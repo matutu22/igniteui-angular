@@ -141,6 +141,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Toolbar'
         },
         {
+            link: '/hierarchicalGrid',
+            icon: 'view_column',
+            name: 'Hierarchical Grid'
+        },
+        {
             link: '/dialog',
             icon: 'all_out',
             name: 'Dialog'

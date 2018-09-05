@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
+// import { IgxHierarchicalGridModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
 
@@ -56,6 +57,7 @@ import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
+import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
 
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
@@ -111,6 +113,8 @@ const components = [
     GridVirtualizationSampleComponent,
     GridColumnGroupsSampleComponent,
 
+    HierarchicalGridSampleComponent,
+
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
@@ -128,6 +132,7 @@ const components = [
         HttpClientModule,
         IgxIconModule.forRoot(),
         IgxGridModule.forRoot(),
+        // IgxHierarchicalGridModule,
         IgxColumnHidingModule,
         IgxDragDropModule,
         SharedModule,

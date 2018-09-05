@@ -42,7 +42,8 @@ import {
     IgxGridPagingPipe,
     IgxGridPostGroupingPipe,
     IgxGridPreGroupingPipe,
-    IgxGridSortingPipe
+    IgxGridSortingPipe,
+    IgxGridHierarchicalPipe
 } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
@@ -51,6 +52,9 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
+import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { IgxChildLayoutComponent } from './igx-layout.component';
+import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +83,10 @@ import { IgxColumnPinningModule } from './column-pinning.component';
     IgxGridPagingPipe,
     IgxGridFilteringPipe,
     IgxGridFilterConditionPipe,
+    IgxGridHierarchicalPipe,
+    IgxHierarchicalRowComponent,
+    IgxChildGridRowComponent,
+    IgxChildLayoutComponent,
     IgxGridFilterExpressionComponent
   ],
   entryComponents: [
@@ -104,7 +112,20 @@ import { IgxColumnPinningModule } from './column-pinning.component';
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
-    IgxGroupAreaDropDirective
+    IgxGroupAreaDropDirective,
+    IgxGridPreGroupingPipe,
+    IgxGridPostGroupingPipe,
+    IgxGridSortingPipe,
+    IgxGridPagingPipe,
+    IgxGridFilteringPipe,
+    IgxGridFilterConditionPipe,
+    IgxHierarchicalRowComponent,
+    IgxChildLayoutComponent,
+    IgxChildGridRowComponent,
+    IgxGridHierarchicalPipe,
+    IgxCheckboxModule,
+    IgxIconModule,
+    IgxChipsModule
   ],
   imports: [
     CommonModule,

@@ -172,3 +172,24 @@ export class IgxGridFilterConditionPipe implements PipeTransform {
         return value.split(/(?=[A-Z])/).join(' ');
     }
 }
+
+/**
+ *@hidden
+ */
+@Pipe({
+    name: 'gridHierarchical',
+    pure: true
+})
+export class IgxGridHierarchicalPipe implements PipeTransform {
+
+    constructor(private gridAPI: IgxGridAPIService) { }
+
+    public transform(collection: IGroupByResult, state = [], id: string, pipeTrigger: number): IGroupByResult {
+
+        const result: IGroupByResult = {
+            data: DataUtil.addHierarchy(cloneArray(collection.data), state),
+            metadata: DataUtil.addHierarchy(cloneArray(collection.metadata), state)
+        };
+        return result;
+    }
+}

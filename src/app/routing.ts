@@ -47,6 +47,7 @@ import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
 
 const appRoutes = [
     {
@@ -246,6 +247,11 @@ const appRoutes = [
     {
         path: 'gridGroupBy',
         component: GridGroupBySampleComponent
+    }
+    ,
+    {
+        path: 'hierarchicalGrid',
+        component: HierarchicalGridSampleComponent
     }
 ];
 

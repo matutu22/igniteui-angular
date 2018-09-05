@@ -52,6 +52,7 @@ import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxChildLayoutComponent } from './igx-layout.component';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -149,6 +150,34 @@ export interface IColumnMovingEndEventArgs {
     templateUrl: './grid.component.html'
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+
+
+
+    /**
+     * @hidden
+     */
+    @ContentChildren(IgxChildLayoutComponent, { read: IgxChildLayoutComponent, descendants: true })
+    public childLayoutList: QueryList<IgxChildLayoutComponent>;
+
+    /**
+     * @hidden
+     */
+    public isHierarchicalRecord(record: any): boolean {
+        let childKey = this.childLayoutList.first.key;
+        return record[childKey] && this.childLayoutList.length !== 0;
+    }
+
+    public isExpanded(record: any): boolean {
+        return this.hierarchicalState.find((v) => {
+            return v === record;
+        }) !== null && this.childLayoutList.length !== 0;
+    }
+
+    @Input()
+    public hierarchicalState = [];
+
+    @Input()
+    public childKey;
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -1187,7 +1216,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     public columnList: QueryList<IgxColumnComponent>;
 
     /**
@@ -1938,15 +1967,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _defaultTargetRecordNumber = 10;
 
     constructor(
-        private gridAPI: IgxGridAPIService,
+        protected gridAPI: IgxGridAPIService,
         public selectionAPI: IgxSelectionAPIService,
-        private elementRef: ElementRef,
-        private zone: NgZone,
+        protected elementRef: ElementRef,
+        protected zone: NgZone,
         @Inject(DOCUMENT) public document,
         public cdr: ChangeDetectorRef,
-        private resolver: ComponentFactoryResolver,
-        private differs: IterableDiffers,
-        private viewRef: ViewContainerRef) {
+        protected resolver: ComponentFactoryResolver,
+        protected differs: IterableDiffers,
+        protected viewRef: ViewContainerRef) {
 
         this.resizeHandler = () => {
             this.calculateGridSizes();

@@ -11,3 +11,4 @@ export { ColumnDisplayOrder } from './column-chooser-base';
 export { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 export * from './column-hiding.component';
 export * from './column-pinning.component';
+export * from './hierarchical-grid.component';

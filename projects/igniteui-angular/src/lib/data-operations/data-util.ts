@@ -139,6 +139,26 @@ export class DataUtil {
         }
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
+    public static isExpanded<T>(state, record): boolean {
+        let result = false;
+        state.forEach((s) => {
+            if (s.rowID === record) {
+                result = true;
+            }
+        });
+        return result;
+    }
+    public static addHierarchy<T>(data: T[], state): T[] {
+        let result = [];
+
+        data.forEach((v) => {
+            result.push(v);
+            if (DataUtil.isExpanded(state, v)) {
+                result.push(v['Products']);
+            }
+        });
+        return result;
+    }
     public static filter<T>(data: T[], state: IFilteringState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, filteringStateDefaults);

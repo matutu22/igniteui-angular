@@ -37,7 +37,7 @@ export class IgxHierarchicalRowComponent implements DoCheck {
      * const RowExpanded = this.grid1.rowList.first.expanded;
      * ```
      */
-    public expanded: boolean = false;
+    public expanded: boolean = true;
 
     /**
      * @hidden

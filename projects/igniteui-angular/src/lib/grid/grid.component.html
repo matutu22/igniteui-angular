@@ -84,15 +84,17 @@
             </igx-grid-groupby-row>
         </ng-container>
         <ng-template #hierarchical_record_template>
-            <ng-container *ngIf="isHierarchicalRecord(rowData); else child_grid_template">
+            <ng-container *ngIf="isHierarchicalRecord(rowData); else child_record_template">
                 <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
                 </igx-hierarchical-grid-row>
             </ng-container>
         </ng-template>
-        <ng-template #child_grid_template>
+        <ng-template #child_record_template>
             <ng-container *ngIf="isExpanded(rowData); else record_template">
-                <igx-child-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
-                </igx-child-grid-row>
+                <div [style.height.px]="rowHeight" [style.width.%]="95" style="overflow:auto;">
+                    <igx-child-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                    </igx-child-grid-row>
+                </div>
             </ng-container>
         </ng-template>
         <ng-template #record_template>

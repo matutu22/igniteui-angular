@@ -163,11 +163,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public isHierarchicalRecord(record: any): boolean {
-        let childKey = this.childLayoutList.first.key;
-        return record[childKey] && this.childLayoutList.length !== 0;
+        return this.childLayoutList.length !== 0 && record[this.childLayoutList.first.key];
     }
 
     public isExpanded(record: any): boolean {
+        //return true;
         return this.hierarchicalState.find((v) => {
             return v === record;
         }) !== null && this.childLayoutList.length !== 0;
@@ -1987,6 +1987,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public ngOnInit() {
+        this.hierarchicalState = [...this.data];
+
         this.gridAPI.register(this);
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;

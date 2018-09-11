@@ -153,7 +153,8 @@ export class DataUtil {
 
         data.forEach((v) => {
             result.push(v);
-            if (DataUtil.isExpanded(state, v)) {
+            //if (DataUtil.isExpanded(state, v)) {
+            if (v['Products'] && v['Products'].length !== 0) {
                 result.push(v['Products']);
             }
         });

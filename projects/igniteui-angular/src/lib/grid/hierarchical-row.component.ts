@@ -37,7 +37,9 @@ export class IgxHierarchicalRowComponent implements DoCheck {
      * const RowExpanded = this.grid1.rowList.first.expanded;
      * ```
      */
-    public expanded: boolean = true;
+    public get expanded() {
+        return this.grid.isExpanded(this.rowID);
+    }
 
     /**
      * @hidden
@@ -299,11 +301,10 @@ export class IgxHierarchicalRowComponent implements DoCheck {
      * ```
      */
     public toggle() {
-        this.expanded = !this.expanded;
-        const grid = this.gridAPI.get(this.grid.id)
-        let state = this.gridAPI.get(this.grid.id).hierarchicalState;
-        if (this.expanded) {
-            state.push({rowID: this.rowID});
+        const grid = this.gridAPI.get(this.grid.id);
+        const state = this.gridAPI.get(this.grid.id).hierarchicalState;
+        if (!this.expanded) {
+            state.push({ rowID: this.rowID });
             grid.hierarchicalState = [...state];
         } else {
             grid.hierarchicalState = state.filter(v => {

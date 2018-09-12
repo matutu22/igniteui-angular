@@ -139,23 +139,26 @@ export class DataUtil {
         }
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
-    public static isExpanded<T>(state, record): boolean {
-        let result = false;
-        state.forEach((s) => {
-            if (s.rowID === record) {
-                result = true;
+    public static isExpanded<T>(state, record, primaryKey): boolean {
+        // A little faster than cycling trough all the data for each search.
+        for (let i = 0; i < state.length; i++) {
+            if ((primaryKey && state[i].rowID === record[primaryKey]) ||
+                (!primaryKey && state[i].rowID === record)) {
+                return true;
             }
-        });
-        return result;
+        }
+        return false;
     }
-    public static addHierarchy<T>(data: T[], state): T[] {
-        let result = [];
+    public static addHierarchy<T>(data: T[], state, primaryKey): T[] {
+        const result = [];
 
         data.forEach((v) => {
             result.push(v);
-            //if (DataUtil.isExpanded(state, v)) {
-            if (v['Products'] && v['Products'].length !== 0) {
-                result.push(v['Products']);
+
+            // Uncomment code bellow in order to update data when collapsing/expanding to render new child grid.
+            // Otherwise the visible chunk size can become smaller than viewport. This is slower though.
+            if (/*DataUtil.isExpanded(state, v, primaryKey) &&*/ v['Products'] && v['Products'].length !== 0) {
+                result.push({rowID: primaryKey ? v[primaryKey] : v,  childGridData: v['Products'] });
             }
         });
         return result;

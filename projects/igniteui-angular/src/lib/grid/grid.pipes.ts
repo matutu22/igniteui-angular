@@ -184,11 +184,11 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) { }
 
-    public transform(collection: IGroupByResult, state = [], id: string, pipeTrigger: number): IGroupByResult {
+    public transform(collection: IGroupByResult, state = [], id: string, primaryKey: any, pipeTrigger: number): IGroupByResult {
 
         const result: IGroupByResult = {
-            data: DataUtil.addHierarchy(cloneArray(collection.data), state),
-            metadata: DataUtil.addHierarchy(cloneArray(collection.metadata), state)
+            data: DataUtil.addHierarchy(cloneArray(collection.data), state, primaryKey),
+            metadata: DataUtil.addHierarchy(cloneArray(collection.metadata), state, primaryKey)
         };
         return result;
     }

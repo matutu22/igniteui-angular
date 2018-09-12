@@ -43,9 +43,8 @@ export class IgxChildGridRowComponent implements DoCheck {
      * @hidden
      */
     public get childData() {
-
-        //figure out how to extract the key from child layout
-        return this.rowData.Products;
+        // figure out how to extract the key from child layout
+        return this.rowData.childGridData;
     }
 
 
@@ -59,6 +58,9 @@ export class IgxChildGridRowComponent implements DoCheck {
      */
     @Input()
     public rowData: any = [];
+
+    @Input()
+    public layoutKey: any;
 
     /**
      * The index of the row.

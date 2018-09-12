@@ -8,6 +8,7 @@ import { IgxDatePickerModule } from '../date-picker/date-picker.component';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxFocusModule } from '../directives/focus/focus.directive';
 import { IgxForOfModule } from '../directives/for-of/for_of.directive';
+import { IgxTemplateOutletModule } from '../directives/template-outlet/template_outlet.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxTextHighlightModule } from '../directives/text-highlight/text-highlight.directive';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
@@ -137,6 +138,7 @@ import { IgxChildGridRowComponent } from './child-grid-row.component';
     IgxInputGroupModule,
     IgxToggleModule,
     IgxForOfModule,
+    IgxTemplateOutletModule,
     IgxFocusModule,
     IgxTextHighlightModule,
     IgxTextSelectionModule,

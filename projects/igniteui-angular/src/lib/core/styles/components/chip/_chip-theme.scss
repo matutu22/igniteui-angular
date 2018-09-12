@@ -282,7 +282,7 @@
         transition: $transition;
         background: --var($theme, 'chip-background');
         border: 1px solid transparent;
-        justify-content: space-between;
+        justify-content: center;
 
         &:hover,
         &:focus{
@@ -336,8 +336,13 @@
     %igx-chip__text {
         color: --var($theme, 'text-color');
         font-size: rem(12px);
-        margin-right: rem(16px);
+        flex: 1 0 0%;
+
         @include ellipsis();
+
+        + %igx-chip__remove-icon {
+            margin-left: rem(16px);
+        }
     }
 
     %igx-icon-display {
@@ -352,6 +357,7 @@
         &%igx-chip__order-icon {
             color: --var($theme, 'order-icon-color');
             margin-right: rem(4px);
+            margin-left: rem(16px);
         }
 
         &%igx-chip__remove-icon {
@@ -462,5 +468,22 @@
         border-radius: map-get($chip-height, 'compact') / 2;
         height: map-get($chip-height, 'compact');
         padding: map-get($chip-padding, 'compact');
+    }
+}
+
+/// Adds typography styles for the igx-chip component.
+/// Uses the 'body-2'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-chip-typography($type-scale, $categories: (text: 'body-2')) {
+    $text: map-get($categories, 'text');
+
+    @include igx-scope('.igx-typography') {
+        %igx-chip__text {
+            @include igx-type-style($type-scale, $text);
+        }
     }
 }

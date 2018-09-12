@@ -4,8 +4,7 @@
         type="text"
         placeholder="Value"
         autocomplete="off"
-        [value]="value"
-        (input)="onInputChanged($event.target.value)"
+        [(ngModel)]="value"
         [igxFocus]="true"/>
 
         <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()">
@@ -16,6 +15,7 @@
 
 <ng-template #defaultDateUI>
     <igx-datePicker
+        [outlet]="grid.outletDirective"
         *ngIf="!unaryCondition"
         [value]="value"
         (onSelection)="onDatePickerValueChanged($event)">

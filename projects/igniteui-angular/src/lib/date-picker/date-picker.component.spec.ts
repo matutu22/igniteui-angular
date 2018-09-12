@@ -7,6 +7,7 @@ import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.compo
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxInputGroupModule } from '../input-group';
 
 describe('IgxDatePicker', () => {
     beforeEach(async(() => {
@@ -17,9 +18,10 @@ describe('IgxDatePicker', () => {
                 IgxDatePickerWithCustomFormatterComponent,
                 IgxDatePickerWithPassedDateComponent,
                 IgxDatePickerWIthLocaleComponent,
-                IgxDatePickerNgModelComponent
+                IgxDatePickerNgModelComponent,
+                IgxDatePickerRetemplatedComponent
             ],
-            imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule]
+            imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule]
         })
         .compileComponents();
     }));
@@ -44,10 +46,10 @@ describe('IgxDatePicker', () => {
         });
 
         it('Initialize a datepicker component with id', () => {
-            const domDatePicker = fixture.debugElement.query(By.css('igx-datePicker')).nativeElement;
+            const domDatePicker = fixture.debugElement.query(By.css('igx-date-picker')).nativeElement;
 
-            expect(datePicker.id).toContain('igx-datePicker-');
-            expect(domDatePicker.id).toContain('igx-datePicker-');
+            expect(datePicker.id).toContain('igx-date-picker-');
+            expect(domDatePicker.id).toContain('igx-date-picker-');
 
             datePicker.id = 'customDatePicker';
             fixture.detectChanges();
@@ -126,7 +128,7 @@ describe('IgxDatePicker', () => {
         });
 
         it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', fakeAsync(() => {
-            const datePickerDom = fixture.debugElement.query(By.css('igx-datepicker'));
+            const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
             let overlayToggle = document.getElementsByTagName('igx-toggle');
             expect(overlayToggle.length).toEqual(0);
 
@@ -147,7 +149,7 @@ describe('IgxDatePicker', () => {
 
         it('When datepicker is closed and the dialog disappear the focus should remain on the input',
         fakeAsync(() => {
-            const datePickerDom = fixture.debugElement.query(By.css('igx-datepicker'));
+            const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
             let overlayToggle = document.getElementsByTagName('igx-toggle');
             expect(overlayToggle.length).toEqual(0);
 
@@ -270,11 +272,38 @@ describe('IgxDatePicker', () => {
         const boundValue = fix.componentInstance.val;
         expect(boundValue).toEqual(expectedRes);
     }));
+
+    it('Retemplate a DatePicker input group', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxDatePickerRetemplatedComponent);
+        tick();
+        fix.detectChanges();
+
+        const dom = fix.debugElement;
+        expect(dom.query(By.css('.igx-input-group'))).not.toBeNull();
+        expect(dom.query(By.css('.igx-icon'))).toBeNull();
+    }));
+
+    it('Should be able to deselect using the API.', () => {
+        const fix = TestBed.createComponent(IgxDatePickerTestComponent);
+        const datePicker = fix.componentInstance.datePicker;
+        fix.detectChanges();
+
+        const date = new Date(Date.now());
+        datePicker.selectDate(date);
+        fix.detectChanges();
+
+        expect(datePicker.value).toBe(date);
+
+        datePicker.deselectDate();
+        fix.detectChanges();
+
+        expect(datePicker.value).toBe(null);
+    });
 });
 
 @Component({
     template: `
-        <igx-datePicker [formatter]="customFormatter" [value]=date></igx-datePicker>
+        <igx-date-picker [formatter]="customFormatter" [value]=date></igx-date-picker>
     `
 })
 export class IgxDatePickerWithCustomFormatterComponent {
@@ -288,7 +317,7 @@ export class IgxDatePickerWithCustomFormatterComponent {
 
 @Component({
     template: `
-        <igx-datePicker [value]="date" [weekStart]="1"></igx-datePicker>
+        <igx-date-picker [value]="date" [weekStart]="1"></igx-date-picker>
     `
 })
 export class IgxDatePickerWithWeekStartComponent {
@@ -298,7 +327,7 @@ export class IgxDatePickerWithWeekStartComponent {
 
 @Component({
     template: `
-        <igx-datePicker [labelVisibility]="labelVisibility"></igx-datePicker>
+        <igx-date-picker [labelVisibility]="labelVisibility"></igx-date-picker>
     `
 })
 export class IgxDatePickerTestComponent {
@@ -309,7 +338,7 @@ export class IgxDatePickerTestComponent {
 
 @Component({
     template: `
-        <igx-datePicker [value]="date" [formatOptions]="formatOptions"></igx-datePicker>
+        <igx-date-picker [value]="date" [formatOptions]="formatOptions"></igx-date-picker>
     `
 })
 export class IgxDatePickerWithPassedDateComponent {
@@ -325,7 +354,7 @@ export class IgxDatePickerWithPassedDateComponent {
 
 @Component({
     template: `
-        <igx-datePicker [value]="date" [locale]="'de-DE'"></igx-datePicker>
+        <igx-date-picker [value]="date" [locale]="'de-DE'"></igx-date-picker>
     `
 })
 export class IgxDatePickerWIthLocaleComponent {
@@ -335,10 +364,24 @@ export class IgxDatePickerWIthLocaleComponent {
 
 @Component({
     template: `
-        <igx-datePicker [(ngModel)]="val"></igx-datePicker>
+        <igx-date-picker [(ngModel)]="val"></igx-date-picker>
     `
 })
 export class IgxDatePickerNgModelComponent {
     public val: Date = new Date(2011, 11, 11);
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 }
+
+@Component({
+    template: `
+<igx-datePicker>
+    <ng-template igxDatePickerTemplate let-displayData="displayData">
+        <igx-input-group>
+            <label igxLabel>Date</label>
+            <input igxInput [value]="displayData"/>
+        </igx-input-group>
+    </ng-template>
+</igx-datePicker>
+    `
+})
+export class IgxDatePickerRetemplatedComponent {}

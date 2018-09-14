@@ -76,7 +76,7 @@
     | gridSort:sortingExpressions:id:pipeTrigger
     | gridPreGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:pipeTrigger
     | gridPaging:page:perPage:id:pipeTrigger
-    | gridHierarchical:hierarchicalState:id:pipeTrigger
+    | gridHierarchical:hierarchicalState:id:primaryKey:pipeTrigger
     | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-container *ngIf="isGroupByRecord(rowData); else hierarchical_record_template">
@@ -90,7 +90,7 @@
             </ng-container>
         </ng-template>
         <ng-template #child_record_template>
-            <ng-container *ngIf="isExpanded(rowData); else record_template">
+            <ng-container *ngIf="isChildGridRecord(rowData) && isExpanded(rowData); else record_template">
                 <div [style.height.px]="rowHeight" [style.width.%]="95" style="overflow:auto;">
                     <igx-child-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
                     </igx-child-grid-row>
@@ -98,7 +98,7 @@
             </ng-container>
         </ng-template>
         <ng-template #record_template>
-            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+            <igx-grid-row *ngIf="!isChildGridRecord(rowData)" [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
             </igx-grid-row>
         </ng-template>
         <ng-template #group_template>

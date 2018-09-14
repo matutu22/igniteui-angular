@@ -53,6 +53,7 @@ import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpr
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxChildLayoutComponent } from './igx-layout.component';
+import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -166,11 +167,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.childLayoutList.length !== 0 && record[this.childLayoutList.first.key];
     }
 
+    public isChildGridRecord(record: any): boolean {
+        return record.childGridData;
+    }
+
     public isExpanded(record: any): boolean {
-        //return true;
-        return this.hierarchicalState.find((v) => {
-            return v === record;
-        }) !== null && this.childLayoutList.length !== 0;
+        let inState;
+        if (record.childGridData) {
+            inState = !!this.hierarchicalState.find(v => v.rowID === record.rowID);
+        } else {
+            inState = !!this.hierarchicalState.find(v => {
+                return this.primaryKey ? v.rowID === record[this.primaryKey] : v.rowID === record;
+            });
+        }
+        return inState && this.childLayoutList.length !== 0;
     }
 
     @Input()
@@ -1299,6 +1309,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
 
+    @ViewChildren(IgxChildGridRowComponent, { read: IgxChildGridRowComponent })
+    public hierarchicalRows: QueryList<IgxChildGridRowComponent>;
+
     /**
      * A template reference for the template when the filtered `IgxGridComponent` is empty.
      * ```
@@ -2025,7 +2038,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public ngOnInit() {
-        this.hierarchicalState = [...this.data];
+        this.data.forEach((row) => {
+            this.hierarchicalState.push({ rowID: this.primaryKey ? row[this.primaryKey] : row});
+        });
 
         this.gridAPI.register(this);
         this.columnListDiffer = this.differs.find([]).create(null);

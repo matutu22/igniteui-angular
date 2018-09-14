@@ -3785,9 +3785,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public getContext(rowData): any {
+        let templateID;
+        if (this.isChildGridRecord(rowData)) {
+            templateID = 'childRow';
+        } else {
+            templateID = this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow';
+        }
         return {
             $implicit: rowData,
-            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+            templateID: templateID
         };
     }
 

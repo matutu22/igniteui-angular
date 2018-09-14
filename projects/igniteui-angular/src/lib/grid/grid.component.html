@@ -79,23 +79,15 @@
     | gridHierarchical:hierarchicalState:id:primaryKey:pipeTrigger
     | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
-        <ng-container *ngIf="isGroupByRecord(rowData); else hierarchical_record_template">
-            <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
-            </igx-grid-groupby-row>
-        </ng-container>
         <ng-template #hierarchical_record_template>
-            <ng-container *ngIf="isHierarchicalRecord(rowData); else child_record_template">
-                <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
-                </igx-hierarchical-grid-row>
-            </ng-container>
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+            </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template>
-            <ng-container *ngIf="isChildGridRecord(rowData) && isExpanded(rowData); else record_template">
-                <div [style.height.px]="rowHeight" [style.width.%]="95" style="overflow:auto;">
-                    <igx-child-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
-                    </igx-child-grid-row>
-                </div>
-            </ng-container>
+            <div [style.height.px]="rowHeight" [style.width.%]="95" style="overflow:auto;">
+                <igx-child-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                </igx-child-grid-row>
+            </div>
         </ng-template>
         <ng-template #record_template>
             <igx-grid-row *ngIf="!isChildGridRecord(rowData)" [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
@@ -105,7 +97,7 @@
             <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
             </igx-grid-groupby-row>
         </ng-template>
-        <ng-container *igxTemplateOutlet="isGroupByRecord(rowData) ? group_template : record_template; context: getContext(rowData) "></ng-container>
+        <ng-container *igxTemplateOutlet="(isGroupByRecord(rowData) ? group_template : (isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : record_template))); context: getContext(rowData)"></ng-container>
     </ng-template>
     <ng-container *ngTemplateOutlet="template"></ng-container>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>

@@ -3890,15 +3890,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (target) {
             const containerTopOffset =
                 parseInt(row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            if (this.rowHeight > Math.abs(containerTopOffset) // not the entire row is visible, due to grid offset
-                && verticalScroll.scrollTop // the scrollbar is not at the first item
-                && row.element.nativeElement.offsetTop < this.rowHeight) { // the target is in the first row
+            if ((!!Math.abs(containerTopOffset) && this.rowList.first.index === row.index) ||
+                (!Math.abs(containerTopOffset) && this.rowList.first.index > row.index)) {
                     const scrollAmount = containerTopOffset < 0 ?
                     containerTopOffset :
                     -this.rowHeight + Math.abs(containerTopOffset);
-                this.performVerticalScroll(scrollAmount, rowIndex - 1, columnIndex, event);
-            }
-            if (row instanceof IgxGridGroupByRowComponent) {
+                this.performVerticalScroll(scrollAmount, rowIndex, columnIndex, event);
+            } else if (row instanceof IgxGridGroupByRowComponent) {
                 target.nativeElement.focus();
             } else {
                 (target as any)._updateCellSelectionStatus(true, event);
@@ -3908,6 +3906,48 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 -parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const scrollAmount = this.rowHeight + scrollOffset;
             this.performVerticalScroll(-scrollAmount, rowIndex, columnIndex, event);
+        }
+    }
+    public navigateTop(columnIndex: number, event?) {
+        const verticalScroll = this.verticalScrollContainer.getVerticalScroll();
+        if (verticalScroll.scrollTop === 0) {
+            const cell = this.gridAPI.get_cell_by_visible_index(this.id, 0, columnIndex);
+            if (cell) {
+                cell._updateCellSelectionStatus(true, event);
+            }
+        } else {
+            this.verticalScrollContainer.scrollTo(0);
+            this.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+                const row = this.gridAPI.get_row_by_index(this.id, 0);
+                const cell = this.gridAPI.get_cell_by_visible_index(this.id, 0, columnIndex);
+                if (cell) {
+                    cell._updateCellSelectionStatus(true, event);
+                } else if (row && row instanceof IgxGridGroupByRowComponent) {
+                    row.groupContent.nativeElement.focus();
+                }
+            });
+        }
+
+    }
+
+    public navigateBottom(columnIndex: number, event?) {
+        const verticalScroll = this.verticalScrollContainer.getVerticalScroll();
+        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.verticalScrollContainer.igxForContainerSize) {
+            const cell = this.gridAPI.get_cell_by_visible_index(this.id, this.rowList.last.index, columnIndex);
+            if (cell) {
+                cell._updateCellSelectionStatus(true, event);
+            }
+        } else {
+            this.verticalScrollContainer.scrollTo(this.verticalScrollContainer.igxForOf.length - 1);
+            this.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+                const row = this.rowList.last;
+                const cell = this.gridAPI.get_cell_by_visible_index(this.id, this.rowList.last.index, columnIndex);
+                if (cell) {
+                    cell._updateCellSelectionStatus(true, event);
+                } else if (row && row instanceof IgxGridGroupByRowComponent) {
+                    row.groupContent.nativeElement.focus();
+                }
+            });
         }
     }
 

@@ -825,7 +825,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    // this.row.virtDirRow.scrollthis.row.virtDirRow.scrollTo(this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
                     this.grid.scrollTo(this.rowIndex, this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex,
                         this.grid.paging ? this.grid.page : 0);
                     this.row.virtDirRow.onChunkLoad
@@ -1058,37 +1057,28 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         const horizontalScroll = this.grid.dataRowList.first.virtDirRow.getHorizontalScroll();
         if (verticalScroll.scrollTop === 0) {
             if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
-                const target = this.grid.rowList.first instanceof IgxGridGroupByRowComponent ?
-                this.grid.rowList.first : this.grid.rowList.first.cells.first;
-                this.updateSelection(target, event);
-                return;
-            }
-            this.grid.scrollTo(0, 0, this.grid.paging ? this.grid.page : 0);
-            this.row.virtDirRow.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    const target = this.gridAPI.get_cell_by_visible_index(this.gridID, 0, 0) ?
-                    this.gridAPI.get_cell_by_visible_index(this.gridID, 0, 0) : this.grid.rowList.first;
-                    this.updateSelection(target, event);
-            });
-        } else {
-            this.grid.scrollTo(0, 0, this.grid.paging ? this.grid.page : 0);
-            if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
-                this.grid.verticalScrollContainer.onChunkLoad.pipe(first())
-                .subscribe(() => {
-                    const target = this.grid.rowList.first instanceof IgxGridGroupByRowComponent ?
-                    this.grid.rowList.first :
-                    this.gridAPI.get_cell_by_visible_index(this.gridID, 0, this.row.cells.first.visibleColumnIndex);
-                    this.updateSelection(target, event);
-                    return;
-                });
+                if (this.grid.dataRowList.first.cells.first) {
+                    this.grid.dataRowList.first.cells.first._updateCellSelectionStatus(true, event);
+                }
             } else {
-                combineLatest([this.grid.verticalScrollContainer.onChunkLoad, this.grid.rowList.first.virtDirRow.onChunkLoad])
+                this.grid.scrollTo(0, 0, this.grid.paging ? this.grid.page : 0);
+                this.row.virtDirRow.onChunkLoad
+                    .pipe(first())
+                    .subscribe(() => {
+                        if (this.grid.dataRowList.first.cells.first) {
+                            this.grid.dataRowList.first.cells.first._updateCellSelectionStatus(true, event);
+                        }
+                });
+            }
+        } else {
+            if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
+                this.grid.navigateTop(0, event);
+            } else {
+                this.row.virtDirRow.scrollTo(0);
+                this.row.virtDirRow.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    const target = this.gridAPI.get_cell_by_visible_index(this.gridID, 0, 0) ?
-                    this.gridAPI.get_cell_by_visible_index(this.gridID, 0, 0) : this.grid.rowList.first;
-                    this.updateSelection(target, event);
+                   this.grid.navigateTop(0, event);
                 });
             }
         }
@@ -1099,20 +1089,18 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         const columnIndex = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex;
         if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
             if (this.row.cells.last.visibleColumnIndex === columnIndex) {
-                const target = this.grid.rowList.last instanceof IgxGridGroupByRowComponent ?
-                this.grid.rowList.last : this.grid.rowList.last.cells.last;
-                this.updateSelection(target, event);
+                if (this.grid.dataRowList.last.cells.last) {
+                    this.grid.dataRowList.last.cells.last._updateCellSelectionStatus(true, event);
+                }
             } else {
                 this.grid.scrollTo(this.rowIndex, columnIndex + 1,
                     this.grid.paging ? this.grid.page : 0);
                 this.grid.dataRowList.last.virtDirRow.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    const target = this.grid.rowList.last instanceof IgxGridGroupByRowComponent ?
-                    this.grid.rowList.last : this.gridAPI.get_cell_by_visible_index(
-                        this.gridID, this.grid.rowList.last.index, columnIndex);
-                    this.updateSelection(target, event);
-
+                    if (this.grid.dataRowList.last.cells.last) {
+                        this.grid.dataRowList.last.cells.last._updateCellSelectionStatus(true, event);
+                    }
                 });
             }
         } else {
@@ -1174,13 +1162,5 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private isNavigationKey(key) {
         return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright', 'home', 'end'].indexOf(key) !== -1;
-    }
-
-    private updateSelection(target, event?) {
-        if (target  && target instanceof IgxGridGroupByRowComponent) {
-            target.groupContent.nativeElement.focus();
-        } else if (target && target instanceof IgxGridCellComponent) {
-            target._updateCellSelectionStatus(true, event);
-        }
     }
 }

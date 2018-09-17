@@ -3911,19 +3911,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public navigateTop(columnIndex: number, event?) {
         const verticalScroll = this.verticalScrollContainer.getVerticalScroll();
         if (verticalScroll.scrollTop === 0) {
-            const cell = this.gridAPI.get_cell_by_visible_index(this.id, 0, columnIndex);
+            const cell = this.dataRowList.first.cells.find((c) => c.visibleColumnIndex === columnIndex);
             if (cell) {
                 cell._updateCellSelectionStatus(true, event);
             }
         } else {
             this.verticalScrollContainer.scrollTo(0);
             this.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
-                const row = this.gridAPI.get_row_by_index(this.id, 0);
-                const cell = this.gridAPI.get_cell_by_visible_index(this.id, 0, columnIndex);
+                const cell = this.dataRowList.first.cells.find((c) => c.visibleColumnIndex === columnIndex);
                 if (cell) {
                     cell._updateCellSelectionStatus(true, event);
-                } else if (row && row instanceof IgxGridGroupByRowComponent) {
-                    row.groupContent.nativeElement.focus();
                 }
             });
         }
@@ -3933,19 +3930,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public navigateBottom(columnIndex: number, event?) {
         const verticalScroll = this.verticalScrollContainer.getVerticalScroll();
         if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.verticalScrollContainer.igxForContainerSize) {
-            const cell = this.gridAPI.get_cell_by_visible_index(this.id, this.rowList.last.index, columnIndex);
+            const cell = this.dataRowList.last.cells.find((c) => c.visibleColumnIndex === columnIndex);
             if (cell) {
                 cell._updateCellSelectionStatus(true, event);
             }
         } else {
             this.verticalScrollContainer.scrollTo(this.verticalScrollContainer.igxForOf.length - 1);
             this.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
-                const row = this.rowList.last;
-                const cell = this.gridAPI.get_cell_by_visible_index(this.id, this.rowList.last.index, columnIndex);
+                const cell = this.dataRowList.last.cells.find((c) => c.visibleColumnIndex === columnIndex);
                 if (cell) {
                     cell._updateCellSelectionStatus(true, event);
-                } else if (row && row instanceof IgxGridGroupByRowComponent) {
-                    row.groupContent.nativeElement.focus();
                 }
             });
         }

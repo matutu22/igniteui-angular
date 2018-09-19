@@ -937,6 +937,12 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public onKeydownArrowRight(event) {
+        this.grid.navigation.onKeydownArrowRight(this.nativeElement, this.rowIndex, this.visibleColumnIndex, event);
+/*         const rowElement =  this.grid.dataRowList.find((row) => row.index === this.rowIndex) ?
+        this.grid.dataRowList.find((row) => row.index === this.rowIndex).nativeElement :
+        this.grid.dataRowList.find((row) => row.index === this.rowIndex);
+
+        console.log(rowElement.children[1].children);
 
         const visibleColumns = this.grid.visibleColumns.filter(c => !c.columnGroup);
         const rowIndex = this.rowIndex;
@@ -989,15 +995,10 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1) - virtContainerSize;
             }
 
-            /**
-             * Determine if we need to subscribe, otherwise if we use navigation and don't scroll, it will bind n-times.
-             * If we scroll the virtual container above, we need to subscribe to onChunkLoad.
-             * We do this because it takes time to detect change in scrollLeft of an element
-             */
             if (bVirtSubscribe) {
                 this.grid._focusNextCell(this.rowIndex, columnIndex, 'right', event);
             }
-        }
+        } */
     }
 
     public onKeydownCtrlArrowRight(event) {
@@ -1053,6 +1054,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public onKeydownCtrlHome(event) {
+        debugger;
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
         const horizontalScroll = this.grid.dataRowList.first.virtDirRow.getHorizontalScroll();
         if (verticalScroll.scrollTop === 0) {

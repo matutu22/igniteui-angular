@@ -42,3 +42,23 @@ steps:
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
+
+- script: |
+  npm version $(TAG) --no-git-tag-version --save
+  if [[ "${TRAVIS_TAG}" == *"beta"* ]]; then export NPM_TAG="next"; else export NPM_TAG="latest"; fi
+  condition: and(succeeded(), ne(variables['TAG'], ''))
+
+- task: Npm@1
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    command: publish
+    publishEndpoint: 'npm publish service connection'
+    workingDir: '/dist/igniteui-angular'
+    #verbose: # Optional
+    #customCommand: # Required when command == Custom
+    #customRegistry: 'useNpmrc' # Optional. Options: useNpmrc, useFeed
+    #customFeed: # Required when customRegistry == UseFeed
+    #customEndpoint: # Optional
+    #publishRegistry: 'useExternalRegistry' # Optional. Options: useExternalRegistry, useFeed
+    #publishFeed: # Required when publishRegistry == UseFeed
+    #publishEndpoint: # Required when publishRegistry == UseExternalRegistry

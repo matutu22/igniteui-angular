@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService,
-    IgxOverlayService
+    IgxOverlayService, IgxTreeGridModule
 } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
@@ -68,7 +68,7 @@ import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
-
+import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 
 const components = [
     AppComponent,
@@ -121,7 +121,7 @@ const components = [
     GridVirtualizationSampleComponent,
     GridColumnGroupsSampleComponent,
     GridCellStylingSampleComponent,
-
+    TreeGridSampleComponent,
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
@@ -139,6 +139,7 @@ const components = [
         HttpClientModule,
         IgxIconModule.forRoot(),
         IgxGridModule.forRoot(),
+        IgxTreeGridModule.forRoot(),
         IgxColumnHidingModule,
         IgxDragDropModule,
         SharedModule,

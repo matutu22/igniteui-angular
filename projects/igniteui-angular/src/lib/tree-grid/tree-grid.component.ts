@@ -45,7 +45,7 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
-    templateUrl: './grid.component.html'
+    templateUrl: 'tree-grid.component.html'
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent {
     private _id = `igx-tree-grid-${NEXT_ID++}`;

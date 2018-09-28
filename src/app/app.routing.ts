@@ -40,7 +40,7 @@ import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
-
+import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 
 const appRoutes = [
     {
@@ -212,6 +212,10 @@ const appRoutes = [
     {
         path: 'gridGroupBy',
         component: GridGroupBySampleComponent
+    },
+    {
+        path: 'treeGrid',
+        component: TreeGridSampleComponent
     }
 ];
 

@@ -21,7 +21,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseComponent } from '../grid-common/grid-base.component';
 
 import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
-import { IGridAPIService } from '../grid-common/api.service';
+import { GridBaseAPIService } from '../grid-common/api.service';
 
 let NEXT_ID = 0;
 
@@ -73,7 +73,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(
-        gridAPI: IGridAPIService<IGridBaseComponent>,
+        gridAPI: GridBaseAPIService<IGridBaseComponent>,
         selection: IgxSelectionAPIService,
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,

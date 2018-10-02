@@ -49,7 +49,8 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid',
-    templateUrl: './grid.component.html'
+    templateUrl: './grid.component.html',
+    providers: [ { provide: GridBaseAPIService, useClass: IgxGridAPIService } ]
 })
 export class IgxGridComponent extends IgxGridBaseComponent {
     private _id = `igx-grid-${NEXT_ID++}`;

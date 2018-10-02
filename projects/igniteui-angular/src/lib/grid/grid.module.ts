@@ -16,6 +16,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxGridCommonModule } from '../grid-common/common/grid-common.module';
+import { GridBaseAPIService } from '../grid-common/api.service';
 
 @NgModule({
   declarations: [
@@ -40,13 +41,8 @@ import { IgxGridCommonModule } from '../grid-common/common/grid-common.module';
     CommonModule,
     FormsModule,
     IgxChipsModule,
-    IgxGridCommonModule.forRoot(IgxGridAPIService)
+    IgxGridCommonModule
   ]
 })
 export class IgxGridModule {
-    public static forRoot() {
-        return {
-            ngModule: IgxGridModule
-        };
-    }
 }

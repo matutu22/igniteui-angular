@@ -142,12 +142,4 @@ import { IgxTemplateOutletModule } from '../../directives/template-outlet/templa
     providers: [ IgxSelectionAPIService, IgxColumnMovingService ]
   })
   export class IgxGridCommonModule {
-    static forRoot(gridType) {
-        return {
-            ngModule: IgxGridCommonModule,
-            providers: [
-                { provide: GridBaseAPIService, useClass: gridType }
-            ]
-        };
-    }
   }

@@ -6,6 +6,7 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxGridCommonModule } from '../grid-common/common/grid-common.module';
+import { GridBaseAPIService } from '../grid-common';
 
 @NgModule({
   declarations: [
@@ -21,13 +22,8 @@ import { IgxGridCommonModule } from '../grid-common/common/grid-common.module';
     CommonModule,
     FormsModule,
     IgxChipsModule,
-    IgxGridCommonModule.forRoot(IgxTreeGridAPIService)
+    IgxGridCommonModule
   ]
 })
 export class IgxTreeGridModule {
-    public static forRoot() {
-        return {
-            ngModule: IgxTreeGridModule
-        };
-    }
 }

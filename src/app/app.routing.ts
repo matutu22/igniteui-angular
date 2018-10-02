@@ -38,6 +38,7 @@ import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
+import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
@@ -216,6 +217,10 @@ const appRoutes = [
     {
         path: 'treeGrid',
         component: TreeGridSampleComponent
+    },
+    {
+        path: 'tooltip',
+        component: TooltipSampleComponent
     }
 ];
 

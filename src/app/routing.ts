@@ -50,6 +50,7 @@ import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 
@@ -272,6 +273,10 @@ const appRoutes = [
         path: 'treeGrid',
         component: TreeGridSampleComponent
     },
+    {
+        path: 'tooltip',
+        component: TooltipSampleComponent
+    }
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

@@ -61,7 +61,7 @@
         <ng-container *ngIf="pinnedColumns.length > 0">
             <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" *ngFor="let col of onlyTopLevel(pinnedColumns)" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
         </ng-container>
-        <ng-template igxFor let-col [igxForOf]="onlyTopLevel(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
+        <ng-template igxFor [igxForAutoSize]='true' let-col [igxForOf]="onlyTopLevel(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
             [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #headerContainer>
             <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-header>
         </ng-template>
@@ -78,13 +78,13 @@
     | gridPaging:page:perPage:id:pipeTrigger
     | gridHierarchical:hierarchicalState:id:primaryKey:pipeTrigger
     | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
-    [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+    [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)" [igxForAutoSize]='autoSizeRows'>
         <ng-template #hierarchical_record_template>
             <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template>
-            <div [style.height.px]="rowHeight" [style.width.%]="95" style="overflow:auto;">
+            <div [style.width.%]="95" style="overflow:auto;">
                 <igx-child-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
                 </igx-child-grid-row>
             </div>

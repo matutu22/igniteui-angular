@@ -105,14 +105,6 @@ export class IgxChildGridRowComponent implements DoCheck {
     /**
      * @hidden
      */
-    @HostBinding('style.height.px')
-    get rowHeight() {
-        return this.grid.rowHeight;
-    }
-
-    /**
-     * @hidden
-     */
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 

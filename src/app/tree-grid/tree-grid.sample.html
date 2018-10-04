@@ -6,9 +6,10 @@
 
     <div class="sample-content">
         <div class="sample-column">
-            <igx-tree-grid #grid1 [data]="data" childDataKey="ChildCompanies" expandedLevels="1" [rowSelectable]="true" [paging]="false" [width]="'900px'" [height]="'500px'">
+            <igx-tree-grid #grid1 [data]="data" childDataKey="ChildCompanies" [rowSelectable]="true" [paging]="false" [width]="'900px'" [height]="'500px'">
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.field"
+                                                    [pinned]="c.pinned"
                                                     [movable]="c.movable"
                                                     [groupable]="false"
                                                     [resizable]="c.resizable"

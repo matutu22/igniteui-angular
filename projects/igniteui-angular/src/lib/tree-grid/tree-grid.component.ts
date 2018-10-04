@@ -89,7 +89,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 	 * @memberof IgxTreeGridRowComponent
      */
     @Input()
-    public expandedLevels = -1;
+    public expandedLevels = Infinity;
 
     private _expandedStates:  Map<any, boolean> = new Map<any, boolean>();
 

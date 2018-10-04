@@ -18,7 +18,7 @@ export class TreeGridSampleComponent implements OnInit {
 
     public ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: 150, resizable: true, movable: true },
+            { field: 'ID', width: 150, resizable: true, movable: true, pinned: true },
             { field: 'CompanyName', width: 150, resizable: true, movable: true },
             { field: 'ContactName', width: 150, resizable: true, movable: true },
             { field: 'ContactTitle', width: 150, resizable: true, movable: true },

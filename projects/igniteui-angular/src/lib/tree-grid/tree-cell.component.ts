@@ -35,7 +35,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
         const indentationLevel = this.indentation;
         const expandedLevels = (<IgxTreeGridComponent>this.grid).expandedLevels;
 
-        return expandedLevels < 0 || (expandedLevels >= 0 && indentationLevel < expandedLevels);
+        return indentationLevel < expandedLevels;
     }
 
     public toggle() {

@@ -105,7 +105,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
 
             let isExpanded = expandedStates.get(rowID);
             if (isExpanded === undefined) {
-                isExpanded = expandedLevels < 0 || (expandedLevels >= 0 && indentationLevel < expandedLevels);
+                isExpanded = indentationLevel < expandedLevels;
             }
 
             if (isExpanded) {

@@ -71,6 +71,16 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         }
     }
 
+    /**
+     * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
+     * ```html
+     * <igx-tree-grid #grid [data]="localData" [showToolbar]="true" [childDataKey]="employees" [autoGenerate]="true"></iigx-tree-grid>
+     * ```
+	 * @memberof IgxTreeGridRowComponent
+     */
+    @Input()
+    public childDataKey;
+
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(

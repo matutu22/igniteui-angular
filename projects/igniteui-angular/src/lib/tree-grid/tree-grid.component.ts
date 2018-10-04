@@ -81,6 +81,29 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     @Input()
     public childDataKey;
 
+    /**
+     * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
+     * ```html
+     * <igx-tree-grid #grid [data]="localData" [showToolbar]="true" [childDataKey]="employees" [autoGenerate]="true"></iigx-tree-grid>
+     * ```
+	 * @memberof IgxTreeGridRowComponent
+     */
+    @Input()
+    public expandedLevels = -1;
+
+    private _expandedStates:  Map<any, boolean> = new Map<any, boolean>();
+
+    @Input()
+    public get expandedStates() {
+        return this._expandedStates;
+    }
+
+    public set expandedStates(value) {
+        this._expandedStates = this.cloneMap(value);
+
+        this.cdr.detectChanges();
+    }
+
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(
@@ -95,7 +118,20 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
-     /**
+
+    private cloneMap(mapIn: Map<any, boolean>):  Map<any, boolean> {
+        const mapCloned: Map<any, boolean> = new Map<any, boolean>();
+
+        mapIn.forEach((value: boolean, key: any, mapObj: Map<any, boolean>) => {
+
+          mapCloned.set(key, value);
+        });
+
+        return mapCloned;
+    }
+
+
+    /**
     * @hidden
     */
     public getContext(rowData): any {

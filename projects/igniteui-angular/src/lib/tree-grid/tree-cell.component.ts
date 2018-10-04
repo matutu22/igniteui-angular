@@ -11,20 +11,38 @@ import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 })
 export class IgxTreeGridCellComponent extends IgxGridCellComponent {
     public get indentation() {
-        const flatRowComponent = <IgxTreeGridRowComponent>this.row;
-        return flatRowComponent.flatRow.indentationLevel;
+        return this.row.flatRow.indentationLevel;
     }
 
     public get hasChildren() {
-        const flatRowComponent = <IgxTreeGridRowComponent>this.row;
-        return flatRowComponent.flatRow.hasChildren;
+        return this.row.flatRow.hasChildren;
     }
 
     @HostBinding('attr.aria-expanded')
     get expanded(): boolean {
-        return true;
+        const states = (<IgxTreeGridComponent>this.grid).expandedStates;
+        const rowID = this.row.rowID;
+        const expanded = states.get(rowID);
+
+        if (expanded !== undefined) {
+            return expanded;
+        } else {
+            return this.getDefaultExpandedState();
+        }
+    }
+
+    private getDefaultExpandedState(): boolean {
+        const indentationLevel = this.indentation;
+        const expandedLevels = (<IgxTreeGridComponent>this.grid).expandedLevels;
+
+        return expandedLevels < 0 || (expandedLevels >= 0 && indentationLevel < expandedLevels);
     }
 
     public toggle() {
+        const states = (<IgxTreeGridComponent>this.grid).expandedStates;
+        const rowID = this.row.rowID;
+        states.set(rowID, !this.expanded);
+
+        (<IgxTreeGridComponent>this.grid).expandedStates = states;
     }
 }

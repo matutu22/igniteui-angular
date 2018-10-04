@@ -74,20 +74,20 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
-    public transform(collection: IHierarchizedResult,
-        id: string, pipeTrigger: number): any[] {
+    public transform(collection: IHierarchizedResult, id: string,
+        expandedLevels: number, expandedStates: Map<any, boolean>, pipeTrigger: number): any[] {
 
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
-
+        const primaryKey = grid.primaryKey;
         const data: IFlattenedRecord[] = [];
 
-        this.getFlatDataRecusrive(collection.data, data, 0);
+        this.getFlatDataRecusrive(collection.data, data, expandedLevels, expandedStates, primaryKey, 0);
 
         return data;
     }
 
-    private getFlatDataRecusrive(collection: IHierarchicalRecord[], data: IFlattenedRecord[] = [], indentationLevel: number) {
-
+    private getFlatDataRecusrive(collection: IHierarchicalRecord[], data: IFlattenedRecord[] = [],
+        expandedLevels: number, expandedStates: Map<any, boolean>, primaryKey: any, indentationLevel: number) {
         if (!collection || !collection.length) {
             return;
         }
@@ -100,7 +100,18 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
                 hasChildren: hirarchicalRecord.children && hirarchicalRecord.children.length > 0
             };
             data.push(flatRecord);
-            this.getFlatDataRecusrive(hirarchicalRecord.children, data, indentationLevel + 1);
+
+            const rowID = primaryKey ? flatRecord.data[primaryKey] : flatRecord.data;
+
+            let isExpanded = expandedStates.get(rowID);
+            if (isExpanded === undefined) {
+                isExpanded = expandedLevels < 0 || (expandedLevels >= 0 && indentationLevel < expandedLevels);
+            }
+
+            if (isExpanded) {
+                this.getFlatDataRecusrive(hirarchicalRecord.children, data, expandedLevels,
+                    expandedStates, primaryKey, indentationLevel + 1);
+            }
         }
     }
 }

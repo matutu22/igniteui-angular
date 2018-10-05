@@ -40,18 +40,4 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
             this.rowData = this._flatRow.data;
         }
     }
-
-    /**
-    * @hidden
-    */
-    public getContext(col): any {
-        return {
-           $implicit: col,
-           templateID: col.index === 0 ? 'treeCell' : 'cell'
-        };
-   }
-
-    // public get indentation() {
-    //     return this._flatRow.indentationLevel;
-    // }
 }

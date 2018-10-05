@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { Component, forwardRef, Input, ViewChildren, QueryList, ViewChild, HostBinding } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowComponent } from '../grid-common/row.component';
 import { IFlattenedRecord } from './tree-grid.pipes';
@@ -39,5 +39,10 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
             this._flatRow = value;
             this.rowData = this._flatRow.data;
         }
+    }
+
+    @HostBinding('attr.aria-expanded')
+    get expanded(): boolean {
+        return this.grid.getIsExpandedRow(this.flatRow);
     }
 }

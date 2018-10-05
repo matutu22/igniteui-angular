@@ -81,13 +81,13 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         const primaryKey = grid.primaryKey;
         const data: IFlattenedRecord[] = [];
 
-        this.getFlatDataRecusrive(collection.data, data, expandedLevels, expandedStates, primaryKey, 0);
+        this.getFlatDataRecusrive(collection.data, data, expandedLevels, expandedStates, id, 0);
 
         return data;
     }
 
     private getFlatDataRecusrive(collection: IHierarchicalRecord[], data: IFlattenedRecord[] = [],
-        expandedLevels: number, expandedStates: Map<any, boolean>, primaryKey: any, indentationLevel: number) {
+        expandedLevels: number, expandedStates: Map<any, boolean>, gridID: string, indentationLevel: number) {
         if (!collection || !collection.length) {
             return;
         }
@@ -101,16 +101,11 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             };
             data.push(flatRecord);
 
-            const rowID = primaryKey ? flatRecord.data[primaryKey] : flatRecord.data;
-
-            let isExpanded = expandedStates.get(rowID);
-            if (isExpanded === undefined) {
-                isExpanded = indentationLevel < expandedLevels;
-            }
+            const isExpanded = this.gridAPI.get_row_expansion_state(gridID, flatRecord);
 
             if (isExpanded) {
                 this.getFlatDataRecusrive(hirarchicalRecord.children, data, expandedLevels,
-                    expandedStates, primaryKey, indentationLevel + 1);
+                    expandedStates, gridID, indentationLevel + 1);
             }
         }
     }

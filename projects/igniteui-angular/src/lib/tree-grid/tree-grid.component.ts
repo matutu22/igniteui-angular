@@ -22,6 +22,7 @@ import { IgxGridBaseComponent } from '../grid-common/grid-base.component';
 
 import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
 import { GridBaseAPIService } from '../grid-common/api.service';
+import { IFlattenedRecord } from './tree-grid.pipes';
 
 let NEXT_ID = 0;
 
@@ -100,7 +101,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
     public set expandedStates(value) {
         this._expandedStates = this.cloneMap(value);
-
         this.cdr.detectChanges();
     }
 
@@ -130,6 +130,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         return mapCloned;
     }
 
+    public getIsExpandedRow(row: IFlattenedRecord) {
+        return this.gridAPI.get_row_expansion_state(this.id, row);
+    }
+
+    public toggleRowExpansion(row: IFlattenedRecord) {
+        this.gridAPI.toggle_row_expansion(this.id, row);
+    }
 
     /**
     * @hidden

@@ -160,6 +160,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ContentChildren(IgxChildLayoutComponent, { read: IgxChildLayoutComponent, descendants: true })
     public childLayoutList: QueryList<IgxChildLayoutComponent>;
 
+    public get childLayoutKey() {
+        return this.childLayoutList.length > 0 ? this.childLayoutList.first.key : null;
+    }
+
     /**
      * @hidden
      */

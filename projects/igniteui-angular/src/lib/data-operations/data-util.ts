@@ -149,7 +149,7 @@ export class DataUtil {
         }
         return false;
     }
-    public static addHierarchy<T>(data: T[], state, primaryKey): T[] {
+    public static addHierarchy<T>(data: T[], state, primaryKey, childKey): T[] {
         const result = [];
 
         data.forEach((v) => {
@@ -157,8 +157,8 @@ export class DataUtil {
 
             // Uncomment code bellow in order to update data when collapsing/expanding to render new child grid.
             // Otherwise the visible chunk size can become smaller than viewport. This is slower though.
-            if (DataUtil.isExpanded(state, v, primaryKey)/* && v['Products'] && v['Products'].length !== 0*/) {
-                result.push({rowID: primaryKey ? v[primaryKey] : v,  childGridData: v['Products'] });
+            if (v[childKey] && DataUtil.isExpanded(state, v, primaryKey)/* && v['Products'] && v['Products'].length !== 0*/) {
+                result.push({rowID: primaryKey ? v[primaryKey] : v,  childGridData: v[childKey] });
             }
         });
         return result;

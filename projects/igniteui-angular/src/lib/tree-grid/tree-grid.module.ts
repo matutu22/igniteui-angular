@@ -10,6 +10,7 @@ import { GridBaseAPIService } from '../grid-common';
 import { IgxTreeGridHierarchizingPipe } from './tree-grid.pipes';
 import { IgxTreeGridFlatteningPipe } from './tree-grid.pipes';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
+import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { IgxTreeGridCellComponent } from './tree-cell.component';
     IgxTreeGridRowComponent,
     IgxTreeGridCellComponent,
     IgxTreeGridHierarchizingPipe,
-    IgxTreeGridFlatteningPipe
+    IgxTreeGridFlatteningPipe,
+    IgxTreeGridFilteringPipe
   ],
   exports: [
     IgxTreeGridComponent,

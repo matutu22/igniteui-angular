@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
 import { GridBaseAPIService } from '../grid-common/api.service';

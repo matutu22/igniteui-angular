@@ -43,13 +43,14 @@
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'>
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-    <ng-template igxFor let-rowData [igxForOf]="data | treeGridHierarchizing:childDataKey:id:pipeTrigger |
-        treeGridSorting:sortingExpressions:id:pipeTrigger |
-        treeGridFlattening:id:expandedLevels:expandedStates:pipeTrigger"
+    <ng-template igxFor let-rowData [igxForOf]="data | treeGridHierarchizing:childDataKey:id:pipeTrigger
+    | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger 
+    | treeGridSorting:sortingExpressions:id:pipeTrigger
+    | treeGridFlattening:id:expandedLevels:expandedStates:pipeTrigger"
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-template #record_template>
-            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [flatRow]="rowData" #row>
+            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [flatRow]="rowData" [style.opacity]="rowData.isFilteredOutParent ? 0.5 : 1" #row>
             </igx-tree-grid-row>
         </ng-template>
      

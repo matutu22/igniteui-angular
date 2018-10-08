@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
 import { GridBaseAPIService } from '../grid-common/api.service';
@@ -11,6 +10,7 @@ import { ISortingExpression } from '../../public_api';
 export interface IHierarchicalRecord {
     data: any;
     children: IHierarchicalRecord[];
+    isFilteredOutParent?: boolean;
 }
 
 export interface IHierarchizedResult {
@@ -21,6 +21,7 @@ export interface IFlattenedRecord {
     data: any;
     hasChildren: boolean;
     indentationLevel: number;
+    isFilteredOutParent?: boolean;
 }
 
 /**
@@ -98,11 +99,17 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             const flatRecord: IFlattenedRecord = {
                 data: hirarchicalRecord.data,
                 indentationLevel: indentationLevel,
-                hasChildren: hirarchicalRecord.children && hirarchicalRecord.children.length > 0
+                hasChildren: hirarchicalRecord.children && hirarchicalRecord.children.length > 0,
+                isFilteredOutParent: hirarchicalRecord.isFilteredOutParent
             };
             data.push(flatRecord);
 
-            const isExpanded = this.gridAPI.get_row_expansion_state(gridID, flatRecord);
+            let isExpanded = this.gridAPI.get_row_expansion_state(gridID, flatRecord);
+
+            if (!isExpanded && hirarchicalRecord.isFilteredOutParent) {
+                this.gridAPI.toggle_row_expansion(gridID, flatRecord);
+                isExpanded = true;
+            }
 
             if (isExpanded) {
                 this.getFlatDataRecusrive(hirarchicalRecord.children, data, expandedLevels,

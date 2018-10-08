@@ -6,6 +6,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
 import { GridBaseAPIService } from '../grid-common/api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
+import { ISortingExpression } from '../../public_api';
 
 export interface IHierarchicalRecord {
     data: any;
@@ -108,5 +109,32 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
                     expandedStates, gridID, indentationLevel + 1);
             }
         }
+    }
+}
+
+@Pipe({
+    name: 'treeGridSorting',
+    pure: true
+})
+export class IgxTreeGridSortingPipe implements PipeTransform {
+    private gridAPI: IgxTreeGridAPIService;
+
+    constructor(gridAPI: GridBaseAPIService<IGridBaseComponent>) {
+        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+    }
+
+    public transform(
+        collection: IHierarchizedResult,
+        expressions: ISortingExpression | ISortingExpression[],
+        id: string, pipeTrigger: number): IHierarchizedResult {
+        const state = { expressions: [] };
+        state.expressions = this.gridAPI.get(id).sortingExpressions;
+
+        if (!state.expressions.length) {
+            return collection;
+        }
+
+        // return DataUtil.sort(cloneArray(collection), state);
+        return collection;
     }
 }

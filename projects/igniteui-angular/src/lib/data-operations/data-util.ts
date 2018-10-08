@@ -19,6 +19,8 @@ import { IDataState } from './data-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
+import { IHierarchizedResult } from '../tree-grid/tree-grid.pipes';
+import { cloneArray } from '../core/utils';
 
 export enum DataType {
     String = 'string',
@@ -28,6 +30,12 @@ export enum DataType {
 }
 
 export class DataUtil {
+    /**
+     * Merge all the properties of defaults object to target object for which
+     * the target object has no value.
+     * @param target Target object where to merge the properties
+     * @param defaults Object with default properties to merge.
+     */
     public static mergeDefaultProperties(target: object, defaults: object) {
         if (!defaults) {
             return target;
@@ -45,18 +53,33 @@ export class DataUtil {
             });
         return target;
     }
+
+    /**
+     * Sorts provided data using the sorting strategy of provided state. If no sorting strategy
+     * is provided will sort with default one
+     * @param data Data to sort
+     * @param state Sorting state to use while sorting provided data
+     */
     public static sort<T>(data: T[], state: ISortingState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each sorting expression(if not set)
         return state.strategy.sort(data, state.expressions);
     }
+
+    public static hierarchicalSort(data: IHierarchizedResult, state: ISortingState): IHierarchizedResult {
+        // let result: IHierarchizedResult;
+        // return result;
+        return data;
+    }
+
     public static group<T>(data: T[], state: IGroupingState): IGroupByResult {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each grouping expression(if not set)
         return state.strategy.groupBy(data, state.expressions);
     }
+
     public static restoreGroups(groupData: IGroupByResult, state: IGroupingState, groupsRecords: any[] = []): any[] {
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         if (state.expressions.length === 0) {
@@ -108,6 +131,7 @@ export class DataUtil {
         }
         return result;
     }
+
     public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {
             return data;
@@ -139,6 +163,7 @@ export class DataUtil {
         }
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
+
     public static filter<T>(data: T[], state: IFilteringState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, filteringStateDefaults);
@@ -147,6 +172,7 @@ export class DataUtil {
         }
         return state.strategy.filter(data, state.expressionsTree);
     }
+
     public static process<T>(data: T[], state: IDataState): T[] {
         if (!state) {
             return data;

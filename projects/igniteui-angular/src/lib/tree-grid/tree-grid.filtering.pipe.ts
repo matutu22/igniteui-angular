@@ -12,7 +12,7 @@ import { IFilteringState } from '../data-operations/filtering-state.interface';
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     public filter(data: IHierarchicalRecord[], expressionsTree: IFilteringExpressionsTree): IHierarchicalRecord[] {
         let i;
-        let rec;
+        let rec: IHierarchicalRecord;
         const len = data.length;
         const res: IHierarchicalRecord[] = [];
         if (!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0 || !len) {
@@ -22,11 +22,14 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
             rec = data[i];
 
             if (rec.children) {
-                const filteredChildren = this.filter(cloneArray(rec.children), expressionsTree);
+                const filteredChildren = this.filter(rec.children, expressionsTree);
                 rec.children = filteredChildren.length > 0 ? filteredChildren : null;
             }
 
-            if (this.matchRecord(rec, expressionsTree) || (rec.children && rec.children.length > 0)) {
+            if (this.matchRecord(rec, expressionsTree)) {
+                res.push(rec);
+            } else if (rec.children && rec.children.length > 0) {
+                rec.isFilteredOutParent = true;
                 res.push(rec);
             }
         }
@@ -59,7 +62,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
 
         DataUtil.mergeDefaultProperties(state, { strategy: new TreeGridFilteringStrategy() });
 
-        const result = this.filter(cloneArray(hierarchyData.data), state);
+        const result = this.filter(hierarchyData.data, state);
         // grid.filteredData = result;
         return { data: result };
     }

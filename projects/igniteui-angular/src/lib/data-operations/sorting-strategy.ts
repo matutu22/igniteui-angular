@@ -141,3 +141,15 @@ export class SortingStrategy implements ISortingStrategy {
         return result;
     }
 }
+
+export class HierarchicalSortingStrategy extends SortingStrategy {
+    public compareObjects(obj1: object, obj2: object, key: string, reverse: number, ignoreCase: boolean) {
+        let a = obj1['data'][key];
+        let b = obj2['data'][key];
+        if (ignoreCase) {
+            a = a && a.toLowerCase ? a.toLowerCase() : a;
+            b = b && b.toLowerCase ? b.toLowerCase() : b;
+        }
+        return reverse * this.compareValues(a, b);
+    }
+}

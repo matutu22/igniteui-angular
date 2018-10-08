@@ -11,7 +11,7 @@ import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
 
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { ISortingState, SortingStateDefaults } from './sorting-state.interface';
-import { ISortingStrategy, SortingStrategy, IGroupByResult } from './sorting-strategy';
+import { ISortingStrategy, SortingStrategy, IGroupByResult, HierarchicalSortingStrategy } from './sorting-strategy';
 
 import { IPagingState, PagingError } from './paging-state.interface';
 
@@ -19,7 +19,7 @@ import { IDataState } from './data-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { IHierarchizedResult } from '../tree-grid/tree-grid.pipes';
+import { IHierarchizedResult, IHierarchicalRecord } from '../tree-grid/tree-grid.pipes';
 import { cloneArray } from '../core/utils';
 
 export enum DataType {
@@ -67,10 +67,16 @@ export class DataUtil {
         return state.strategy.sort(data, state.expressions);
     }
 
-    public static hierarchicalSort(data: IHierarchizedResult, state: ISortingState): IHierarchizedResult {
-        // let result: IHierarchizedResult;
-        // return result;
-        return data;
+    public static hierarchicalSort(hierarchicalData: IHierarchicalRecord[], state: ISortingState): IHierarchicalRecord[] {
+        state.strategy = new HierarchicalSortingStrategy();
+        const res: IHierarchicalRecord[] = this.sort(hierarchicalData, state);
+        res.forEach((hr: IHierarchicalRecord) => {
+            if (hr.children) {
+                hr.children = this.hierarchicalSort(hr.children, state);
+            }
+        });
+
+        return hierarchicalData;
     }
 
     public static group<T>(data: T[], state: IGroupingState): IGroupByResult {

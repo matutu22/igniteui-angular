@@ -19,11 +19,8 @@ import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
     IgxTreeGridCellComponent,
     IgxTreeGridHierarchizingPipe,
     IgxTreeGridFlatteningPipe,
-<<<<<<< HEAD
-    IgxTreeGridSortingPipe
-=======
+    IgxTreeGridSortingPipe,
     IgxTreeGridFilteringPipe
->>>>>>> ae4240e84cb7e201940e2357a439f1c24872c628
   ],
   exports: [
     IgxTreeGridComponent,

@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, ViewChildren, QueryList, ViewChild, HostBinding } from '@angular/core';
+import { Component, forwardRef, Input, ViewChildren, QueryList, ViewChild, HostBinding, DoCheck } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowComponent } from '../grid-common/row.component';
 import { IFlattenedRecord } from './tree-grid.pipes';
@@ -10,7 +10,7 @@ import { IgxGridCellComponent } from '../grid-common';
     templateUrl: 'tree-grid-row.component.html',
     providers: [{provide: IgxRowComponent, useExisting: forwardRef(() => IgxTreeGridRowComponent)}]
 })
-export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponent> {
+export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponent> implements DoCheck {
     private _flatRow: IFlattenedRecord;
 
     /**
@@ -44,5 +44,19 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
     @HostBinding('attr.aria-expanded')
     get expanded(): boolean {
         return this.grid.getIsExpandedRow(this.flatRow);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngDoCheck() {
+        this.isSelected = this.rowSelectable ?
+            this.flatRow.isFilteredOutParent ? false :
+            this.grid.allRowsSelected ? true : this.selection.is_item_selected(this.gridID, this.rowID) :
+            this.selection.is_item_selected(this.gridID, this.rowID);
+        this.cdr.markForCheck();
+        if (this.checkboxElement) {
+            this.checkboxElement.checked = this.isSelected;
+        }
     }
 }

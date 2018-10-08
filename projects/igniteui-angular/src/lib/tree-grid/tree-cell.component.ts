@@ -23,7 +23,12 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
         return this.row.expanded;
     }
 
-    public toggle() {
+    public toggle(event: Event) {
+        event.stopPropagation();
         (<IgxTreeGridComponent>this.grid).toggleRowExpansion(this.row.flatRow);
+    }
+
+    public onFocus(event: Event) {
+        event.stopPropagation();
     }
 }

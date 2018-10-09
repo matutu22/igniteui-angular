@@ -5,8 +5,8 @@ export function DeprecateClass(message: string): ClassDecorator {
 }
 
 export function DeprecateMethod(message: string): MethodDecorator {
-    return (constructor: any) => {
-        console.warn(constructor.constructor.name + ': ' + message);
+    return (constructor: any, key: string, descriptor: any) => {
+        console.warn((constructor.name ? constructor.name : constructor.constructor.name) + ': ' + message);
     };
 }
 

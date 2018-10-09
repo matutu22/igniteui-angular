@@ -122,7 +122,9 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 /**
  * @hidden
  */
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class IgxColumnMovingService {
     private _icon: any;
     private _column: IgxColumnComponent;

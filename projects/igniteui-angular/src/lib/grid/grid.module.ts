@@ -17,6 +17,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxGridCommonModule } from '../grid-common/common/grid-common.module';
 import { GridBaseAPIService } from '../grid-common/api.service';
+import { DeprecateMethod } from '../core/deprecateDecorators';
 
 @NgModule({
   declarations: [
@@ -45,4 +46,10 @@ import { GridBaseAPIService } from '../grid-common/api.service';
   ]
 })
 export class IgxGridModule {
+  @DeprecateMethod('IgxGridModule.forRoot method is deprecated. Use IgxGridModule instead.')
+  public static forRoot() {
+    return {
+        ngModule: IgxGridModule
+    };
+  }
 }

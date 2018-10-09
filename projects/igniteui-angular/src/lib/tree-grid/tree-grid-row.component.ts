@@ -25,7 +25,7 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
     public cells: QueryList<any>;
 
     /**
-     *  The flat data tow passed to the tree grid row component.
+     *  The flat data row passed to the tree grid row component.
      *
      * ```typescript
      * ```

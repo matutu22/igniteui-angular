@@ -137,14 +137,19 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
     public transform(
         hierarchicalData: IHierarchizedResult,
         expressions: ISortingExpression | ISortingExpression[],
-        id: string, pipeTrigger: number): IHierarchizedResult {
-        const state = { expressions: [] };
-        state.expressions = this.gridAPI.get(id).sortingExpressions;
+        id: string,
+        pipeTrigger: number): IHierarchizedResult {
+            const state = { expressions: [] };
+            const grid = this.gridAPI.get(id);
+            state.expressions = grid.sortingExpressions;
 
-        if (!state.expressions.length) {
-            return hierarchicalData;
-        }
+            let result: IHierarchizedResult;
+            if (!state.expressions.length) {
+                result = hierarchicalData;
+            } else {
+                result = { data: DataUtil.hierarchicalSort(cloneArray(hierarchicalData.data), state)};
+            }
 
-        return { data: DataUtil.hierarchicalSort(cloneArray(hierarchicalData.data, true), state)};
+            return result;
     }
 }

@@ -23,6 +23,7 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { DataType } from '../data-operations/data-util';
 import { DropPosition } from './common/grid-common.misc';
 import { ISummaryExpression } from './summaries/grid-summary';
+import { ComponentRef } from '@angular/core/src/render3';
 
 const DEFAULT_TARGET_RECORD_NUMBER = 10;
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -819,7 +820,7 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
         const columns = [];
 
         fields.forEach((field) => {
-            const ref = grid.viewRef.createComponent(factory);
+            const ref = grid.viewRef.createComponent(factory, null, grid.viewRef.injector);
             ref.instance.field = field;
             ref.instance.dataType = this.resolve_data_types(grid.data[0][field]);
             ref.changeDetectorRef.detectChanges();

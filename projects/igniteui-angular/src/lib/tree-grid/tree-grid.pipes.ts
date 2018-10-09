@@ -80,10 +80,14 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         expandedLevels: number, expandedStates: Map<any, boolean>, pipeTrigger: number): any[] {
 
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
-        const primaryKey = grid.primaryKey;
         const data: IFlattenedRecord[] = [];
 
         this.getFlatDataRecusrive(collection.data, data, expandedLevels, expandedStates, id, 0);
+
+        if (grid.filteringExpressionsTree && grid.filteringExpressionsTree.filteringOperands &&
+            grid.filteringExpressionsTree.filteringOperands.length > 0 && data.length > 0) {
+            grid.filteredData = data.filter(r => !r.isFilteredOutParent).map(r => r.data);
+        }
 
         return data;
     }

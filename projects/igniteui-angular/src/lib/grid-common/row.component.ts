@@ -222,7 +222,7 @@ export class IgxRowComponent<T extends IGridBaseComponent> implements DoCheck {
     protected isFocused = false;
 
     constructor(public gridAPI: GridBaseAPIService<T>,
-                private selection: IgxSelectionAPIService,
+                protected selection: IgxSelectionAPIService,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 

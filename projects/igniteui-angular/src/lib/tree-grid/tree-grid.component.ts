@@ -83,9 +83,19 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     public childDataKey;
 
     /**
-     * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
+     * An @Input property that sets the foreign key of the `IgxTreeGridComponent`.
      * ```html
-     * <igx-tree-grid #grid [data]="localData" [showToolbar]="true" [childDataKey]="employees" [autoGenerate]="true"></iigx-tree-grid>
+     * <igx-tree-grid #grid [data]="localData" [primaryKey]="employeeID" [foreignKey]="parentID" [autoGenerate]="true"></iigx-tree-grid>
+     * ```
+	 * @memberof IgxTreeGridRowComponent
+     */
+    @Input()
+    public foreignKey;
+
+    /**
+     * An @Input property that sets the count of levels to expand by default in the `IgxTreeGridComponent`.
+     * ```html
+     * <igx-tree-grid #grid [data]="localData" [childDataKey]="employees" expandedLevels="1" [autoGenerate]="true"></iigx-tree-grid>
      * ```
 	 * @memberof IgxTreeGridRowComponent
      */

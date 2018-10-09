@@ -1,0 +1,31 @@
+<div class="wrapper">
+    <app-page-header title="Tree Grid Flat Data">
+        Displays flat data with primary/foreign key relation.
+    </app-page-header>
+
+    <div class="sample-content">
+        <div class="sample-column">
+            <igx-tree-grid #grid1 [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true" [paging]="false" [width]="'900px'" [height]="'500px'">
+                <igx-column *ngFor="let c of columns" [field]="c.field"
+                                                    [header]="c.label"
+                                                    [pinned]="c.pinned"
+                                                    [movable]="c.movable"
+                                                    [groupable]="false"
+                                                    [resizable]="c.resizable"
+                                                    [width]="c.width"
+                                                    [sortable]="true"
+                                                    [filterable]="true"
+                                                    [editable]="true"
+                                                    [hidden]="c.hidden"
+                                                    [hasSummary]="c.summary"
+                                                    [minWidth]="c.minWidth"
+                                                    [maxWidth]="c.maxWidth">
+                </igx-column>
+            </igx-tree-grid>
+
+            <div>
+                <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+            </div>
+        </div>
+    </div>
+</div>

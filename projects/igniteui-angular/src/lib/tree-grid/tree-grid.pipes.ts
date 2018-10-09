@@ -38,13 +38,49 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
-    public transform(collection: any[], childDataKey: string,
+    public transform(collection: any[], primaryKey: string, foreignKey: string, childDataKey: string,
         id: string, pipeTrigger: number): IHierarchizedResult {
-        const hirerchicalRecords = this.hierarchizeRecursive(collection, childDataKey);
+        let hirerchicalRecords: IHierarchicalRecord[] = [];
+        if (primaryKey && foreignKey) {
+            hirerchicalRecords = this.hierarchizeFlatData(collection, primaryKey, foreignKey);
+        } else if (childDataKey) {
+            hirerchicalRecords = this.hierarchizeRecursive(collection, childDataKey);
+        }
 
         return {
             data: hirerchicalRecords
         };
+    }
+
+    private hierarchizeFlatData(collection: any[], primaryKey: string, foreignKey: string): IHierarchicalRecord[] {
+        const map: Map<any, IHierarchicalRecord> = new Map<any, IHierarchicalRecord>();
+        const result: IHierarchicalRecord[] = [];
+        const missingParentRecords: IHierarchicalRecord[] = [];
+        collection.forEach(row => {
+            const record: IHierarchicalRecord = {
+                data: row,
+                children: []
+            };
+            const parent = map.get(row[foreignKey]);
+            if (parent) {
+                parent.children.push(record);
+            } else {
+                missingParentRecords.push(record);
+            }
+
+            map.set(row[primaryKey], record);
+        });
+
+        missingParentRecords.forEach(record => {
+            const parent = map.get(record.data[foreignKey]);
+            if (parent) {
+                parent.children.push(record);
+            } else {
+                result.push(record);
+            }
+        });
+
+        return result;
     }
 
     private hierarchizeRecursive(collection: any[], childDataKey: string): IHierarchicalRecord[] {

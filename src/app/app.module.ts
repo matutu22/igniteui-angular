@@ -70,6 +70,7 @@ import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
+import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 
 const components = [
     AppComponent,
@@ -123,6 +124,7 @@ const components = [
     GridColumnGroupsSampleComponent,
     GridCellStylingSampleComponent,
     TreeGridSampleComponent,
+    TreeGridFlatDataSampleComponent,
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,

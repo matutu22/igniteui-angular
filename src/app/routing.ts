@@ -53,6 +53,7 @@ import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
+import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 
 const appRoutes = [
     {
@@ -272,6 +273,10 @@ const appRoutes = [
     {
         path: 'treeGrid',
         component: TreeGridSampleComponent
+    },
+    {
+        path: 'treeGridFlatData',
+        component: TreeGridFlatDataSampleComponent
     },
     {
         path: 'tooltip',

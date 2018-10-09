@@ -148,3 +148,31 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         return { data: DataUtil.hierarchicalSort(cloneArray(hierarchicalData.data, true), state)};
     }
 }
+
+@Pipe({
+    name: 'treeGridPaging',
+    pure: true
+})
+export class IgxTreeGridPagingPipe implements PipeTransform {
+    private gridAPI: IgxTreeGridAPIService;
+
+    constructor(gridAPI: GridBaseAPIService<IGridBaseComponent>) {
+        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+    }
+
+    public transform(collection: IFlattenedRecord[], page = 0, perPage = 15, id: string, pipeTrigger: number): IFlattenedRecord[] {
+        if (!this.gridAPI.get(id).paging) {
+            return collection;
+        }
+
+        const state = {
+            index: page,
+            recordsPerPage: perPage
+        };
+
+        const result: IFlattenedRecord[] = DataUtil.page(cloneArray(collection), state);
+
+        this.gridAPI.get(id).pagingState = state;
+        return result;
+    }
+}

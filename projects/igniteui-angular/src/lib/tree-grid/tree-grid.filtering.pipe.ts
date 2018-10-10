@@ -19,7 +19,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
             return data;
         }
         for (i = 0; i < len; i++) {
-            rec = data[i];
+            rec = DataUtil.cloneHierarchicalRecord(data[i]);
 
             if (rec.children) {
                 const filteredChildren = this.filter(rec.children, expressionsTree);

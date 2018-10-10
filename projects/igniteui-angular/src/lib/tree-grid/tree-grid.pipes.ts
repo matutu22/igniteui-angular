@@ -120,12 +120,16 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
 
         this.getFlatDataRecusrive(collection.data, data, expandedLevels, expandedStates, id, 0);
 
-        if (grid.filteringExpressionsTree && grid.filteringExpressionsTree.filteringOperands &&
-            grid.filteringExpressionsTree.filteringOperands.length > 0 && data.length > 0) {
+        if (this.hasFiltering(grid) && data.length > 0) {
             grid.filteredData = data.filter(r => !r.isFilteredOutParent).map(r => r.data);
         }
 
         return data;
+    }
+
+    private hasFiltering(grid: IgxTreeGridComponent): boolean {
+        return grid.filteringExpressionsTree && grid.filteringExpressionsTree.filteringOperands &&
+            grid.filteringExpressionsTree.filteringOperands.length > 0;
     }
 
     private getFlatDataRecusrive(collection: IHierarchicalRecord[], data: IFlattenedRecord[] = [],
@@ -145,9 +149,11 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             data.push(flatRecord);
 
             let isExpanded = this.gridAPI.get_row_expansion_state(gridID, flatRecord);
+            const grid: IgxTreeGridComponent = this.gridAPI.get(gridID);
 
-            if (!isExpanded && hirarchicalRecord.isFilteredOutParent) {
-                this.gridAPI.toggle_row_expansion(gridID, flatRecord);
+            if (flatRecord.hasChildren && !isExpanded && this.hasFiltering(grid)) {
+                const rowID = this.gridAPI.get_row_id(gridID, flatRecord);
+                grid.expandedStates.set(rowID, true);
                 isExpanded = true;
             }
 

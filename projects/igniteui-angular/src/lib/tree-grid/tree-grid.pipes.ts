@@ -183,7 +183,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
             if (!state.expressions.length) {
                 result = hierarchicalData;
             } else {
-                result = { data: DataUtil.hierarchicalSort(cloneArray(hierarchicalData.data), state)};
+                result = { data: DataUtil.hierarchicalSort(hierarchicalData.data, state)};
             }
 
             return result;

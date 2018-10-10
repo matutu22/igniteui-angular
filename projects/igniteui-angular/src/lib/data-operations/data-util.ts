@@ -69,14 +69,28 @@ export class DataUtil {
 
     public static hierarchicalSort(hierarchicalData: IHierarchicalRecord[], state: ISortingState): IHierarchicalRecord[] {
         state.strategy = new HierarchicalSortingStrategy();
-        const res: IHierarchicalRecord[] = this.sort(hierarchicalData, state);
-        res.forEach((hr: IHierarchicalRecord) => {
-            if (hr.children) {
-                hr.children = this.hierarchicalSort(hr.children, state);
+        let res: IHierarchicalRecord[] = [];
+
+        hierarchicalData.forEach((hr: IHierarchicalRecord) => {
+            const rec: IHierarchicalRecord = DataUtil.cloneHierarchicalRecord(hr);
+            if (rec.children) {
+                rec.children = DataUtil.hierarchicalSort(rec.children, state);
             }
+            res.push(rec);
         });
 
-        return hierarchicalData;
+        res = DataUtil.sort(res, state);
+
+        return res;
+    }
+
+    public static cloneHierarchicalRecord(hierarchicalRecord: IHierarchicalRecord) {
+        const rec: IHierarchicalRecord = {
+            data: hierarchicalRecord.data,
+            children: hierarchicalRecord.children,
+            isFilteredOutParent: hierarchicalRecord.isFilteredOutParent
+        };
+        return rec;
     }
 
     public static group<T>(data: T[], state: IGroupingState): IGroupByResult {

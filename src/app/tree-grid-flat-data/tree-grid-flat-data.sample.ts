@@ -55,4 +55,8 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
             { 'employeeID': 23, 'PID': 20, 'firstName': 'Jeremy', 'lastName': 'Donaldson', 'Title': 'Software Developer' }
         ];
     }
+
+    public addRow() {
+        this.grid1.addRow({ 'employeeID': 24, 'PID': 5, 'firstName': 'John', 'lastName': 'Doe', 'Title': 'Junior Sales Representative' });
+    }
 }

@@ -257,8 +257,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
                 }
             }
 
-            this._filteringExpressionsTree = value;
-            this._pipeTrigger++;
+            // clone the filtering expression tree in order to trigger the filtering pipe
+            const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
+            filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
+            this._filteringExpressionsTree = filteringExpressionTreeClone;
+
             this.cdr.markForCheck();
             requestAnimationFrame(() => {
                 this.clearSummaryCache();

@@ -4,7 +4,7 @@ import { SampleTestData } from './sample-test-data.spec';
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expandedLevels="1" width="900px" height="500px">
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="900px" height="600px">
         <igx-column [field]="'ID'" [sortable]="true"></igx-column>
         <igx-column [field]="'Name'" [sortable]="true"></igx-column>
         <igx-column [field]="'HireDate'" [sortable]="true"></igx-column>
@@ -14,5 +14,5 @@ import { SampleTestData } from './sample-test-data.spec';
 })
 export class IgxTreeGridSortingComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
-    public data = SampleTestData.employeeTreeData();
+    public data = SampleTestData.employeeSmallTreeData();
 }

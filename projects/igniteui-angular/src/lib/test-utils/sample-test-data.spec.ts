@@ -800,7 +800,7 @@ export class SampleTestData {
             phone: '№ 573-394-9254'
         }];
     }
-    
+
     /* Tree data: Every employee node has ID, Name, HireDate, Age and Employees */
     public static employeeTreeData = () => ([
         {

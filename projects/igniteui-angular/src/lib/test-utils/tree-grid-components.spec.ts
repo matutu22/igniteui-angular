@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxTreeGridComponent } from '../tree-grid';
+import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
+import { Calendar } from '../calendar/calendar';
 
 @Component({
     template: `
@@ -15,4 +16,21 @@ import { SampleTestData } from './sample-test-data.spec';
 export class IgxTreeGridSortingComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expandedLevels="2" width="900px" height="600px">
+        <igx-column [field]="'ID'" [filterable]="true"></igx-column>
+        <igx-column [field]="'Name'" [filterable]="true"></igx-column>
+        <igx-column [field]="'HireDate'" [filterable]="true"></igx-column>
+        <igx-column [field]="'Age'" [filterable]="true"></igx-column>
+    </igx-tree-grid>
+        `
+})
+export class IgxTreeGridFilteringComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+    public timeGenerator: Calendar = new Calendar();
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 }

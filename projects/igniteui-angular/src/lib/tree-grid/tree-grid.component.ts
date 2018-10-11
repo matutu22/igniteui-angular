@@ -92,6 +92,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     @Input()
     public foreignKey;
 
+    private _expandedLevels = Infinity;
+
     /**
      * An @Input property that sets the count of levels to expand by default in the `IgxTreeGridComponent`.
      * ```html
@@ -100,7 +102,14 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 	 * @memberof IgxTreeGridRowComponent
      */
     @Input()
-    public expandedLevels = Infinity;
+    public get expandedLevels(): number {
+        return this._expandedLevels;
+    }
+
+    public set expandedLevels(value: number) {
+        this._expandedLevels = value;
+        this.cdr.markForCheck();
+    }
 
     private _expandedStates:  Map<any, boolean> = new Map<any, boolean>();
 

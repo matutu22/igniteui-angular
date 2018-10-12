@@ -1,15 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
-import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
 import { IgxTreeGridSortingComponent } from '../test-utils/tree-grid-components.spec';
-
-const SORTING_ICON_NONE_CONTENT = 'none';
-const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
-const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 
 describe('IgxTreeGrid - Sorting', () => {
     let fix;
@@ -356,11 +350,7 @@ describe('IgxTreeGrid - Sorting', () => {
             expect(treeGrid.getCellByColumn(5, 'Age').value).toEqual(25);
         });
     });
-
-
-
-
-})
+});
 
 function getHeaderCell(fix, columnKey) {
     const headerCells = fix.debugElement.queryAll(By.css('igx-grid-header'));

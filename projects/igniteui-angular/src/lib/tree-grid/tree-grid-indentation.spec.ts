@@ -40,16 +40,16 @@ fdescribe('IgxTreeGrid - Indentation', () => {
 
     it('should have correct indentation for every record of each level', () => {
         const rows = sortElementsVertically(getAllRows(fix));
-        verifyRowIndentationLevel(rows[0], 0);
-        verifyRowIndentationLevel(rows[1], 1);
-        verifyRowIndentationLevel(rows[2], 1);
-        verifyRowIndentationLevel(rows[3], 1);
-        verifyRowIndentationLevel(rows[4], 2);
-        verifyRowIndentationLevel(rows[5], 2);
-        verifyRowIndentationLevel(rows[6], 2);
-        verifyRowIndentationLevel(rows[7], 0);
-        verifyRowIndentationLevel(rows[8], 0);
-        verifyRowIndentationLevel(rows[9], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(3), rows[3], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 2);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(5), rows[5], 2);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(6), rows[6], 2);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(7), rows[7], 0);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(8), rows[8], 0);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(9), rows[9], 1);
     });
 
     it('should persist the indentation after sorting', () => {
@@ -58,17 +58,17 @@ fdescribe('IgxTreeGrid - Indentation', () => {
         treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc });
         fix.detectChanges();
 
-        const rows = sortElementsVertically(getAllRows(fix));
-        verifyRowIndentationLevel(rows[0], 0);
-        verifyRowIndentationLevel(rows[1], 1);
-        verifyRowIndentationLevel(rows[2], 0);
-        verifyRowIndentationLevel(rows[3], 1);
-        verifyRowIndentationLevel(rows[4], 1);
-        verifyRowIndentationLevel(rows[5], 1);
-        verifyRowIndentationLevel(rows[6], 2);
-        verifyRowIndentationLevel(rows[7], 2);
-        verifyRowIndentationLevel(rows[8], 2);
-        verifyRowIndentationLevel(rows[9], 0);
+        const rows = sortElementsVertically(getAllRows(fix));        
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 0);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(3), rows[3], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(5), rows[5], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(6), rows[6], 2);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(7), rows[7], 2);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(8), rows[8], 2);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(9), rows[9], 0);
     });
 
     it('should persist the indentation after filtering', () => {
@@ -79,15 +79,15 @@ fdescribe('IgxTreeGrid - Indentation', () => {
         fix.detectChanges();
 
         const rows = sortElementsVertically(getAllRows(fix));
-        verifyRowIndentationLevel(rows[0], 0);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
 
         // This row does not satisfy the filtering, but is present in the DOM with lowered opacity
         // in order to indicate that it is a parent of another record that satisfies the filtering.
-        verifyRowIndentationLevel(rows[1], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
 
-        verifyRowIndentationLevel(rows[2], 2);
-        verifyRowIndentationLevel(rows[3], 0);
-        verifyRowIndentationLevel(rows[4], 0);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 2);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(3), rows[3], 0);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 0);
     });
 
     it('should persist the indentation on all pages when using paging', () => {
@@ -99,10 +99,10 @@ fdescribe('IgxTreeGrid - Indentation', () => {
         // Verify page 1
         let rows = sortElementsVertically(getAllRows(fix));
         expect(rows.length).toBe(4, 'Incorrect number of rows on page 1.');
-        verifyRowIndentationLevel(rows[0], 0);
-        verifyRowIndentationLevel(rows[1], 1);
-        verifyRowIndentationLevel(rows[2], 1);
-        verifyRowIndentationLevel(rows[3], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(3), rows[3], 1);
 
         treeGrid.page = 1;
         fix.detectChanges();
@@ -110,10 +110,10 @@ fdescribe('IgxTreeGrid - Indentation', () => {
         // Verify page 2
         rows = sortElementsVertically(getAllRows(fix));
         expect(rows.length).toBe(4, 'Incorrect number of rows on page 2.');
-        verifyRowIndentationLevel(rows[0], 2);
-        verifyRowIndentationLevel(rows[1], 2);
-        verifyRowIndentationLevel(rows[2], 2);
-        verifyRowIndentationLevel(rows[3], 0);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 2);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 2);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 2);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(3), rows[3], 0);
 
         treeGrid.page = 2;
         fix.detectChanges();
@@ -121,8 +121,8 @@ fdescribe('IgxTreeGrid - Indentation', () => {
         // Verify page 3
         rows = sortElementsVertically(getAllRows(fix));
         expect(rows.length).toBe(2, 'Incorrect number of rows on page 3.');
-        verifyRowIndentationLevel(rows[0], 0);
-        verifyRowIndentationLevel(rows[1], 1);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
+        verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
     });
 });
 
@@ -154,8 +154,8 @@ function verifyCellsPosition(rows, expectedColumnsCount) {
     });
 }
 
-function verifyRowIndentationLevel(row, expectedIndentationLevel) {
-    const treeCell = getTreeCell(row);
+function verifyRowIndentationLevel(rowComponent, rowDOM, expectedIndentationLevel) {
+    const treeCell = getTreeCell(rowDOM);
     const divChildren = treeCell.queryAll(By.css('div'));
 
     // If 'expectedIndentationLevel' is 0, we expect the row to be a root level row
@@ -168,6 +168,9 @@ function verifyRowIndentationLevel(row, expectedIndentationLevel) {
         expect(indentationDiv).toBeDefined();
         expect(indentationDiv).not.toBeNull();
     }
+
+    // Verify rowComponent's indentation API.
+    expect(rowComponent.indentation).toBe(expectedIndentationLevel);
 }
 
 function sortElementsVertically(arr) {

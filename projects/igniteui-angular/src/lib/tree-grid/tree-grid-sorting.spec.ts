@@ -111,9 +111,9 @@ describe('IgxTreeGrid - Sorting', () => {
 
         it('should sort treeGrid by multiple expressions through API', () => {
             // Test prerequisites (need to have multiple records with the same name on every level)
-            treeGrid.getCellByColumn(0, 'Name').value = 'Ana Sanders';
-            treeGrid.getCellByColumn(2, 'Name').value = 'Michael Langdon';
-            treeGrid.getCellByColumn(4, 'Name').value = 'Peter Lewis';
+            treeGrid.data[0].Name = 'Ana Sanders';
+            treeGrid.data[0].Employees[1].Name = 'Michael Langdon';
+            treeGrid.data[0].Employees[2].Employees[0].Name = 'Peter Lewis';
             fix.detectChanges();
 
             const exprs = [
@@ -130,31 +130,31 @@ describe('IgxTreeGrid - Sorting', () => {
             expect(treeGrid.getCellByColumn(0, 'Name').value).toEqual('Ana Sanders');
             expect(treeGrid.getCellByColumn(0, 'Age').value).toEqual(55);
 
-            expect(treeGrid.getCellByColumn(2, 'Name').value).toEqual('Ana Sanders');
-            expect(treeGrid.getCellByColumn(2, 'Age').value).toEqual(42);
+            expect(treeGrid.getCellByColumn(7, 'Name').value).toEqual('Ana Sanders');
+            expect(treeGrid.getCellByColumn(7, 'Age').value).toEqual(42);
 
             expect(treeGrid.getCellByColumn(9, 'Name').value).toEqual('Yang Wang');
             expect(treeGrid.getCellByColumn(9, 'Age').value).toEqual(61);
 
             // Verify second level multiple expressions sorting
-            expect(treeGrid.getCellByColumn(3, 'Name').value).toEqual('Michael Langdon');
-            expect(treeGrid.getCellByColumn(3, 'Age').value).toEqual(30);
+            expect(treeGrid.getCellByColumn(1, 'Name').value).toEqual('Michael Langdon');
+            expect(treeGrid.getCellByColumn(1, 'Age').value).toEqual(30);
 
-            expect(treeGrid.getCellByColumn(4, 'Name').value).toEqual('Michael Langdon');
-            expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(29);
+            expect(treeGrid.getCellByColumn(2, 'Name').value).toEqual('Michael Langdon');
+            expect(treeGrid.getCellByColumn(2, 'Age').value).toEqual(29);
 
-            expect(treeGrid.getCellByColumn(8, 'Name').value).toEqual('Monica Reyes');
-            expect(treeGrid.getCellByColumn(8, 'Age').value).toEqual(31);
+            expect(treeGrid.getCellByColumn(3, 'Name').value).toEqual('Monica Reyes');
+            expect(treeGrid.getCellByColumn(3, 'Age').value).toEqual(31);
 
             // Verify third level multiple expressions sorting
+            expect(treeGrid.getCellByColumn(4, 'Name').value).toEqual('Peter Lewis');
+            expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
+
             expect(treeGrid.getCellByColumn(5, 'Name').value).toEqual('Peter Lewis');
-            expect(treeGrid.getCellByColumn(5, 'Age').value).toEqual(35);
+            expect(treeGrid.getCellByColumn(5, 'Age').value).toEqual(25);
 
-            expect(treeGrid.getCellByColumn(6, 'Name').value).toEqual('Peter Lewis');
-            expect(treeGrid.getCellByColumn(6, 'Age').value).toEqual(25);
-
-            expect(treeGrid.getCellByColumn(7, 'Name').value).toEqual('Sven Ottlieb');
-            expect(treeGrid.getCellByColumn(7, 'Age').value).toEqual(44);
+            expect(treeGrid.getCellByColumn(6, 'Name').value).toEqual('Sven Ottlieb');
+            expect(treeGrid.getCellByColumn(6, 'Age').value).toEqual(44);
         });
 
         it('should clear sorting of treeGrid for one column only through API', () => {
@@ -265,9 +265,9 @@ describe('IgxTreeGrid - Sorting', () => {
 
         it('should sort treeGrid by multiple expressions through UI', () => {
             // Test prerequisites (need to have multiple records with the same name on every level)
-            treeGrid.getCellByColumn(0, 'Name').value = 'Ana Sanders';
-            treeGrid.getCellByColumn(2, 'Name').value = 'Michael Langdon';
-            treeGrid.getCellByColumn(4, 'Name').value = 'Peter Lewis';
+            treeGrid.data[0].Name = 'Ana Sanders';
+            treeGrid.data[0].Employees[1].Name = 'Michael Langdon';
+            treeGrid.data[0].Employees[2].Employees[0].Name = 'Peter Lewis';
             fix.detectChanges();
 
             // Sort by 'Name' in asc order and by 'Age' in desc order
@@ -284,31 +284,31 @@ describe('IgxTreeGrid - Sorting', () => {
             expect(treeGrid.getCellByColumn(0, 'Name').value).toEqual('Ana Sanders');
             expect(treeGrid.getCellByColumn(0, 'Age').value).toEqual(55);
 
-            expect(treeGrid.getCellByColumn(2, 'Name').value).toEqual('Ana Sanders');
-            expect(treeGrid.getCellByColumn(2, 'Age').value).toEqual(42);
+            expect(treeGrid.getCellByColumn(7, 'Name').value).toEqual('Ana Sanders');
+            expect(treeGrid.getCellByColumn(7, 'Age').value).toEqual(42);
 
             expect(treeGrid.getCellByColumn(9, 'Name').value).toEqual('Yang Wang');
             expect(treeGrid.getCellByColumn(9, 'Age').value).toEqual(61);
 
             // Verify second level multiple expressions sorting
-            expect(treeGrid.getCellByColumn(3, 'Name').value).toEqual('Michael Langdon');
-            expect(treeGrid.getCellByColumn(3, 'Age').value).toEqual(30);
+            expect(treeGrid.getCellByColumn(1, 'Name').value).toEqual('Michael Langdon');
+            expect(treeGrid.getCellByColumn(1, 'Age').value).toEqual(30);
 
-            expect(treeGrid.getCellByColumn(4, 'Name').value).toEqual('Michael Langdon');
-            expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(29);
+            expect(treeGrid.getCellByColumn(2, 'Name').value).toEqual('Michael Langdon');
+            expect(treeGrid.getCellByColumn(2, 'Age').value).toEqual(29);
 
-            expect(treeGrid.getCellByColumn(8, 'Name').value).toEqual('Monica Reyes');
-            expect(treeGrid.getCellByColumn(8, 'Age').value).toEqual(31);
+            expect(treeGrid.getCellByColumn(3, 'Name').value).toEqual('Monica Reyes');
+            expect(treeGrid.getCellByColumn(3, 'Age').value).toEqual(31);
 
             // Verify third level multiple expressions sorting
+            expect(treeGrid.getCellByColumn(4, 'Name').value).toEqual('Peter Lewis');
+            expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
+
             expect(treeGrid.getCellByColumn(5, 'Name').value).toEqual('Peter Lewis');
-            expect(treeGrid.getCellByColumn(5, 'Age').value).toEqual(35);
+            expect(treeGrid.getCellByColumn(5, 'Age').value).toEqual(25);
 
-            expect(treeGrid.getCellByColumn(6, 'Name').value).toEqual('Peter Lewis');
-            expect(treeGrid.getCellByColumn(6, 'Age').value).toEqual(25);
-
-            expect(treeGrid.getCellByColumn(7, 'Name').value).toEqual('Sven Ottlieb');
-            expect(treeGrid.getCellByColumn(7, 'Age').value).toEqual(44);
+            expect(treeGrid.getCellByColumn(6, 'Name').value).toEqual('Sven Ottlieb');
+            expect(treeGrid.getCellByColumn(6, 'Age').value).toEqual(44);
         });
 
         it('should clear sorting of treeGrid for one column only through UI', () => {

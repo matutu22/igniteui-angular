@@ -34,3 +34,18 @@ export class IgxTreeGridFilteringComponent {
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 }
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="900px" height="600px">
+        <igx-column [field]="'ID'"></igx-column>
+        <igx-column [field]="'Name'"></igx-column>
+        <igx-column [field]="'HireDate'"></igx-column>
+        <igx-column [field]="'Age'"></igx-column>
+    </igx-tree-grid>
+        `
+})
+export class IgxTreeGridSimpleComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeSmallTreeData();
+}

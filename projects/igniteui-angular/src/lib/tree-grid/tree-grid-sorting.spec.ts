@@ -7,7 +7,7 @@ import { IgxTreeGridSortingComponent } from '../test-utils/tree-grid-components.
 
 describe('IgxTreeGrid - Sorting', () => {
     let fix;
-    let treeGrid: IgxTreeGridComponent;    
+    let treeGrid: IgxTreeGridComponent;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -29,7 +29,7 @@ describe('IgxTreeGrid - Sorting', () => {
         it('should sort descending all treeGrid levels by column name through API', () => {
             treeGrid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false });
             fix.detectChanges();
-            
+
             // Verify first level records are desc sorted
             expect(treeGrid.getCellByColumn(0, 'Name').value).toEqual('Yang Wang');
             expect(treeGrid.getCellByColumn(1, 'Name').value).toEqual('John Winchester');
@@ -260,7 +260,7 @@ describe('IgxTreeGrid - Sorting', () => {
             // Verify first record of all 3 levels (default layout)
             expect(treeGrid.getCellByColumn(0, 'Age').value).toEqual(55);
             expect(treeGrid.getCellByColumn(1, 'Age').value).toEqual(30);
-            expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);            
+            expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
         });
 
         it('should sort treeGrid by multiple expressions through UI', () => {

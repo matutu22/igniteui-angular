@@ -1,4 +1,5 @@
 import { By } from '@angular/platform-browser';
+import { IgxTreeGridComponent } from '../tree-grid';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__group-row--padding-level-';
@@ -31,6 +32,9 @@ export class TreeGridFunctions {
         cell.nativeElement.dispatchEvent(new Event('click'));
     }
 
+    /**
+     * Verifies that the first cell of every row is its tree cell.
+    */
     public static verifyCellsPosition(rows, expectedColumnsCount) {
         rows.forEach((row) => {
             // Verify each row's cell count
@@ -47,6 +51,9 @@ export class TreeGridFunctions {
         });
     }
     
+    /**
+     * Verifies both the RowComponent and the respective DOM Row are with the expected indentation level.
+    */
     public static verifyRowIndentationLevel(rowComponent, rowDOM, expectedIndentationLevel) {
         const treeCell = TreeGridFunctions.getTreeCell(rowDOM);
         const divChildren = treeCell.queryAll(By.css('div'));
@@ -66,7 +73,21 @@ export class TreeGridFunctions {
         // Verify rowComponent's indentation API.
         expect(rowComponent.indentation).toBe(expectedIndentationLevel);
     }
-    
+
+    /**
+     * Verifies both the RowComponent and the respective DOM Row are with the expected indentation level.
+     * The rowIndex is the index of the row in ascending order (if rowIndex is 0, then the top-most row in view will be verified).
+    */
+    public static verifyRowIndentationLevelByIndex(fix, rowIndex, expectedIndentationLevel) {
+        const treeGrid = fix.debugElement.query(By.css('igx-tree-grid')).componentInstance as IgxTreeGridComponent;
+        const rowComponent = treeGrid.getRowByIndex(rowIndex);
+        const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
+        this.verifyRowIndentationLevel(rowComponent, rowDOM, expectedIndentationLevel);
+    }
+
+    /**
+     * Verifies that the specified column is the tree column, that contains the tree cells.
+    */
     public static verifyTreeColumn(fix, expectedTreeColumnKey, expectedColumnsCount) {
         const headerCell = TreeGridFunctions.getHeaderCell(fix, expectedTreeColumnKey);
         const treeCells = TreeGridFunctions.getTreeCells(fix);

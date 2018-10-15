@@ -4,6 +4,7 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { IgxTreeGridSortingComponent } from '../test-utils/tree-grid-components.spec';
+import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
 
 describe('IgxTreeGrid - Sorting', () => {
     let fix;
@@ -196,8 +197,8 @@ describe('IgxTreeGrid - Sorting', () => {
 
     describe('UI sorting', () => {
         it('should sort descending all treeGrid levels by column name through UI', () => {
-            clickHeaderCell(fix, 'Name');
-            clickHeaderCell(fix, 'Name');
+            TreeGridFunctions.clickHeaderCell(fix, 'Name');
+            TreeGridFunctions.clickHeaderCell(fix, 'Name');
             fix.detectChanges();
 
             // Verify first level records are desc sorted
@@ -217,7 +218,7 @@ describe('IgxTreeGrid - Sorting', () => {
         });
 
         it('should sort ascending all treeGrid levels by column name through UI', () => {
-            clickHeaderCell(fix, 'Age');
+            TreeGridFunctions.clickHeaderCell(fix, 'Age');
             fix.detectChanges();
 
             // Verify first level records are asc sorted
@@ -243,7 +244,7 @@ describe('IgxTreeGrid - Sorting', () => {
             expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
 
             // Click header once
-            clickHeaderCell(fix, 'Age');
+            TreeGridFunctions.clickHeaderCell(fix, 'Age');
             fix.detectChanges();
 
             // Verify first record of all 3 levels (sorted layout)
@@ -252,9 +253,9 @@ describe('IgxTreeGrid - Sorting', () => {
             expect(treeGrid.getCellByColumn(6, 'Age').value).toEqual(25);
 
             // Click header two more times
-            clickHeaderCell(fix, 'Age');
+            TreeGridFunctions.clickHeaderCell(fix, 'Age');
             fix.detectChanges();
-            clickHeaderCell(fix, 'Age');
+            TreeGridFunctions.clickHeaderCell(fix, 'Age');
             fix.detectChanges();
 
             // Verify first record of all 3 levels (default layout)
@@ -271,11 +272,11 @@ describe('IgxTreeGrid - Sorting', () => {
             fix.detectChanges();
 
             // Sort by 'Name' in asc order and by 'Age' in desc order
-            clickHeaderCell(fix, 'Name');
+            TreeGridFunctions.clickHeaderCell(fix, 'Name');
             fix.detectChanges();
-            clickHeaderCell(fix, 'Age');
+            TreeGridFunctions.clickHeaderCell(fix, 'Age');
             fix.detectChanges();
-            clickHeaderCell(fix, 'Age');
+            TreeGridFunctions.clickHeaderCell(fix, 'Age');
             fix.detectChanges();
 
             expect(treeGrid.sortingExpressions.length).toBe(2);
@@ -319,17 +320,17 @@ describe('IgxTreeGrid - Sorting', () => {
             fix.detectChanges();
 
             // Sort by 'Name' in asc order and by 'Age' in desc order
-            clickHeaderCell(fix, 'Name');
+            TreeGridFunctions.clickHeaderCell(fix, 'Name');
             fix.detectChanges();
-            clickHeaderCell(fix, 'Age');
+            TreeGridFunctions.clickHeaderCell(fix, 'Age');
             fix.detectChanges();
-            clickHeaderCell(fix, 'Age');
+            TreeGridFunctions.clickHeaderCell(fix, 'Age');
             fix.detectChanges();
 
             // Clear sorting for 'Name' column
-            clickHeaderCell(fix, 'Name');
+            TreeGridFunctions.clickHeaderCell(fix, 'Name');
             fix.detectChanges();
-            clickHeaderCell(fix, 'Name');
+            TreeGridFunctions.clickHeaderCell(fix, 'Name');
             fix.detectChanges();
 
             expect(treeGrid.sortingExpressions.length).toBe(1);
@@ -351,14 +352,3 @@ describe('IgxTreeGrid - Sorting', () => {
         });
     });
 });
-
-function getHeaderCell(fix, columnKey) {
-    const headerCells = fix.debugElement.queryAll(By.css('igx-grid-header'));
-    const headerCell = headerCells.filter((cell) => cell.nativeElement.textContent.indexOf(columnKey) !== -1)[0];
-    return headerCell;
-}
-
-function clickHeaderCell(fix, columnKey) {
-    const cell = getHeaderCell(fix, columnKey);
-    cell.nativeElement.dispatchEvent(new Event('click'));
-}

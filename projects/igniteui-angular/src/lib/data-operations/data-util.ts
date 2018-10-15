@@ -19,7 +19,7 @@ import { IDataState } from './data-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { IHierarchizedResult, IHierarchicalRecord } from '../tree-grid/tree-grid.pipes';
+import { ITreeGridRecord } from '../tree-grid/tree-grid.pipes';
 import { cloneArray } from '../core/utils';
 
 export enum DataType {
@@ -67,14 +67,15 @@ export class DataUtil {
         return state.strategy.sort(data, state.expressions);
     }
 
-    public static hierarchicalSort(hierarchicalData: IHierarchicalRecord[], state: ISortingState): IHierarchicalRecord[] {
+    public static hierarchicalSort(hierarchicalData: ITreeGridRecord[], state: ISortingState, parent: ITreeGridRecord): ITreeGridRecord[] {
         state.strategy = new HierarchicalSortingStrategy();
-        let res: IHierarchicalRecord[] = [];
+        let res: ITreeGridRecord[] = [];
 
-        hierarchicalData.forEach((hr: IHierarchicalRecord) => {
-            const rec: IHierarchicalRecord = DataUtil.cloneHierarchicalRecord(hr);
+        hierarchicalData.forEach((hr: ITreeGridRecord) => {
+            const rec: ITreeGridRecord = DataUtil.cloneHierarchicalRecord(hr);
+            rec.parent = parent;
             if (rec.children) {
-                rec.children = DataUtil.hierarchicalSort(rec.children, state);
+                rec.children = DataUtil.hierarchicalSort(rec.children, state, rec);
             }
             res.push(rec);
         });
@@ -84,8 +85,9 @@ export class DataUtil {
         return res;
     }
 
-    public static cloneHierarchicalRecord(hierarchicalRecord: IHierarchicalRecord) {
-        const rec: IHierarchicalRecord = {
+    public static cloneHierarchicalRecord(hierarchicalRecord: ITreeGridRecord) {
+        const rec: ITreeGridRecord = {
+            rowID: hierarchicalRecord.rowID,
             data: hierarchicalRecord.data,
             children: hierarchicalRecord.children,
             isFilteredOutParent: hierarchicalRecord.isFilteredOutParent

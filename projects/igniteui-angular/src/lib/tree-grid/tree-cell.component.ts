@@ -1,7 +1,6 @@
 import { Component, forwardRef, Input, HostBinding } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowComponent } from '../grid-common/row.component';
-import { IFlattenedRecord } from './tree-grid.pipes';
 import { IgxGridCellComponent } from '../grid-common/cell.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
@@ -16,7 +15,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
     }
 
     public get hasChildren() {
-        return this.row.flatRow.hasChildren;
+        return this.row.treeRow.hasChildren;
     }
 
     get expanded(): boolean {
@@ -25,7 +24,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
 
     public toggle(event: Event) {
         event.stopPropagation();
-        (<IgxTreeGridComponent>this.grid).toggleRowExpansion(this.row.flatRow);
+        (<IgxTreeGridComponent>this.grid).toggleRowExpansion(this.row.rowID);
     }
 
     public onFocus(event: Event) {

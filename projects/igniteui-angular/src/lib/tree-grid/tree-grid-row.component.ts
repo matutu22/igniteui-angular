@@ -1,7 +1,7 @@
-import { Component, forwardRef, Input, ViewChildren, QueryList, ViewChild, HostBinding, DoCheck } from '@angular/core';
+import { Component, forwardRef, Input, ViewChildren, QueryList, ViewChild, HostBinding } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowComponent } from '../grid-common/row.component';
-import { IFlattenedRecord } from './tree-grid.pipes';
+import { ITreeGridRecord } from './tree-grid.pipes';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxGridCellComponent } from '../grid-common';
 
@@ -10,8 +10,8 @@ import { IgxGridCellComponent } from '../grid-common';
     templateUrl: 'tree-grid-row.component.html',
     providers: [{provide: IgxRowComponent, useExisting: forwardRef(() => IgxTreeGridRowComponent)}]
 })
-export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponent> implements DoCheck {
-    private _flatRow: IFlattenedRecord;
+export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponent> {
+    private _treeRow: ITreeGridRecord;
 
     /**
      * The rendered cells in the row component.
@@ -31,36 +31,22 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
      * ```
      */
     @Input()
-    public get flatRow(): IFlattenedRecord {
-        return this._flatRow;
+    public get treeRow(): ITreeGridRecord {
+        return this._treeRow;
     }
-    public set flatRow(value: IFlattenedRecord) {
-        if (this._flatRow !== value) {
-            this._flatRow = value;
-            this.rowData = this._flatRow.data;
+    public set treeRow(value: ITreeGridRecord) {
+        if (this._treeRow !== value) {
+            this._treeRow = value;
+            this.rowData = this._treeRow.data;
         }
     }
 
     public get indentation() {
-        return this._flatRow.indentationLevel;
+        return this._treeRow.indentationLevel;
     }
 
     @HostBinding('attr.aria-expanded')
     get expanded(): boolean {
-        return this.grid.getIsExpandedRow(this.flatRow);
-    }
-
-    /**
-     * @hidden
-     */
-    public ngDoCheck() {
-        this.isSelected = this.rowSelectable ?
-            this.flatRow.isFilteredOutParent ? false :
-            this.grid.allRowsSelected ? true : this.selection.is_item_selected(this.gridID, this.rowID) :
-            this.selection.is_item_selected(this.gridID, this.rowID);
-        this.cdr.markForCheck();
-        if (this.checkboxElement) {
-            this.checkboxElement.checked = this.isSelected;
-        }
+        return this._treeRow.expanded;
     }
 }

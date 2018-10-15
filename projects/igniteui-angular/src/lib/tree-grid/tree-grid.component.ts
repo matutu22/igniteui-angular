@@ -22,7 +22,7 @@ import { IgxGridBaseComponent } from '../grid-common/grid-base.component';
 
 import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
 import { GridBaseAPIService } from '../grid-common/api.service';
-import { IFlattenedRecord } from './tree-grid.pipes';
+import { ITreeGridRecord } from './tree-grid.pipes';
 
 let NEXT_ID = 0;
 
@@ -71,6 +71,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             this.gridAPI.reset(oldId, this._id);
         }
     }
+
+    public treeGridRecords: ITreeGridRecord[];
+
+    public treeGridRecordsMap: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
     /**
      * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
@@ -137,7 +141,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
-
     private cloneMap(mapIn: Map<any, boolean>):  Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 
@@ -149,12 +152,30 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         return mapCloned;
     }
 
-    public getIsExpandedRow(row: IFlattenedRecord) {
-        return this.gridAPI.get_row_expansion_state(this.id, row);
+    public getTreeGridRecord(rowID: any): ITreeGridRecord {
+        return this.gridAPI.get_tree_grid_record(this.id, rowID);
     }
 
-    public toggleRowExpansion(row: IFlattenedRecord) {
-        this.gridAPI.toggle_row_expansion(this.id, row);
+    public expandRow(rowID: any) {
+        this.gridAPI.expand_row(this.id, rowID);
+    }
+
+    public collapseRow(rowID: any) {
+        this.gridAPI.collapse_row(this.id, rowID);
+    }
+
+    public toggleRowExpansion(rowID: any) {
+        this.gridAPI.toggle_row_expansion(this.id, rowID);
+    }
+
+    public expandAll() {
+        this._expandedLevels = Infinity;
+        this.expandedStates = new Map<boolean, any>();
+    }
+
+    public collapseAll() {
+        this._expandedLevels = 0;
+        this.expandedStates = new Map<boolean, any>();
     }
 
     /**

@@ -9,7 +9,7 @@ import { IgxNumberFilteringOperand } from '../data-operations/filtering-conditio
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__group-row--padding-level-';
 
-fdescribe('IgxTreeGrid - Indentation', () => {
+describe('IgxTreeGrid - Indentation', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
@@ -124,6 +124,15 @@ fdescribe('IgxTreeGrid - Indentation', () => {
         verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
         verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
     });
+
+    it('should transform a non-tree column into a tree column when pinning it', () => {
+        verifyTreeColumn(fix, 'ID', 4);
+
+        treeGrid.pinColumn('Age');
+        fix.detectChanges();
+
+        verifyTreeColumn(fix, 'Age', 4);
+    });
 });
 
 function getAllRows(fix) {
@@ -134,8 +143,18 @@ function getTreeCell(row) {
     return row.query(By.css('igx-tree-grid-cell'));
 }
 
+function getTreeCells(fix) {
+    return fix.debugElement.queryAll(By.css('igx-tree-grid-cell'));
+}
+
 function getNormalCells(row) {
     return row.queryAll(By.css('igx-grid-cell'));
+}
+
+function getHeaderCell(fix, columnKey) {
+    const headerCells = fix.debugElement.queryAll(By.css('igx-grid-header'));
+    const headerCell = headerCells.filter((cell) => cell.nativeElement.textContent.indexOf(columnKey) !== -1)[0];
+    return headerCell;
 }
 
 function verifyCellsPosition(rows, expectedColumnsCount) {
@@ -149,7 +168,7 @@ function verifyCellsPosition(rows, expectedColumnsCount) {
         normalCells.forEach((normalCell) => {
             // Verify that the treeCell is the first cell (on the left of all the other cells)
             const normalCellRectLeft = (<HTMLElement>normalCell.nativeElement).getBoundingClientRect().left;
-            expect(treeCellRectRight <= normalCellRectLeft).toBe(true, 'TreeCell is not on the left of all other cells.');
+            expect(treeCellRectRight <= normalCellRectLeft).toBe(true, 'TreeCell is not on the left of a normal cell.');
         });
     });
 }
@@ -160,17 +179,36 @@ function verifyRowIndentationLevel(rowComponent, rowDOM, expectedIndentationLeve
 
     // If 'expectedIndentationLevel' is 0, we expect the row to be a root level row
     // and thus it has no indentation div.
+    const indentationDiv = treeCell.query(By.css(TREE_CELL_DIV_INDENTATION_CSS_CLASS + expectedIndentationLevel));
     if (expectedIndentationLevel === 0) {
-        expect(divChildren.length).toBe(2, 'root treeCell has incorrect divs count');
+        expect(divChildren.length).toBe(2, 'root treeCell has incorrect divs count');        
+        expect(indentationDiv).toBeNull();
     } else {
-        expect(divChildren.length).toBe(3, 'child treeCell has incorrect divs count');
-        const indentationDiv = treeCell.query(By.css(TREE_CELL_DIV_INDENTATION_CSS_CLASS + expectedIndentationLevel));
+        expect(divChildren.length).toBe(3, 'child treeCell has incorrect divs count');        
         expect(indentationDiv).toBeDefined();
         expect(indentationDiv).not.toBeNull();
     }
 
     // Verify rowComponent's indentation API.
     expect(rowComponent.indentation).toBe(expectedIndentationLevel);
+}
+
+function verifyTreeColumn(fix, expectedTreeColumnKey, expectedColumnsCount) {
+    const headerCell = getHeaderCell(fix, expectedTreeColumnKey);
+    const treeCells = getTreeCells(fix);
+    const rows = getAllRows(fix);
+
+    // Verify the tree cells are first (on the left) in comparison to the rest of the cells.
+    verifyCellsPosition(rows, expectedColumnsCount);
+
+    // Verify the tree cells are exactly under the respective header cell.
+    const headerCellRect = (<HTMLElement>headerCell.nativeElement).getBoundingClientRect();
+    treeCells.forEach(treeCell => {
+        const treeCellRect = (<HTMLElement>treeCell.nativeElement).getBoundingClientRect();
+        expect(headerCellRect.bottom <= treeCellRect.top).toBe(true, 'headerCell is not on top of a treeCell');
+        expect(headerCellRect.left).toBe(treeCellRect.left, 'headerCell and treeCell are not left-aligned');
+        expect(headerCellRect.right).toBe(treeCellRect.right, 'headerCell and treeCell are not right-aligned');
+    });
 }
 
 function sortElementsVertically(arr) {

@@ -1,6 +1,3 @@
-<ng-container *ngIf="indentation > 0">
-    <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{indentation}}"></div>
-</ng-container>
 <ng-container *ngIf="rowSelectable">
     <div class="igx-grid__cbx-selection">
         <igx-checkbox [checked]="isSelected" (change)="onCheckboxClick($event)" disableRipple="true" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>

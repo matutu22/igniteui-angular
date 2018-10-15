@@ -12,7 +12,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 })
 export class IgxTreeGridCellComponent extends IgxGridCellComponent {
     public get indentation() {
-        return this.row.flatRow.indentationLevel;
+        return this.row.indentation;
     }
 
     public get hasChildren() {

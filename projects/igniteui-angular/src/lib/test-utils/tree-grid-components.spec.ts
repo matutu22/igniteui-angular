@@ -49,3 +49,19 @@ export class IgxTreeGridSimpleComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
 }
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px">
+        <igx-column [field]="'ID'"></igx-column>
+        <igx-column [field]="'ParentID'"></igx-column>
+        <igx-column [field]="'Name'"></igx-column>
+        <igx-column [field]="'JobTitle'"></igx-column>
+        <igx-column [field]="'Age'"></igx-column>
+    </igx-tree-grid>
+        `
+})
+export class IgxTreeGridPrimaryForeignKeyComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
+}

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {  IgxBadgeModule } from '../badge/badge.component';
+import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { IgxBadgeModule } from '../badge/badge.component';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDatePickerModule } from '../date-picker/date-picker.component';
@@ -36,7 +37,8 @@ import {
     IgxColumnMovingService,
     IgxGroupByRowTemplateDirective,
     IgxDecimalPipeComponent,
-    IgxDatePipeComponent
+    IgxDatePipeComponent,
+    GridHammerConfig
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
 import {
@@ -134,7 +136,10 @@ import { IgxColumnPinningModule } from './column-pinning.component';
     IgxButtonGroupModule,
     IgxColumnPinningModule
   ],
-  providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
+  providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService, {
+    provide: HAMMER_GESTURE_CONFIG,
+    useClass: GridHammerConfig
+  }]
 })
 export class IgxGridModule {
     public static forRoot() {

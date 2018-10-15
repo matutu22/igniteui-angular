@@ -692,6 +692,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      *@hidden
      */
+    @HostListener('ios:doubletap', ['$event'])
     @HostListener('dblclick', ['$event'])
     public onDoubleClick(event) {
         if (this.column.editable) {

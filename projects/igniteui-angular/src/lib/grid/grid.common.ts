@@ -1,4 +1,5 @@
 ﻿import { DOCUMENT, DatePipe, DecimalPipe } from '@angular/common';
+import { HammerGestureConfig } from '@angular/platform-browser';
 import {
     ChangeDetectorRef,
     Directive,
@@ -633,4 +634,41 @@ export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransfor
             return value;
         }
     }
+}
+
+/**
+ *@hidden
+ */
+export class GridHammerConfig extends HammerGestureConfig {
+    constructor() {
+        super();
+
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window['MSStream']) {
+            this.events = ['tap', 'ios:doubletap'];
+        }
+    }
+
+    events = [];
+    options: HammerOptions = {
+        recognizers: [
+            [ Hammer.Tap ],
+            [ Hammer.Tap, { event: 'ios:doubletap', taps: 2, interval: 450 } ]
+        ],
+        inputClass: Hammer.TouchInput
+    };
+
+    buildHammer(element: HTMLElement) {
+        const mc = new Hammer(element, this.options);
+
+
+        Object.keys(this.overrides).forEach(eventName => {
+            mc.get(eventName).set(this.overrides[eventName]);
+        });
+
+        mc.get('ios:doubletap').recognizeWith('tap');
+        mc.get('tap').requireFailure('ios:doubletap');
+        mc.get('ios:doubletap').dropRequireFailure('tap');
+
+        return mc;
+      }
 }

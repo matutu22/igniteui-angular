@@ -127,7 +127,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         this.getFlatDataRecusrive(collection, data, expandedLevels, expandedStates, id, undefined, 0);
 
         if (this.hasFiltering(grid) && data.length > 0) {
-            grid.filteredData = data.filter(r => !r.isFilteredOutParent).map(r => r.data);
+            grid.filteredData = data.map(r => r.data);
         }
 
         return data;

@@ -170,12 +170,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
     public expandAll() {
         this._expandedLevels = Infinity;
-        this.expandedStates = new Map<boolean, any>();
+        this.expandedStates = new Map<any, boolean>();
     }
 
     public collapseAll() {
         this._expandedLevels = 0;
-        this.expandedStates = new Map<boolean, any>();
+        this.expandedStates = new Map<any, boolean>();
     }
 
     /**

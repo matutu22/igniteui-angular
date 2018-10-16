@@ -143,6 +143,19 @@ describe('IgxTreeGrid - Indentation', () => {
 
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 3);
         });
+
+        it('should transform the first visible column into tree column when pin and hide another column before that', () => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
+
+            treeGrid.pinColumn('Age');
+            fix.detectChanges();
+
+            const column = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            column.hidden = true;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 3);
+        });
     });
 
     describe('Primary/Foreign key Relation Indentation', () => {
@@ -259,6 +272,19 @@ describe('IgxTreeGrid - Indentation', () => {
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 4);
+        });
+
+        it('should transform the first visible column into tree column when pin and hide another column before that with primary/foreign keys', () => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
+
+            treeGrid.pinColumn('Age');
+            fix.detectChanges();
+
+            const column = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            column.hidden = true;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
         });
     });
 });

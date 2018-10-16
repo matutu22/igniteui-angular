@@ -2,7 +2,7 @@ import { By } from '@angular/platform-browser';
 import { IgxTreeGridComponent } from '../tree-grid';
 
 // CSS class should end with a number that specified the row's level
-const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__group-row--padding-level-';
+const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';
 
 export class TreeGridFunctions {
     public static getAllRows(fix) {

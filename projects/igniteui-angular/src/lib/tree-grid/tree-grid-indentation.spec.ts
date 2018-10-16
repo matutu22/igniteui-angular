@@ -6,6 +6,7 @@ import { IgxTreeGridModule } from './index';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../test-utils/tree-grid-components.spec';
 import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid - Indentation', () => {
     let fix;
@@ -168,6 +169,23 @@ describe('IgxTreeGrid - Indentation', () => {
 
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
         });
+
+        it('should transform a non-tree column into a tree column when moving the original tree-column through UI', (async() => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
+
+            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+            column.movable = true;
+
+            const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
+            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
+            UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 490, 30);
+            UIInteractions.simulatePointerEvent('pointerup', header, 490, 30);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
+        }));
     });
 
     describe('Primary/Foreign key Relation Indentation', () => {
@@ -310,6 +328,23 @@ describe('IgxTreeGrid - Indentation', () => {
 
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
         });
+
+        it('should transform a non-tree column into a tree column when moving the original tree-column through UI', (async() => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
+
+            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+            column.movable = true;
+
+            const header = TreeGridFunctions.getHeaderCell(fix, 'ID').nativeElement;
+            UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
+            UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 490, 30);
+            UIInteractions.simulatePointerEvent('pointerup', header, 490, 30);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
+        }));
     });
 });
 

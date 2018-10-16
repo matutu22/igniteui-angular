@@ -114,7 +114,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         grid.treeGridRecords = collection;
         grid.treeGridRecordsMap = new Map<any, ITreeGridRecord>();
 
-        this.getFlatDataRecusrive(collection, data, expandedLevels, expandedStates, id, undefined, 0);
+        this.getFlatDataRecusrive(collection, data, expandedLevels, expandedStates, id, true, 0);
 
         if (this.hasFiltering(grid) && data.length > 0) {
             grid.filteredData = data.map(r => r.data);
@@ -129,7 +129,8 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
     }
 
     private getFlatDataRecusrive(collection: ITreeGridRecord[], data: ITreeGridRecord[] = [],
-        expandedLevels: number, expandedStates: Map<any, boolean>, gridID: string, parent: ITreeGridRecord, indentationLevel: number) {
+        expandedLevels: number, expandedStates: Map<any, boolean>, gridID: string,
+        parentExpanded: boolean, indentationLevel: number) {
         if (!collection || !collection.length) {
             return;
         }
@@ -139,7 +140,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             hierarchicalRecord.indentationLevel = indentationLevel;
             hierarchicalRecord.hasChildren =  hierarchicalRecord.children && hierarchicalRecord.children.length > 0;
 
-            if (!parent || parent.expanded) {
+            if (parentExpanded) {
                 data.push(hierarchicalRecord);
             }
 
@@ -152,11 +153,10 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             }
 
             hierarchicalRecord.expanded = isExpanded;
-
             grid.treeGridRecordsMap.set(hierarchicalRecord.rowID, hierarchicalRecord);
 
             this.getFlatDataRecusrive(hierarchicalRecord.children, data, expandedLevels,
-                expandedStates, gridID, hierarchicalRecord, indentationLevel + 1);
+                expandedStates, gridID, parentExpanded && hierarchicalRecord.expanded, indentationLevel + 1);
         }
     }
 }

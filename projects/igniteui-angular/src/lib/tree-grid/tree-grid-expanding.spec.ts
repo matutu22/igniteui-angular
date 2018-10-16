@@ -3,12 +3,10 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
-import { IgxRowComponent } from '../grid-common/row.component';
-import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
 import { IgxTreeGridExpandingComponent } from '../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
 
-fdescribe('IgxTreeGrid - Expanding/Collapsing actions', () => {
+describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

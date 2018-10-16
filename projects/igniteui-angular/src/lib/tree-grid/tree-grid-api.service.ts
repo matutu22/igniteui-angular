@@ -4,7 +4,7 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { ITreeGridRecord } from './tree-grid.pipes';
+import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { ITreeGridRowExpansionEventArgs } from './tree-grid.interfaces';
 import { IgxExpansionPanelDescriptionDirective } from '../expansion-panel/expansion-panel.directives';

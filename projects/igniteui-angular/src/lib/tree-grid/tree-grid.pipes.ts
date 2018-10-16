@@ -6,17 +6,7 @@ import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
 import { GridBaseAPIService } from '../grid-common/api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { ISortingExpression } from '../../public_api';
-
-export interface ITreeGridRecord {
-    rowID: any;
-    data: any;
-    children?: ITreeGridRecord[];
-    parent?: ITreeGridRecord;
-    isFilteredOutParent?: boolean;
-    hasChildren?: boolean;
-    indentationLevel?: number;
-    expanded?: boolean;
-}
+import { ITreeGridRecord } from './tree-grid.interfaces';
 
 /**
  *@hidden

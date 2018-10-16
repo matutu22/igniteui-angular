@@ -24,7 +24,7 @@ import { IgxGridBaseComponent } from '../grid-common/grid-base.component';
 
 import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
 import { GridBaseAPIService } from '../grid-common/api.service';
-import { ITreeGridRecord } from './tree-grid.pipes';
+import { ITreeGridRecord } from './tree-grid.interfaces';
 import { ITreeGridRowExpansionEventArgs } from './tree-grid.interfaces';
 
 let NEXT_ID = 0;

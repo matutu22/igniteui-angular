@@ -19,7 +19,7 @@ import { IDataState } from './data-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { ITreeGridRecord } from '../tree-grid/tree-grid.pipes';
+import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { cloneArray } from '../core/utils';
 
 export enum DataType {

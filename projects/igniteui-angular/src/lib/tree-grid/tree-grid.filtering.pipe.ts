@@ -7,7 +7,7 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { BaseFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IFilteringState } from '../data-operations/filtering-state.interface';
-import { ITreeGridRecord } from './tree-grid.pipes';
+import { ITreeGridRecord } from './tree-grid.interfaces';
 
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree): ITreeGridRecord[] {

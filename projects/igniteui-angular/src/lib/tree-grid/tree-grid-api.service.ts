@@ -81,4 +81,22 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             return indentationLevel < grid.expandedLevels;
         }
     }
+
+    public add_child_row(id: string, parentRowID: any, data: any) {
+        const grid = this.get(id);
+        const parentRecord = grid.treeGridRecordsMap.get(parentRowID);
+
+        if (!parentRecord) {
+            return;
+        }
+
+        if (grid.primaryKey && grid.foreignKey) {
+            data[grid.foreignKey] = parentRowID;
+            this.add_row(id, data);
+        } else {
+            const children = parentRecord.data[grid.childDataKey];
+            children.push(data);
+            this.trigger_row_added(id, data);
+        }
+    }
 }

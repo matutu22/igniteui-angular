@@ -1513,6 +1513,11 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
     public add_row(id: string, data: any) {
         const grid = this.get(id);
         grid.data.push(data);
+        this.trigger_row_added(id, data);
+    }
+
+    protected trigger_row_added(id: string, data: any) {
+        const grid = this.get(id);
         grid.onRowAdded.emit({ data });
         grid.pipeTrigger++;
         grid.cdr.markForCheck();

@@ -5,6 +5,9 @@ import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { ITreeGridRecord } from './tree-grid.pipes';
+import { IgxTreeGridRowComponent } from './tree-grid-row.component';
+import { ITreeGridRowExpansionEventArgs } from './tree-grid.interfaces';
+import { IgxExpansionPanelDescriptionDirective } from '../expansion-panel/expansion-panel.directives';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
     public on_after_content_init(id: string) {
@@ -44,6 +47,27 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             expandedStates.set(rowID, !treeRecord.expanded);
             grid.expandedStates = expandedStates;
         }
+    }
+
+    public trigger_row_expansion_toggle(id: string, row: IgxTreeGridRowComponent, event: Event) {
+        const grid = this.get(id);
+        const expanded = !row.treeRow.expanded;
+
+        const args: ITreeGridRowExpansionEventArgs = {
+            row: row,
+            expanded: expanded,
+            event: event,
+            cancel: false
+        };
+        grid.onRowExpansionToggle.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+
+        const expandedStates = grid.expandedStates;
+        expandedStates.set(row.rowID, expanded);
+        grid.expandedStates = expandedStates;
     }
 
     public get_row_expansion_state(id: string, rowID: any, indentationLevel: number): boolean {

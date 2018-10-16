@@ -12,7 +12,9 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef
+    ViewContainerRef,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
@@ -23,6 +25,7 @@ import { IgxGridBaseComponent } from '../grid-common/grid-base.component';
 import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
 import { GridBaseAPIService } from '../grid-common/api.service';
 import { ITreeGridRecord } from './tree-grid.pipes';
+import { ITreeGridRowExpansionEventArgs } from './tree-grid.interfaces';
 
 let NEXT_ID = 0;
 
@@ -126,6 +129,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this._expandedStates = this.cloneMap(value);
         this.cdr.detectChanges();
     }
+
+    @Output()
+    public onRowExpansionToggle = new EventEmitter<ITreeGridRowExpansionEventArgs>();
 
     private gridAPI: IgxTreeGridAPIService;
 

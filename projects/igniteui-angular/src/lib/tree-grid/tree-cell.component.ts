@@ -1,15 +1,29 @@
-import { Component, forwardRef, Input, HostBinding } from '@angular/core';
+import { Component, forwardRef, Input, HostBinding, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowComponent } from '../grid-common/row.component';
 import { IgxGridCellComponent } from '../grid-common/cell.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
+import { GridBaseAPIService } from '../grid-common/api.service';
+import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
+import { IgxSelectionAPIService } from '../core/selection';
 
 @Component({
     selector: 'igx-tree-grid-cell',
     templateUrl: 'tree-cell.component.html'
 })
 export class IgxTreeGridCellComponent extends IgxGridCellComponent {
+    private treeGridAPI: IgxTreeGridAPIService;
+
+    constructor(
+        gridAPI: GridBaseAPIService<IGridBaseComponent>,
+        selection: IgxSelectionAPIService,
+        cdr: ChangeDetectorRef,
+        element: ElementRef) {
+            super(gridAPI, selection, cdr, element);
+            this.treeGridAPI = <IgxTreeGridAPIService>gridAPI;
+        }
+
     public get indentation() {
         return this.row.indentation;
     }
@@ -24,7 +38,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
 
     public toggle(event: Event) {
         event.stopPropagation();
-        (<IgxTreeGridComponent>this.grid).toggleRowExpansion(this.row.rowID);
+        this.treeGridAPI.trigger_row_expansion_toggle(this.gridID, this.row, event);
     }
 
     public onFocus(event: Event) {

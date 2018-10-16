@@ -156,6 +156,18 @@ describe('IgxTreeGrid - Indentation', () => {
 
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 3);
         });
+
+        it('should transform a non-tree column into a tree column when moving the original tree-column through API', () => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
+
+            // Move tree-column
+            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+            const targetColumn = treeGrid.columns.filter(c => c.field === 'HireDate')[0];
+            treeGrid.moveColumn(sourceColumn, targetColumn);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
+        });
     });
 
     describe('Primary/Foreign key Relation Indentation', () => {
@@ -165,7 +177,7 @@ describe('IgxTreeGrid - Indentation', () => {
             treeGrid = fix.componentInstance.treeGrid;
         });
 
-        it('should have the tree-cell as a first cell on every row with primary/foreign keys', () => {
+        it('should have the tree-cell as a first cell on every row', () => {
             // Verify all rows are present
             const rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(8);
@@ -174,7 +186,7 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyCellsPosition(rows, 5);
         });
 
-        it('should have correct indentation for every record of each level with primary/foreign keys', () => {
+        it('should have correct indentation for every record of each level', () => {
             const rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
@@ -186,7 +198,7 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(7), rows[7], 1);
         });
 
-        it('should persist the indentation after sorting with primary/foreign keys', () => {
+        it('should persist the indentation after sorting', () => {
             treeGrid.columnList.filter(c => c.field === 'Age')[0].sortable = true;
             fix.detectChanges();
             treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc });
@@ -203,7 +215,7 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(7), rows[7], 1);
         });
 
-        it('should persist the indentation after filtering with primary/foreign keys', () => {
+        it('should persist the indentation after filtering', () => {
             treeGrid.columnList.filter(c => c.field === 'Age')[0].sortable = true;
             fix.detectChanges();
 
@@ -222,7 +234,7 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 1);
         });
 
-        it('should persist the indentation on all pages when using paging with primary/foreign keys', () => {
+        it('should persist the indentation on all pages when using paging', () => {
             treeGrid.paging = true;
             fix.detectChanges();
             treeGrid.perPage = 3;
@@ -255,7 +267,7 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
         });
 
-        it('should transform a non-tree column into a tree column when pinning it with primary/foreign keys', () => {
+        it('should transform a non-tree column into a tree column when pinning it', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
             treeGrid.pinColumn('Name');
@@ -264,7 +276,7 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 5);
         });
 
-        it('should transform a non-tree column into a tree column when hiding the original tree-column with primary/foreign keys', () => {
+        it('should transform a non-tree column into a tree column when hiding the original tree-column', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
             const column = treeGrid.columns.filter(c => c.field === 'ID')[0];
@@ -274,7 +286,7 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 4);
         });
 
-        it('should transform the first visible column into tree column when pin and hide another column before that with primary/foreign keys', () => {
+        it('should transform the first visible column into tree column when pin and hide another column before that', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
             treeGrid.pinColumn('Age');
@@ -285,6 +297,18 @@ describe('IgxTreeGrid - Indentation', () => {
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
+        });
+
+        it('should transform a non-tree column into a tree column when moving the original tree-column through API', () => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
+
+            // Move tree-column
+            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+            const targetColumn = treeGrid.columns.filter(c => c.field === 'JobTitle')[0];
+            treeGrid.moveColumn(sourceColumn, targetColumn);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
         });
     });
 });

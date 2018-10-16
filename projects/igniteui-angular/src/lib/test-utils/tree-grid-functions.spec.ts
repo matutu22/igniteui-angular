@@ -9,16 +9,21 @@ export class TreeGridFunctions {
         return fix.debugElement.queryAll(By.css('igx-tree-grid-row'));
     }
 
-    public static getTreeCell(row) {
-        return row.query(By.css('igx-tree-grid-cell'));
+    public static getTreeCell(rowDOM) {
+        return rowDOM.query(By.css('igx-tree-grid-cell'));
     }
 
     public static getTreeCells(fix) {
         return fix.debugElement.queryAll(By.css('igx-tree-grid-cell'));
     }
 
-    public static getNormalCells(row) {
-        return row.queryAll(By.css('igx-grid-cell'));
+    public static getNormalCells(rowDOM) {
+        return rowDOM.queryAll(By.css('igx-grid-cell'));
+    }
+
+    public static getExpansionIndicatorDiv(rowDOM) {
+        const treeGridCell = TreeGridFunctions.getTreeCell(rowDOM);
+        return treeGridCell.query(By.css('.igx-grid__tree-expansion-indicator'));
     }
 
     public static getHeaderCell(fix, columnKey) {
@@ -35,8 +40,8 @@ export class TreeGridFunctions {
     /**
      * Verifies that the first cell of every row is its tree cell.
     */
-    public static verifyCellsPosition(rows, expectedColumnsCount) {
-        rows.forEach((row) => {
+    public static verifyCellsPosition(rowsDOM, expectedColumnsCount) {
+        rowsDOM.forEach((row) => {
             // Verify each row's cell count
             const treeCell = TreeGridFunctions.getTreeCell(row);
             const normalCells = TreeGridFunctions.getNormalCells(row);
@@ -109,5 +114,17 @@ export class TreeGridFunctions {
     public static sortElementsVertically(arr) {
         return arr.sort((a, b) =>
             (<HTMLElement>a.nativeElement).getBoundingClientRect().top - (<HTMLElement>b.nativeElement).getBoundingClientRect().top);
+    }
+
+    public static verifyTreeRowHasCollapsedIcon(treeRowDOM) {
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
+        const igxIcon = indicatorDiv.query(By.css('igx-icon'));
+        expect(igxIcon.nativeElement.textContent).toEqual('chevron_right');
+    }
+
+    public static verifyTreeRowHasExpandedIcon(treeRowDOM) {
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
+        const igxIcon = indicatorDiv.query(By.css('igx-icon'));
+        expect(igxIcon.nativeElement.textContent).toEqual('expand_more');
     }
 }

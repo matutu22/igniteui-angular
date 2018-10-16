@@ -644,7 +644,7 @@ export class GridHammerConfig extends HammerGestureConfig {
         super();
 
         if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window['MSStream']) {
-            this.events = ['tap', 'ios:doubletap'];
+            this.events = ['tap', 'doubletap'];
         }
     }
 
@@ -652,7 +652,7 @@ export class GridHammerConfig extends HammerGestureConfig {
     options: HammerOptions = {
         recognizers: [
             [ Hammer.Tap ],
-            [ Hammer.Tap, { event: 'ios:doubletap', taps: 2, interval: 450 } ]
+            [ Hammer.Tap, { event: 'doubletap', taps: 2, interval: 450 } ]
         ],
         inputClass: Hammer.TouchInput
     };
@@ -665,9 +665,9 @@ export class GridHammerConfig extends HammerGestureConfig {
             mc.get(eventName).set(this.overrides[eventName]);
         });
 
-        mc.get('ios:doubletap').recognizeWith('tap');
-        mc.get('tap').requireFailure('ios:doubletap');
-        mc.get('ios:doubletap').dropRequireFailure('tap');
+        mc.get('doubletap').recognizeWith('tap');
+        mc.get('tap').requireFailure('doubletap');
+        mc.get('doubletap').dropRequireFailure('tap');
 
         return mc;
       }

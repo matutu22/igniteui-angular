@@ -26,9 +26,9 @@
     </ng-container>
 </ng-template>
 <ng-container *ngIf="indentation > 0">
-    <div class="igx-grid__group-row--padding-level-{{indentation}}"></div>
+    <div class="igx-grid__tree-cell--padding-level-{{indentation}}"></div>
 </ng-container>
-<div [ngStyle]="{'visibility': hasChildren ? 'visible' : 'hidden', 'cursor': 'pointer'}" (click)="toggle($event)" (focus)="onFocus($event)">
+<div [style.visibility]="hasChildren ? 'visible' : 'hidden'" class="igx-grid__tree-expansion-indicator" (click)="toggle($event)" (focus)="onFocus($event)">
     <igx-icon *ngIf="!expanded" fontSet="material">chevron_right</igx-icon>
     <igx-icon *ngIf="expanded" fontSet="material">expand_more</igx-icon>
 </div>

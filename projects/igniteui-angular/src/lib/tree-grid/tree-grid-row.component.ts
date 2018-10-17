@@ -49,4 +49,10 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
     get expanded(): boolean {
         return this._treeRow.expanded;
     }
+
+    protected resolveClasses(): string {
+        const classes = super.resolveClasses();
+        const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
+        return `${classes} ${filteredClass}`;
+    }
 }

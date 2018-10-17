@@ -104,11 +104,14 @@ export class IgxRowComponent<T extends IGridBaseComponent> implements DoCheck {
      */
     @HostBinding('class')
     get styleClasses(): string {
+       return this.resolveClasses();
+    }
+
+    protected resolveClasses(): string {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
         const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
         return `${this.defaultCssClass} ${indexClass} ${selectedClass}`;
     }
-
 
     /**
      * @hidden

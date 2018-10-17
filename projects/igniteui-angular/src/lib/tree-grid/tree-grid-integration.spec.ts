@@ -5,7 +5,7 @@ import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } fro
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
-fdescribe('IgxTreeGrid - Integration', () => {
+describe('IgxTreeGrid - Integration', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 

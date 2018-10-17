@@ -1,10 +1,12 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../test-utils/tree-grid-components.spec';
 import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
+import { By } from '@angular/platform-browser';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid - Indentation', () => {
     let fix;
@@ -123,6 +125,42 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
         });
+
+        it('should persist the indentation after resizing the tree-column', fakeAsync(() => {
+            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+            column.resizable = true;
+            fix.detectChanges();
+
+            const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
+            const resizer = header.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+
+            // Verify before resizing width
+            expect((<HTMLElement>header.nativeElement).getBoundingClientRect().width).toBe(225);
+
+            // Resize the tree column
+            UIInteractions.simulateMouseEvent('mousedown', resizer, 225, 5);
+            tick();
+            fix.detectChanges();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
+            tick();
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);
+            tick();
+            fix.detectChanges();
+
+            // Verify after resizing width and row indentation
+            expect((<HTMLElement>header.nativeElement).getBoundingClientRect().width).toBe(370);
+            const rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 1);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(3), rows[3], 1);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 2);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(5), rows[5], 2);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(6), rows[6], 2);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(7), rows[7], 0);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(8), rows[8], 0);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(9), rows[9], 1);
+        }));
     });
 
     describe('Primary/Foreign key', () => {
@@ -221,6 +259,40 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
         });
+
+        it('should persist the indentation after resizing the tree-column', fakeAsync(() => {
+            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+            column.resizable = true;
+            fix.detectChanges();
+
+            const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
+            const resizer = header.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+
+            // Verify before resizing width
+            expect((<HTMLElement>header.nativeElement).getBoundingClientRect().width).toBe(180);
+
+            // Resize the tree column
+            UIInteractions.simulateMouseEvent('mousedown', resizer, 180, 5);
+            tick();
+            fix.detectChanges();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
+            tick();
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);
+            tick();
+            fix.detectChanges();
+
+            // Verify after resizing width and row indentation
+            expect((<HTMLElement>header.nativeElement).getBoundingClientRect().width).toBe(370);
+            const rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 2);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(3), rows[3], 2);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 1);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(5), rows[5], 0);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(6), rows[6], 0);
+            TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(7), rows[7], 1);
+        }));
     });
 });
 

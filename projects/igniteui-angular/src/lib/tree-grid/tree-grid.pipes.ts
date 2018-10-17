@@ -113,11 +113,14 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
 
         grid.treeGridRecords = collection;
         grid.treeGridRecordsMap = new Map<any, ITreeGridRecord>();
+        const flatData: any[] = [];
+        this.getFlatDataRecusrive(collection, data, flatData, expandedLevels, expandedStates, id, true, 0);
 
-        this.getFlatDataRecusrive(collection, data, expandedLevels, expandedStates, id, true, 0);
-
+        grid.flatData = flatData;
         if (this.hasFiltering(grid) && data.length > 0) {
             grid.filteredData = data.map(r => r.data);
+        } else {
+            grid.filteredData = null;
         }
 
         return data;
@@ -128,7 +131,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             grid.filteringExpressionsTree.filteringOperands.length > 0;
     }
 
-    private getFlatDataRecusrive(collection: ITreeGridRecord[], data: ITreeGridRecord[] = [],
+    private getFlatDataRecusrive(collection: ITreeGridRecord[], data: ITreeGridRecord[] = [], flatData: any[],
         expandedLevels: number, expandedStates: Map<any, boolean>, gridID: string,
         parentExpanded: boolean, indentationLevel: number) {
         if (!collection || !collection.length) {
@@ -143,6 +146,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             if (parentExpanded) {
                 data.push(hierarchicalRecord);
             }
+            flatData.push(hierarchicalRecord.data);
 
             let isExpanded = this.gridAPI.get_row_expansion_state(gridID, hierarchicalRecord.rowID, hierarchicalRecord.indentationLevel);
             const grid: IgxTreeGridComponent = this.gridAPI.get(gridID);
@@ -155,7 +159,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             hierarchicalRecord.expanded = isExpanded;
             grid.treeGridRecordsMap.set(hierarchicalRecord.rowID, hierarchicalRecord);
 
-            this.getFlatDataRecusrive(hierarchicalRecord.children, data, expandedLevels,
+            this.getFlatDataRecusrive(hierarchicalRecord.children, data, flatData, expandedLevels,
                 expandedStates, gridID, parentExpanded && hierarchicalRecord.expanded, indentationLevel + 1);
         }
     }

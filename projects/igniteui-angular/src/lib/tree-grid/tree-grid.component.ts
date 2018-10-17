@@ -75,6 +75,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         }
     }
 
+    public flatData: any[];
+
     public treeGridRecords: ITreeGridRecord[];
 
     public treeGridRecordsMap: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();

@@ -498,7 +498,6 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
         }
 
         grid.filteringExpressionsTree = filteringState;
-        grid.filteredData = null;
     }
 
     public clear_sort(id, fieldName) {
@@ -1205,6 +1204,11 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
         }
     }
 
+    protected get_selectable_data(id: string): any[] {
+        const grid = this.get(id);
+        return grid.data;
+    }
+
     public on_header_checkbox_click(id: string, event: any) {
         const grid = this.get(id);
         grid.allRowsSelected = event.checked;
@@ -1212,7 +1216,7 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
             event.checked ?
                 grid.filteredData ?
                     grid.selection.add_items(id, grid.selection.get_all_ids(grid.filteredData, grid.primaryKey)) :
-                    grid.selection.get_all_ids(grid.data, grid.primaryKey) :
+                    grid.selection.get_all_ids(this.get_selectable_data(id), grid.primaryKey) :
                 grid.filteredData ?
                     grid.selection.delete_items(id, grid.selection.get_all_ids(grid.filteredData, grid.primaryKey)) :
                     grid.selection.get_empty();
@@ -1223,11 +1227,11 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
     public check_header_checkbox_status(id: string, headerStatus?: boolean) {
         const grid = this.get(id);
         if (headerStatus === undefined) {
-            grid.allRowsSelected = grid.selection.are_all_selected(id, grid.data);
+            grid.allRowsSelected = grid.selection.are_all_selected(id, this.get_selectable_data(id));
             if (grid.headerCheckbox) {
                 grid.headerCheckbox.indeterminate = !grid.allRowsSelected && !grid.selection.are_none_selected(id);
                 if (!grid.headerCheckbox.indeterminate) {
-                    grid.headerCheckbox.checked = grid.selection.are_all_selected(id, grid.data);
+                    grid.headerCheckbox.checked = grid.selection.are_all_selected(id, this.get_selectable_data(id));
                 }
             }
             grid.cdr.markForCheck();
@@ -1273,7 +1277,7 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
     public update_header_checkbox_status_on_filter(id: string, data: any[]) {
         const grid = this.get(id);
         if (!data) {
-            data = grid.data;
+            data = this.get_selectable_data(id);
         }
         switch (this.filtered_items_status(id, data, grid.primaryKey)) {
             case 'allSelected': {

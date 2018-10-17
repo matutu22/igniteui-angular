@@ -51,6 +51,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
         if (!state.expressionsTree ||
             !state.expressionsTree.filteringOperands ||
             state.expressionsTree.filteringOperands.length === 0) {
+            grid.filteredData = null;
             return collection;
         }
 

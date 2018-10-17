@@ -294,7 +294,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     set filteredData(value) {
         this._filteredData = value;
 
-        if (this.rowSelectable) {
+        if (this.rowSelectable && this.ngAfterViewInitPassed) {
             this.api.update_header_checkbox_status_on_filter(this.id, this._filteredData);
         }
 

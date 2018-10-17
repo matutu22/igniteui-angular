@@ -164,7 +164,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
         expect(grid.getCellByColumn(5, 'ID').value).toEqual(15);
 
         expect(FilteringHelpers.checkRowIsNotGrayedOut(grid.getRowByIndex(6))).toEqual(true);
-        expect(grid.getCellByColumn(6, 'ID').value).toEqual(19);
+        expect(grid.getCellByColumn(6, 'ID').value).toEqual(17);
 
         grid.clearFilter();
         fix.detectChanges();
@@ -243,10 +243,10 @@ describe('IgxTreeGrid - Filtering actions', () => {
         expect(grid.getCellByColumn(4, 'ID').value).toEqual(663);
 
         expect(FilteringHelpers.checkRowIsGrayedOut(grid.getRowByIndex(5))).toEqual(true);
-        expect(grid.getCellByColumn(5, 'ID').value).toEqual(19);
+        expect(grid.getCellByColumn(5, 'ID').value).toEqual(17);
 
         expect(FilteringHelpers.checkRowIsGrayedOut(grid.getRowByIndex(6))).toEqual(true);
-        expect(grid.getCellByColumn(6, 'ID').value).toEqual(15);
+        expect(grid.getCellByColumn(6, 'ID').value).toEqual(12);
 
         expect(FilteringHelpers.checkRowIsNotGrayedOut(grid.getRowByIndex(7))).toEqual(true);
         expect(grid.getCellByColumn(7, 'ID').value).toEqual(101);

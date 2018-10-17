@@ -98,6 +98,14 @@
         @extend %grid-row--group !optional;
     }
 
+    @include e(tr, $m: filtered) {
+        @extend %igx-grid-row--filtered !optional;
+    }
+
+    @include e(tree-grouping-indicator) {
+        @extend %igx-grid__tree-grouping-indicator !optional;
+    }
+
     @include e(th) {
         @extend %grid-cell-display !optional;
         @extend %grid-cell-header !optional;

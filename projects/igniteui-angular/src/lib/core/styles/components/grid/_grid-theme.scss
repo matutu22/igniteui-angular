@@ -51,6 +51,7 @@
 /// @param {Color} $grouping-indicator-hover-background [#fefefe] - grouping indicator hover background color.
 /// @param {Color} $grouping-indicator-focus-background [rgba(0, 0, 0, .04)] - grouping indicator focus background color.
 /// @param {Color} $row-content-focus-background [rgba(0, 0, 0, .04)] - grouping row background color on focus.
+/// @param {Color} $treegrid-filtered-text-color [rgba(0, 0, 0, .04)] - grouping row background color on focus.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -118,7 +119,9 @@
     $drop-area-on-drop-background: null,
 
     $grouping-indicator-hover-background: null,
-    $grouping-indicator-focus-background: null
+    $grouping-indicator-focus-background: null,
+
+    $treegrid-filtered-text-color: null
 ) {
     $default-theme: (
         name: 'igx-grid',
@@ -179,7 +182,8 @@
         row-content-focus-background: igx-color($palette, grays, 100),
         row-indentation-background: hexrgba(igx-color($palette, 'grays', 100)),
         grouping-indicator-hover-background: hexrgba(igx-color($palette, 'grays', 100)),
-        grouping-indicator-focus-background: igx-color($palette, grays, 100)
+        grouping-indicator-focus-background: igx-color($palette, grays, 100),
+        treegrid-filtered-text-color: igx-color($palette, grays, 500)
     );
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
@@ -366,6 +370,7 @@
 
         grouping-indicator-hover-background: $grouping-indicator-hover-background,
         grouping-indicator-focus-background: $grouping-indicator-focus-background,
+        treegrid-filtered-text-color: $treegrid-filtered-text-color,
     ));
 }
 
@@ -637,6 +642,26 @@
     %grid-row--group {
         position: relative;
         background: --var($theme, 'header-background') !important;
+    }
+
+    %igx-grid-row--filtered {
+        %grid-cell-text {
+            color: --var($theme, 'treegrid-filtered-text-color');
+        }
+    }
+
+    %igx-grid__tree-grouping-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: rem(8);
+        cursor: pointer;
+
+        color: --var($theme, 'expand-icon-color');
+
+        &:hover {
+            color: --var($theme, 'expand-icon-hover-color')
+        }
     }
 
     %grid-cell-display {

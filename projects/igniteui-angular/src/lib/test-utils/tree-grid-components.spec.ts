@@ -6,10 +6,10 @@ import { Calendar } from '../calendar/calendar';
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="900px" height="600px">
-        <igx-column [field]="'ID'" [sortable]="true"></igx-column>
-        <igx-column [field]="'Name'" [sortable]="true"></igx-column>
-        <igx-column [field]="'HireDate'" [sortable]="true"></igx-column>
-        <igx-column [field]="'Age'" [sortable]="true"></igx-column>
+        <igx-column [field]="'ID'" dataType="number" [sortable]="true"></igx-column>
+        <igx-column [field]="'Name'" dataType="string" [sortable]="true"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [sortable]="true"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [sortable]="true"></igx-column>
     </igx-tree-grid>
         `
 })
@@ -21,10 +21,10 @@ export class IgxTreeGridSortingComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expandedLevels="2" width="900px" height="600px">
-        <igx-column [field]="'ID'" [filterable]="true"></igx-column>
-        <igx-column [field]="'Name'" [filterable]="true"></igx-column>
-        <igx-column [field]="'HireDate'" [filterable]="true"></igx-column>
-        <igx-column [field]="'Age'" [filterable]="true"></igx-column>
+        <igx-column [field]="'ID'" dataType="number" [filterable]="true"></igx-column>
+        <igx-column [field]="'Name'" dataType="string" [filterable]="true"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [filterable]="true"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [filterable]="true"></igx-column>
     </igx-tree-grid>
         `
 })
@@ -38,10 +38,10 @@ export class IgxTreeGridFilteringComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="900px" height="600px">
-        <igx-column [field]="'ID'"></igx-column>
-        <igx-column [field]="'Name'"></igx-column>
-        <igx-column [field]="'HireDate'"></igx-column>
-        <igx-column [field]="'Age'"></igx-column>
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
         `
 })
@@ -53,11 +53,11 @@ export class IgxTreeGridSimpleComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px">
-        <igx-column [field]="'ID'"></igx-column>
-        <igx-column [field]="'ParentID'"></igx-column>
-        <igx-column [field]="'Name'"></igx-column>
-        <igx-column [field]="'JobTitle'"></igx-column>
-        <igx-column [field]="'Age'"></igx-column>
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
         `
 })
@@ -70,10 +70,10 @@ export class IgxTreeGridPrimaryForeignKeyComponent {
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expandedLevels="0" width="900px" height="600px"
         [paging]="true" [perPage]="10">
-        <igx-column [field]="'ID'"></igx-column>
-        <igx-column [field]="'Name'"></igx-column>
-        <igx-column [field]="'HireDate'"></igx-column>
-        <igx-column [field]="'Age'"></igx-column>
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
     `
 })

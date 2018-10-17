@@ -77,6 +77,9 @@ export class TreeGridFunctions {
 
         // Verify rowComponent's indentation API.
         expect(rowComponent.indentation).toBe(expectedIndentationLevel);
+
+        // Verify expand/collapse icon's position.
+        TreeGridFunctions.verifyTreeRowIconPosition(rowDOM, expectedIndentationLevel);
     }
 
     /**
@@ -126,5 +129,23 @@ export class TreeGridFunctions {
         const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
         const igxIcon = indicatorDiv.query(By.css('igx-icon'));
         expect(igxIcon.nativeElement.textContent).toEqual('expand_more');
+    }
+
+    public static verifyTreeRowIconPosition(treeRowDOM, indentationLevel) {
+        const treeCell = TreeGridFunctions.getTreeCell(treeRowDOM);
+        const treeCellPaddingLeft = parseInt(window.getComputedStyle(<HTMLElement>treeCell.nativeElement).paddingLeft, 10);
+        const treeCellRect = (<HTMLElement>treeCell.nativeElement).getBoundingClientRect();
+
+        let indentation = 0;
+        if (indentationLevel !== 0) {
+            const indentationDiv = treeCell.query(By.css(TREE_CELL_DIV_INDENTATION_CSS_CLASS + indentationLevel));
+            const indentationDivRect = (<HTMLElement>indentationDiv.nativeElement).getBoundingClientRect();
+            indentation = indentationDivRect.width;
+        }
+
+        const iconDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
+        const iconDivRect = (<HTMLElement>iconDiv.nativeElement).getBoundingClientRect();
+        expect((iconDivRect.left - (treeCellRect.left + treeCellPaddingLeft + indentation)) < 2)
+            .toBe(true, 'TreeRow icon has incorrect position');
     }
 }

@@ -60,32 +60,35 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
 
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         id: string, pipeTrigger: number): ITreeGridRecord[] {
+        const grid: IgxTreeGridComponent = this.gridAPI.get(id);
         const state = { expressionsTree: expressionsTree };
 
         if (!state.expressionsTree ||
             !state.expressionsTree.filteringOperands ||
             state.expressionsTree.filteringOperands.length === 0) {
+            grid.filteredData = null;
             return hierarchyData;
         }
 
         DataUtil.mergeDefaultProperties(state, { strategy: new TreeGridFilteringStrategy() });
 
         const result = this.filter(hierarchyData, state);
-
-        const grid: IgxTreeGridComponent = this.gridAPI.get(id);
         const expandedStates = grid.expandedStates;
-        this.expandAllRecursive(result, expandedStates);
+        const filteredData: any[] = [];
+        this.expandAllRecursive(result, expandedStates, filteredData);
+        grid.filteredData = filteredData;
 
         return result;
     }
 
-    private expandAllRecursive(data: ITreeGridRecord[], expandedStates: Map<any, boolean>) {
+    private expandAllRecursive(data: ITreeGridRecord[], expandedStates: Map<any, boolean>, filteredData: any[]) {
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
+            filteredData.push(rec.data);
 
             if (rec.children && rec.children.length > 0) {
                 expandedStates.set(rec.rowID, true);
-                this.expandAllRecursive(rec.children, expandedStates);
+                this.expandAllRecursive(rec.children, expandedStates, filteredData);
             }
         }
     }

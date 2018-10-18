@@ -19,7 +19,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         super.on_after_content_init(id);
     }
 
-    protected get_selectable_data(id: string): any[] {
+    public get_all_data(id: string): any[] {
         const grid = this.get(id);
         return grid.flatData;
     }

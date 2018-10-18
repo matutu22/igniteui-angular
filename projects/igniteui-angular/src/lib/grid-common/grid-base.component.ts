@@ -2555,7 +2555,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 	 * @memberof IgxGridComponent
      */
     public selectAllRows() {
-        this.api.trigger_row_selection_change(this.id, this.selection.get_all_ids(this.data, this.primaryKey));
+        this.api.trigger_row_selection_change(this.id, this.selection.get_all_ids(this.api.get_all_data(this.id), this.primaryKey));
     }
 
     /**

@@ -112,7 +112,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         });
     });
 
-    it('check second level records are having the corrent indentation (UI)', () => {
+    it('check second level records are having the correct indentation (UI)', () => {
         const fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
         fix.detectChanges();
 
@@ -125,7 +125,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 3, 1);
     });
 
-    it('check second level records are having the corrent indentation (API)', () => {
+    it('check second level records are having the correct indentation (API)', () => {
         const fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.treeGrid;
@@ -137,7 +137,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 3, 1);
     });
 
-    it('check third level records are having the corrent indentation (UI)', () => {
+    it('check third level records are having the correct indentation (UI)', () => {
         const fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
         fix.detectChanges();
 
@@ -156,7 +156,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 5, 2);
     });
 
-    it('check third level records are having the corrent indentation (API)', () => {
+    it('check third level records are having the correct indentation (API)', () => {
         const fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.treeGrid;
@@ -170,6 +170,30 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         // check third level records indentation
         TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 4, 2); // fix, rowIndex, expectedLevel
         TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 5, 2);
+    });
+
+    fit('check grand children are not visible when collapsing their grand parent', () => {
+        const fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.treeGrid;
+
+        let rows = TreeGridFunctions.getAllRows(fix);
+        expect(rows.length).toBe(4);
+
+        // expand second level records
+        (<IgxTreeGridComponent>grid).toggleRowExpansion((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
+
+        // expand third level record
+        (<IgxTreeGridComponent>grid).toggleRowExpansion((<IgxTreeGridRowComponent>grid.getRowByIndex(3)).rowID);
+
+        rows = TreeGridFunctions.getAllRows(fix);
+        expect(rows.length).toBe(9);
+
+        // collapse first row with all its children and grand children
+        (<IgxTreeGridComponent>grid).toggleRowExpansion((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
+
+        rows = TreeGridFunctions.getAllRows(fix);
+        expect(rows.length).toBe(4);
     });
 
 });

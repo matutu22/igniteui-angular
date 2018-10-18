@@ -148,15 +148,11 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             }
             flatData.push(hierarchicalRecord.data);
 
-            let isExpanded = this.gridAPI.get_row_expansion_state(gridID, hierarchicalRecord.rowID, hierarchicalRecord.indentationLevel);
             const grid: IgxTreeGridComponent = this.gridAPI.get(gridID);
 
-            if (hierarchicalRecord.hasChildren && !isExpanded && this.hasFiltering(grid)) {
-                grid.expandedStates.set(hierarchicalRecord.rowID, true);
-                isExpanded = true;
-            }
+            hierarchicalRecord.expanded = this.gridAPI.get_row_expansion_state(gridID,
+                hierarchicalRecord.rowID, hierarchicalRecord.indentationLevel);
 
-            hierarchicalRecord.expanded = isExpanded;
             grid.treeGridRecordsMap.set(hierarchicalRecord.rowID, hierarchicalRecord);
 
             this.getFlatDataRecusrive(hierarchicalRecord.children, data, flatData, expandedLevels,

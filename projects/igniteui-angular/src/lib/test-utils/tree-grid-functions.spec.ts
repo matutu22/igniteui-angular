@@ -8,8 +8,14 @@ const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level
 
 const TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
 const TREE_ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
+const TREE_HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
+const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 
 export class TreeGridFunctions {
+    public static getHeaderRow(fix) {
+        return fix.debugElement.query(By.css(TREE_HEADER_ROW_CSS_CLASS));
+    }
+
     public static getAllRows(fix) {
         return fix.debugElement.queryAll(By.css('igx-tree-grid-row'));
     }
@@ -37,9 +43,26 @@ export class TreeGridFunctions {
         return headerCell;
     }
 
+    public static getRowCheckbox(rowDOM) {
+        const checkboxDiv = rowDOM.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
+        return checkboxDiv.query(By.css(CHECKBOX_INPUT_CSS_CLASS));
+    }
+
     public static clickHeaderCell(fix, columnKey) {
         const cell = TreeGridFunctions.getHeaderCell(fix, columnKey);
         cell.nativeElement.dispatchEvent(new Event('click'));
+    }
+
+    public static clickRowSelectionCheckbox(fix, rowIndex) {
+        const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
+        const checkbox = TreeGridFunctions.getRowCheckbox(rowDOM);
+        checkbox.nativeElement.dispatchEvent(new Event('click'));
+    }
+
+    public static clickHeaderRowSelectionCheckbox(fix) {
+        const headerRow = TreeGridFunctions.getHeaderRow(fix);
+        const checkbox = TreeGridFunctions.getRowCheckbox(headerRow);
+        checkbox.nativeElement.dispatchEvent(new Event('click'));
     }
 
     /**
@@ -213,4 +236,6 @@ export class TreeGridFunctions {
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, rowIndex, expectedSelection);
         });
     }
+
+
 }

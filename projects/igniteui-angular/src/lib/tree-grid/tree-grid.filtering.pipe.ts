@@ -73,10 +73,8 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
         const result = this.filter(hierarchyData, state);
 
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
-        const expandedStates = new Map<any, boolean>();
+        const expandedStates = grid.expandedStates;
         this.expandAllRecursive(result, expandedStates);
-        // set the private _expandedStates in order to not trigger the pipes unnecessarily
-        (grid as any)._expandedStates = expandedStates;
 
         return result;
     }

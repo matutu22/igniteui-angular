@@ -1,9 +1,13 @@
 import { By } from '@angular/platform-browser';
 import { IgxTreeGridComponent, IgxRowComponent } from '../tree-grid';
 import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';
+
+const TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
+const TREE_ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
 
 export class TreeGridFunctions {
     public static getAllRows(fix) {
@@ -162,5 +166,51 @@ export class TreeGridFunctions {
      */
     public static checkRowIsNotGrayedOut(row: IgxRowComponent<IGridBaseComponent>): boolean {
         return !row.nativeElement.classList.contains('igx-grid__tr--filtered');
+    }
+
+    /**
+     * Verifies the selection of both the RowComponent and the respective DOM Row.
+    */
+    public static verifyTreeRowSelection(treeGridComponent, rowComponent, rowDOM, expectedSelection: boolean) {
+        // Verfiy selection of checkbox
+        const checkboxDiv = rowDOM.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
+        const checkboxComponent = checkboxDiv.query(By.css('igx-checkbox')).componentInstance as IgxCheckboxComponent;
+        expect(checkboxComponent.checked).toBe(expectedSelection, 'Incorrect checkbox selection state');
+        expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(expectedSelection, 'Incorrect native checkbox selection state');
+
+        // Verify selection of row
+        expect(rowComponent.isSelected).toBe(expectedSelection, 'Incorrect row selection state');
+        expect((<HTMLElement>rowDOM.nativeElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(expectedSelection);
+
+        // Verify selection of row through treeGrid
+        const selectedRows = (treeGridComponent as IgxTreeGridComponent).selectedRows();
+        expect(selectedRows.includes(rowComponent.rowID)).toBe(expectedSelection);
+    }
+
+    /**
+     * Verifies the selection of both the RowComponent and the respective DOM Row.
+     * The rowIndex is the index of the row in ascending order (if rowIndex is 0, then the top-most row in view will be verified).
+    */
+    public static verifyTreeRowSelectionByIndex(fix, rowIndex, expectedSelection: boolean) {
+        const treeGrid = fix.debugElement.query(By.css('igx-tree-grid')).componentInstance as IgxTreeGridComponent;
+        const rowComponent = treeGrid.getRowByIndex(rowIndex);
+        const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
+        TreeGridFunctions.verifyTreeRowSelection(treeGrid, rowComponent, rowDOM, expectedSelection);
+    }
+
+    /**
+     * Verifies the selection of the treeGrid rows.
+     * Every index of the provided array is the index of the respective row in ascending order
+     * (if rowIndex is 0, then the top-most row in view will be verified).
+    */
+    public static verifyAllRowsSelection(fix, expectedSelectedRowIndices: any[], expectedSelection: boolean) {
+        if (expectedSelection) {
+            const treeGrid = fix.debugElement.query(By.css('igx-tree-grid')).componentInstance as IgxTreeGridComponent;
+            expect(treeGrid.selectedRows().length).toBe(expectedSelectedRowIndices.length, 'Incorrect number of rows that are selected.');
+        }
+
+        expectedSelectedRowIndices.forEach(rowIndex => {
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, rowIndex, expectedSelection);
+        });
     }
 }

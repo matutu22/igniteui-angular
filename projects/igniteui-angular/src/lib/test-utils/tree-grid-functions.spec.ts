@@ -90,7 +90,7 @@ export class TreeGridFunctions {
         const treeGrid = fix.debugElement.query(By.css('igx-tree-grid')).componentInstance as IgxTreeGridComponent;
         const rowComponent = treeGrid.getRowByIndex(rowIndex);
         const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
-        this.verifyRowIndentationLevel(rowComponent, rowDOM, expectedIndentationLevel);
+        TreeGridFunctions.verifyRowIndentationLevel(rowComponent, rowDOM, expectedIndentationLevel);
     }
 
     /**

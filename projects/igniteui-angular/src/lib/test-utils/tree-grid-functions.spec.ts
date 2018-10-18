@@ -1,5 +1,6 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent } from '../tree-grid';
+import { IgxTreeGridComponent, IgxRowComponent } from '../tree-grid';
+import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';
@@ -147,5 +148,19 @@ export class TreeGridFunctions {
         const iconDivRect = (<HTMLElement>iconDiv.nativeElement).getBoundingClientRect();
         expect((iconDivRect.left - (treeCellRect.left + treeCellPaddingLeft + indentation)) < 2)
             .toBe(true, 'TreeRow icon has incorrect position');
+    }
+
+    /**
+     * Returns true if a tree-grid row is 'grayed out' because of filtering
+     */
+    public static checkRowIsGrayedOut(row: IgxRowComponent<IGridBaseComponent>): boolean {
+        return row.nativeElement.classList.contains('igx-grid__tr--filtered');
+    }
+
+    /**
+     * Returns true if a tree-grid row is NOT 'grayed out' because of filtering
+     */
+    public static checkRowIsNotGrayedOut(row: IgxRowComponent<IGridBaseComponent>): boolean {
+        return !row.nativeElement.classList.contains('igx-grid__tr--filtered');
     }
 }

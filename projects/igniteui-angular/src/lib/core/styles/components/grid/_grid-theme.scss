@@ -637,6 +637,14 @@
             background-color: --var($theme, 'row-selected-background');
             color: --var($theme, 'row-selected-text-color');
         }
+
+        %igx-grid__tree-grouping-indicator {
+            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+
+            &:hover {
+                color: text-contrast(--var($theme, 'row-selected-background'));
+            }
+        }
     }
 
     %grid-row--group {
@@ -649,6 +657,31 @@
             color: --var($theme, 'treegrid-filtered-text-color');
         }
     }
+
+    %grid-row--selected--filtered {
+        %grid-cell-text {
+            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+        }
+
+        %igx-grid__tree-grouping-indicator {
+            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+
+            &:hover {
+                color: text-contrast(--var($theme, 'row-selected-background'));
+            }
+        }
+
+        %grid-cell--selected {
+            %igx-grid__tree-grouping-indicator {
+                color: rgba(text-contrast(--var($theme, 'cell-selected-background')), .5);
+
+                &:hover {
+                    color: text-contrast(--var($theme, 'cell-selected-background'));
+                }
+            }
+        }
+    }
+
 
     %igx-grid__tree-grouping-indicator {
         display: flex;

@@ -94,6 +94,10 @@
         @extend %grid-row--selected !optional;
     }
 
+    @include e(tr, $mods: (selected, filtered)) {
+        @extend %grid-row--selected--filtered !optional;
+    }
+
     @include e(tr, $m: group) {
         @extend %grid-row--group !optional;
     }

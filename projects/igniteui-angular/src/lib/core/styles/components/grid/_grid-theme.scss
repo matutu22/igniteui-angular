@@ -650,6 +650,30 @@
         }
     }
 
+    %grid-row--selected--filtered {
+        %grid-cell-text {
+            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+        }
+
+        %igx-grid__tree-grouping-indicator {
+            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+
+            &:hover {
+                color: text-contrast(--var($theme, 'row-selected-background'));
+            }
+        }
+
+        %grid-cell--selected {
+            %igx-grid__tree-grouping-indicator {
+                color: rgba(text-contrast(--var($theme, 'cell-selected-background')), .5);
+
+                &:hover {
+                    color: text-contrast(--var($theme, 'cell-selected-background'));
+                }
+            }
+        }
+    }
+
     %igx-grid__tree-grouping-indicator {
         display: flex;
         align-items: center;

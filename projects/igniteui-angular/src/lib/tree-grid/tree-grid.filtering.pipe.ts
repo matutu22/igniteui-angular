@@ -8,6 +8,7 @@ import { IFilteringExpressionsTree } from '../data-operations/filtering-expressi
 import { BaseFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IFilteringState } from '../data-operations/filtering-state.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
+import { IgxTreeGridAPIService } from './tree-grid-api.service';
 
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree): ITreeGridRecord[] {
@@ -51,27 +52,48 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     pure: true
 })
 export class IgxTreeGridFilteringPipe implements PipeTransform {
+    private gridAPI: IgxTreeGridAPIService;
 
-    constructor(private gridAPI: GridBaseAPIService<IGridBaseComponent>) { }
+    constructor(gridAPI: GridBaseAPIService<IGridBaseComponent>) {
+        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+     }
 
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         id: string, pipeTrigger: number): ITreeGridRecord[] {
+        const grid: IgxTreeGridComponent = this.gridAPI.get(id);
         const state = { expressionsTree: expressionsTree };
 
         if (!state.expressionsTree ||
             !state.expressionsTree.filteringOperands ||
             state.expressionsTree.filteringOperands.length === 0) {
+            grid.filteredData = null;
             return hierarchyData;
         }
 
         DataUtil.mergeDefaultProperties(state, { strategy: new TreeGridFilteringStrategy() });
 
         const result = this.filter(hierarchyData, state);
-        // grid.filteredData = result;
+        const expandedStates = grid.expandedStates;
+        const filteredData: any[] = [];
+        this.expandAllRecursive(result, expandedStates, filteredData);
+        grid.filteredData = filteredData;
+
         return result;
     }
 
-    public filter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
+    private expandAllRecursive(data: ITreeGridRecord[], expandedStates: Map<any, boolean>, filteredData: any[]) {
+        for (let i = 0; i < data.length; i++) {
+            const rec = data[i];
+            filteredData.push(rec.data);
+
+            if (rec.children && rec.children.length > 0) {
+                expandedStates.set(rec.rowID, true);
+                this.expandAllRecursive(rec.children, expandedStates, filteredData);
+            }
+        }
+    }
+
+    private filter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
         return state.strategy.filter(data, state.expressionsTree);
     }
 }

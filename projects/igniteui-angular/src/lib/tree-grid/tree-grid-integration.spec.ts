@@ -34,6 +34,11 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'Age', 4);
+
+            treeGrid.unpinColumn('Age');
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
         });
 
         it('should transform a non-tree column into a tree column when hiding the original tree-column', () => {
@@ -44,6 +49,11 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 3);
+
+            column.hidden = false;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
         });
 
         it('should transform the first visible column into tree column when pin and hide another column before that', () => {
@@ -103,6 +113,11 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 5);
+
+            treeGrid.unpinColumn('Name');
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
         });
 
         it('should transform a non-tree column into a tree column when hiding the original tree-column', () => {
@@ -113,6 +128,11 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 4);
+
+            column.hidden = false;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
         });
 
         it('should transform the first visible column into tree column when pin and hide another column before that', () => {

@@ -31,8 +31,6 @@ export class IgxTreeGridSortingComponent {
 export class IgxTreeGridFilteringComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
-    public timeGenerator: Calendar = new Calendar();
-    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 }
 
 @Component({

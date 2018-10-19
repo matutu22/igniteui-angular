@@ -69,7 +69,7 @@ describe('IgxTreeGrid - Integration', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 3);
         });
 
-        it('should transform a non-tree column into a tree column when moving the original tree-column through API', () => {
+        it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
 
             // Move tree-column
@@ -81,7 +81,7 @@ describe('IgxTreeGrid - Integration', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
         });
 
-        it('should transform a non-tree column into a tree column when moving the original tree-column through UI', (async () => {
+        it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', (async () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
 
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
@@ -148,7 +148,7 @@ describe('IgxTreeGrid - Integration', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
         });
 
-        it('should transform a non-tree column into a tree column when moving the original tree-column through API', () => {
+        it('(API) should transform a non-tree column into a tree column when moving the original tree-column through', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
             // Move tree-column
@@ -160,7 +160,7 @@ describe('IgxTreeGrid - Integration', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
         });
 
-        it('should transform a non-tree column into a tree column when moving the original tree-column through UI', (async () => {
+        it('(UI) should transform a non-tree column into a tree column when moving the original tree-column through', (async () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];

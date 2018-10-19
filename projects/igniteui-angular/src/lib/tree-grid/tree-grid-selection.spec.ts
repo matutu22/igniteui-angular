@@ -4,7 +4,9 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { IgxTreeGridSimpleComponent } from '../test-utils/tree-grid-components.spec';
-import { TreeGridFunctions, TREE_ROW_SELECTION_CSS_CLASS } from '../test-utils/tree-grid-functions.spec';
+import { TreeGridFunctions,
+         TREE_ROW_SELECTION_CSS_CLASS,
+         TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS } from '../test-utils/tree-grid-functions.spec';
 import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 
 describe('IgxTreeGrid - Selection', () => {
@@ -29,6 +31,24 @@ describe('IgxTreeGrid - Selection', () => {
         treeGrid.rowSelectable = true;
         treeGrid.primaryKey = 'ID';
         fix.detectChanges();
+    });
+
+    it('should have checkbox on each row if rowSelectable is true', () => {
+        const rows = TreeGridFunctions.getAllRows(fix);
+
+        expect(rows.length).toBe(10);
+        rows.forEach((row) => {
+            const checkBoxElement = row.nativeElement.querySelector(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS);
+            expect(checkBoxElement).not.toBeNull();
+        });
+
+        treeGrid.rowSelectable = false;
+
+        expect(rows.length).toBe(10);
+        rows.forEach((row) => {
+            const checkBoxElement = row.nativeElement.querySelector(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS);
+            expect(checkBoxElement).toBeNull();
+        });
     });
 
     describe('API Row Selection', () => {
@@ -137,6 +157,35 @@ describe('IgxTreeGrid - Selection', () => {
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 3, 5], true);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+
+        it('should persist selection after paging', () => {
+            treeGrid.selectRows([treeGrid.getRowByIndex(0).rowID, treeGrid.getRowByIndex(3).rowID,
+            treeGrid.getRowByIndex(5).rowID], true);
+            fix.detectChanges();
+
+            treeGrid.paging = true;
+            treeGrid.perPage = 4;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, true);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 2, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, true);
+
+            treeGrid.page = 1;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, true);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 2, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+
+            treeGrid.page = 2;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
         });
     });
 
@@ -274,6 +323,36 @@ describe('IgxTreeGrid - Selection', () => {
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 3, 5], true);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+
+        it('should persist selection after paging', () => {
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 3);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
+            fix.detectChanges();
+
+            treeGrid.paging = true;
+            treeGrid.perPage = 4;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, true);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 2, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, true);
+
+            treeGrid.page = 1;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, true);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 2, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+
+            treeGrid.page = 2;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
         });
     });
 });

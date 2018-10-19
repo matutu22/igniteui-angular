@@ -699,6 +699,14 @@
         color: --var($theme, 'cell-selected-text-color');
         background-color: --var($theme, 'cell-selected-background') !important;
         border-bottom: 0;
+
+        %igx-grid__tree-grouping-indicator {
+            color: rgba(text-contrast(--var($theme, 'cell-selected-background')), .5);
+
+            &:hover {
+                color: text-contrast(--var($theme, 'cell-selected-background'));
+            }
+        }
     }
 
     %grid-cell--editing {

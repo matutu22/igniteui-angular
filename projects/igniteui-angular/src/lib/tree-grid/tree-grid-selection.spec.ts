@@ -4,7 +4,7 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { IgxTreeGridSimpleComponent } from '../test-utils/tree-grid-components.spec';
-import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
+import { TreeGridFunctions, TREE_ROW_SELECTION_CSS_CLASS } from '../test-utils/tree-grid-functions.spec';
 import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 
 describe('IgxTreeGrid - Selection', () => {
@@ -61,8 +61,8 @@ describe('IgxTreeGrid - Selection', () => {
             // Verify new selection by keeping the old one.
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 2], true);
 
-            treeGrid.selectRows([treeGrid.getRowByIndex(1).rowID, treeGrid.getRowByIndex(3).rowID, 
-                                 treeGrid.getRowByIndex(6).rowID, treeGrid.getRowByIndex(8).rowID], true);
+            treeGrid.selectRows([treeGrid.getRowByIndex(1).rowID, treeGrid.getRowByIndex(3).rowID,
+            treeGrid.getRowByIndex(6).rowID, treeGrid.getRowByIndex(8).rowID], true);
             fix.detectChanges();
 
             // Verify new selection by NOT keeping the old one.
@@ -73,8 +73,8 @@ describe('IgxTreeGrid - Selection', () => {
 
         it('should be able to deselect row of any level', () => {
             treeGrid.selectRows([treeGrid.getRowByIndex(1).rowID, treeGrid.getRowByIndex(3).rowID,
-                                 treeGrid.getRowByIndex(6).rowID, treeGrid.getRowByIndex(8).rowID,
-                                 treeGrid.getRowByIndex(9).rowID], true);
+            treeGrid.getRowByIndex(6).rowID, treeGrid.getRowByIndex(8).rowID,
+            treeGrid.getRowByIndex(9).rowID], true);
             fix.detectChanges();
 
             treeGrid.deselectRows([treeGrid.getRowByIndex(1).rowID, treeGrid.getRowByIndex(3).rowID]);
@@ -104,7 +104,7 @@ describe('IgxTreeGrid - Selection', () => {
 
         it('should persist the selection after filtering', fakeAsync(() => {
             treeGrid.selectRows([treeGrid.getRowByIndex(0).rowID, treeGrid.getRowByIndex(5).rowID,
-                                 treeGrid.getRowByIndex(8).rowID], true);
+            treeGrid.getRowByIndex(8).rowID], true);
             fix.detectChanges();
 
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
@@ -119,6 +119,25 @@ describe('IgxTreeGrid - Selection', () => {
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 5, 8], true);
         }));
+
+        it('should persist the selection after expand/collapse', () => {
+            treeGrid.selectRows([treeGrid.getRowByIndex(0).rowID, treeGrid.getRowByIndex(3).rowID,
+            treeGrid.getRowByIndex(5).rowID], true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(3);
+
+            // Collapse row and verify visible selected rows
+            treeGrid.toggleRowExpansion(treeGrid.getRowByIndex(0).rowID);
+            expect(getVisibleSelectedRows(fix).length).toBe(1);
+
+            // Expand same row and verify visible selected rows
+            treeGrid.toggleRowExpansion(treeGrid.getRowByIndex(0).rowID);
+            expect(getVisibleSelectedRows(fix).length).toBe(3);
+
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 3, 5], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
     });
 
     describe('UI Row Selection', () => {
@@ -142,7 +161,7 @@ describe('IgxTreeGrid - Selection', () => {
             fix.detectChanges();
             TreeGridFunctions.verifyDataRowsSelection(fix, [0], true);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
-            
+
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 2);
             fix.detectChanges();
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 2], true);
@@ -220,5 +239,46 @@ describe('IgxTreeGrid - Selection', () => {
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 5, 8], true);
         }));
+
+        it('should update header checkbox when reselecting all filtered-in rows', fakeAsync(() => {
+            treeGrid.filter('Age', 30, IgxNumberFilteringOperand.instance().condition('lessThan'));
+            tick(100);
+
+            TreeGridFunctions.clickHeaderRowSelectionCheckbox(fix);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true); // Verify header checkbox is selected
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0); // Unselect row
+            fix.detectChanges();
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null); // Verify header checkbox is indeterminate
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0); // Reselect same row
+            fix.detectChanges();
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true); // Verify header checkbox is selected
+        }));
+
+        it('should persist the selection after expand/collapse', () => {
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 3);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(3);
+
+            // Collapse row and verify visible selected rows
+            TreeGridFunctions.clickRowIndicator(fix, 0);
+            expect(getVisibleSelectedRows(fix).length).toBe(1);
+
+            // Expand same row and verify visible selected rows
+            TreeGridFunctions.clickRowIndicator(fix, 0);
+            expect(getVisibleSelectedRows(fix).length).toBe(3);
+
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 3, 5], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
     });
 });
+
+function getVisibleSelectedRows(fix) {
+    return TreeGridFunctions.getAllRows(fix).filter(
+        (row) => row.nativeElement.classList.contains(TREE_ROW_SELECTION_CSS_CLASS));
+}

@@ -6,10 +6,10 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';
 
-const TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
-const TREE_ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
-const TREE_HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
-const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
+export const TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
+export const TREE_ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
+export const TREE_HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
+export const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 
 export class TreeGridFunctions {
     public static getHeaderRow(fix) {
@@ -63,6 +63,12 @@ export class TreeGridFunctions {
         const headerRow = TreeGridFunctions.getHeaderRow(fix);
         const checkbox = TreeGridFunctions.getRowCheckbox(headerRow);
         checkbox.nativeElement.dispatchEvent(new Event('click'));
+    }
+
+    public static clickRowIndicator(fix, rowIndex) {
+        const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(rowDOM);
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
     }
 
     /**
@@ -241,7 +247,7 @@ export class TreeGridFunctions {
      * Verifies the selection of the header checkbox.
      * The expected value can be true, false or null (indeterminate).
     */
-    public static verifyHeaderCheckboxSelection(fix, expectedSelection: boolean | null) {        
+    public static verifyHeaderCheckboxSelection(fix, expectedSelection: boolean | null) {
         const headerRow = TreeGridFunctions.getHeaderRow(fix);
         const checkboxDiv = headerRow.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
         const checkboxComponent = checkboxDiv.query(By.css('igx-checkbox')).componentInstance as IgxCheckboxComponent;
@@ -249,11 +255,12 @@ export class TreeGridFunctions {
         if (expectedSelection === null) {
             expect(checkboxComponent.indeterminate).toBe(true);
             expect(checkboxComponent.checked).toBe(false, 'Incorrect checkbox selection state');
-            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(false, 'Incorrect native checkbox selection state');    
+            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(false, 'Incorrect native checkbox selection state');
         } else {
             expect(checkboxComponent.indeterminate).toBe(false);
             expect(checkboxComponent.checked).toBe(expectedSelection, 'Incorrect checkbox selection state');
-            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(expectedSelection, 'Incorrect native checkbox selection state');
+            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(expectedSelection,
+                'Incorrect native checkbox selection state');
         }
     }
 }

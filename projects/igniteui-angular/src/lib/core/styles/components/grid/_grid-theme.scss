@@ -637,6 +637,14 @@
             background-color: --var($theme, 'row-selected-background');
             color: --var($theme, 'row-selected-text-color');
         }
+
+        %igx-grid__tree-grouping-indicator {
+            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+
+            &:hover {
+                color: text-contrast(--var($theme, 'row-selected-background'));
+            }
+        }
     }
 
     %grid-row--group {
@@ -673,6 +681,7 @@
             }
         }
     }
+
 
     %igx-grid__tree-grouping-indicator {
         display: flex;

@@ -172,7 +172,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 5, 2);
     });
 
-    fit('check grand children are not visible when collapsing their grand parent', () => {
+    it('check grand children are not visible when collapsing their grand parent', () => {
         const fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.treeGrid;

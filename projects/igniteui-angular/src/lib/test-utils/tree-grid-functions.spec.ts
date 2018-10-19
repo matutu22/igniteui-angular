@@ -226,7 +226,7 @@ export class TreeGridFunctions {
      * Every index of the provided array is the index of the respective row in ascending order
      * (if rowIndex is 0, then the top-most row in view will be verified).
     */
-    public static verifyAllRowsSelection(fix, expectedSelectedRowIndices: any[], expectedSelection: boolean) {
+    public static verifyDataRowsSelection(fix, expectedSelectedRowIndices: any[], expectedSelection: boolean) {
         if (expectedSelection) {
             const treeGrid = fix.debugElement.query(By.css('igx-tree-grid')).componentInstance as IgxTreeGridComponent;
             expect(treeGrid.selectedRows().length).toBe(expectedSelectedRowIndices.length, 'Incorrect number of rows that are selected.');
@@ -237,5 +237,23 @@ export class TreeGridFunctions {
         });
     }
 
+    /**
+     * Verifies the selection of the header checkbox.
+     * The expected value can be true, false or null (indeterminate).
+    */
+    public static verifyHeaderCheckboxSelection(fix, expectedSelection: boolean | null) {        
+        const headerRow = TreeGridFunctions.getHeaderRow(fix);
+        const checkboxDiv = headerRow.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
+        const checkboxComponent = checkboxDiv.query(By.css('igx-checkbox')).componentInstance as IgxCheckboxComponent;
 
+        if (expectedSelection === null) {
+            expect(checkboxComponent.indeterminate).toBe(true);
+            expect(checkboxComponent.checked).toBe(false, 'Incorrect checkbox selection state');
+            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(false, 'Incorrect native checkbox selection state');    
+        } else {
+            expect(checkboxComponent.indeterminate).toBe(false);
+            expect(checkboxComponent.checked).toBe(expectedSelection, 'Incorrect checkbox selection state');
+            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(expectedSelection, 'Incorrect native checkbox selection state');
+        }
+    }
 }

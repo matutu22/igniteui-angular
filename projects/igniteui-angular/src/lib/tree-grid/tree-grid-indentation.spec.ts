@@ -54,8 +54,6 @@ describe('IgxTreeGrid - Indentation', () => {
         });
 
         it('should persist the indentation after sorting', () => {
-            treeGrid.columnList.filter(c => c.field === 'Age')[0].sortable = true;
-            fix.detectChanges();
             treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc });
             fix.detectChanges();
 
@@ -73,9 +71,6 @@ describe('IgxTreeGrid - Indentation', () => {
         });
 
         it('should persist the indentation after filtering', () => {
-            treeGrid.columnList.filter(c => c.field === 'Age')[0].sortable = true;
-            fix.detectChanges();
-
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
 
@@ -192,8 +187,6 @@ describe('IgxTreeGrid - Indentation', () => {
         });
 
         it('should persist the indentation after sorting', () => {
-            treeGrid.columnList.filter(c => c.field === 'Age')[0].sortable = true;
-            fix.detectChanges();
             treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc });
             fix.detectChanges();
 
@@ -209,8 +202,6 @@ describe('IgxTreeGrid - Indentation', () => {
         });
 
         it('should persist the indentation after filtering', () => {
-            treeGrid.columnList.filter(c => c.field === 'Age')[0].sortable = true;
-            fix.detectChanges();
 
             treeGrid.filter('Age', 35, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();

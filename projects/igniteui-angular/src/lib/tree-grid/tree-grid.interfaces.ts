@@ -5,9 +5,8 @@ export interface ITreeGridRecord {
     data: any;
     children?: ITreeGridRecord[];
     parent?: ITreeGridRecord;
-    isFilteredOutParent?: boolean;
-    hasChildren?: boolean;
     indentationLevel?: number;
+    isFilteredOutParent?: boolean;
     expanded?: boolean;
 }
 

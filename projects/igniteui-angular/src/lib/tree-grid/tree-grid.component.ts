@@ -81,6 +81,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
     public treeGridRecordsMap: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
+    public processedTreeGridRecords: ITreeGridRecord[];
+
+    public processedTreeGridRecordsMap: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
+
     /**
      * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
      * ```html
@@ -161,7 +165,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     }
 
     public getTreeGridRecord(rowID: any): ITreeGridRecord {
-        return this.gridAPI.get_tree_grid_record(this.id, rowID);
+        return this.treeGridRecordsMap.get(rowID);
     }
 
     public expandRow(rowID: any) {

@@ -29,7 +29,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
     }
 
     public get hasChildren() {
-        return this.row.treeRow.hasChildren;
+        return this.row.treeRow.children && this.row.treeRow.children.length > 0;
     }
 
     get expanded(): boolean {

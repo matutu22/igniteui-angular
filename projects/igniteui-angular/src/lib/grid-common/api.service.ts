@@ -1532,14 +1532,15 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
     public delete_row(id: string, rowSelector: any) {
         const grid = this.get(id);
         if (grid.primaryKey !== undefined && grid.primaryKey !== null) {
-            const index = grid.data.map((record) => record[grid.primaryKey]).indexOf(rowSelector);
+            const gridData = this.get_all_data(id);
+            const index = gridData.map((record) => record[grid.primaryKey]).indexOf(rowSelector);
             if (index !== -1) {
                 const editableCell = this.get_cell_inEditMode(id);
                 if (editableCell && editableCell.cellID.rowID === rowSelector) {
                     this.escape_editMode(id, editableCell.cellID);
                 }
-                grid.onRowDeleted.emit({ data: grid.data[index] });
-                grid.data.splice(index, 1);
+                grid.onRowDeleted.emit({ data: gridData[index] });
+                this.delete_row_from_array(id, rowSelector, index);
                 if (grid.rowSelectable === true && grid.selection.is_item_selected(id, rowSelector)) {
                     this.deselect_rows(id, [rowSelector]);
                 } else {
@@ -1549,11 +1550,16 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
                 grid.cdr.markForCheck();
 
                 this.refresh_search(id);
-                if (grid.data.length % grid.perPage === 0 && grid.isLastPage && grid.page !== 0) {
+                if (gridData.length % grid.perPage === 0 && grid.isLastPage && grid.page !== 0) {
                     grid.page--;
                 }
             }
         }
+    }
+
+    protected delete_row_from_array(id: string, rowID: any, index: number) {
+        const grid = this.get(id);
+        grid.data.splice(index, 1);
     }
 
     public update_cell(id: string, value: any, rowSelector: any, column: string): void {
@@ -1581,15 +1587,16 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
         const column = grid.columns[columnID];
         const cellObj = (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) ?
         editableCell.cell : grid.columns[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
-        const rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
-        grid.data.indexOf(rowID);
+        const gridData = this.get_all_data(id);
+        const rowIndex = grid.primaryKey ? gridData.map((record) => record[grid.primaryKey]).indexOf(rowID) :
+        gridData.indexOf(rowID);
         if (rowIndex !== -1) {
             const args: IGridEditEventArgs = {
                 row: cellObj ? cellObj.row : null, cell: cellObj,
-                currentValue: grid.data[rowIndex][column.field], newValue: editValue
+                currentValue: gridData[rowIndex][column.field], newValue: editValue
             };
             grid.onEditDone.emit(args);
-            grid.data[rowIndex][column.field] = args.newValue;
+            gridData[rowIndex][column.field] = args.newValue;
             if (grid.primaryKey === column.field && isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 grid.selection.select_item(id, args.newValue);
@@ -1614,13 +1621,14 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
     public update_row_implementation(id: string, value: any, rowID: any): void {
         const grid = this.get(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
-        const index = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
-        grid.data.indexOf(rowID);
+        const gridData = this.get_all_data(id);
+        const index = grid.primaryKey ? gridData.map((record) => record[grid.primaryKey]).indexOf(rowID) :
+            gridData.indexOf(rowID);
         if (index !== -1) {
             const args: IGridEditEventArgs = { row: this.get_row_by_key(id, rowID), cell: null,
                 currentValue: this.get(id).data[index], newValue: value };
             grid.onEditDone.emit(args);
-            grid.data[index] = args.newValue;
+            this.update_row_in_array(id, args.newValue, rowID, index);
             if (isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 const newRowID = (grid.primaryKey) ? args.newValue[grid.primaryKey] : args.newValue;
@@ -1628,6 +1636,11 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
             }
             (grid as any)._pipeTrigger++;
         }
+    }
+
+    protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
+        const grid = this.get(id);
+        grid.data[index] = value;
     }
 
     public enable_summaries(id: string, rest) {

@@ -90,7 +90,8 @@ export class DataUtil {
             rowID: hierarchicalRecord.rowID,
             data: hierarchicalRecord.data,
             children: hierarchicalRecord.children,
-            isFilteredOutParent: hierarchicalRecord.isFilteredOutParent
+            isFilteredOutParent: hierarchicalRecord.isFilteredOutParent,
+            indentationLevel: hierarchicalRecord.indentationLevel
         };
         return rec;
     }

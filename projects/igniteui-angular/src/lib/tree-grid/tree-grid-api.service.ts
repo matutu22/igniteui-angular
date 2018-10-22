@@ -24,11 +24,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return grid.flatData;
     }
 
-    public get_tree_grid_record(id: string, rowID: any): ITreeGridRecord {
-        const grid = this.get(id);
-        return grid.treeGridRecordsMap.get(rowID);
-    }
-
     public expand_row(id: string, rowID: any) {
         const grid = this.get(id);
         const expandedStates = grid.expandedStates;
@@ -46,10 +41,11 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     public toggle_row_expansion(id: string, rowID: any) {
         const grid = this.get(id);
         const expandedStates = grid.expandedStates;
-        const treeRecord = this.get_tree_grid_record(id, rowID);
+        const treeRecord = grid.treeGridRecordsMap.get(rowID);
 
         if (treeRecord) {
-            expandedStates.set(rowID, !treeRecord.expanded);
+            const isExpanded = this.get_row_expansion_state(id, rowID, treeRecord.indentationLevel);
+            expandedStates.set(rowID, !isExpanded);
             grid.expandedStates = expandedStates;
         }
     }
@@ -102,6 +98,32 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             const children = parentRecord.data[grid.childDataKey];
             children.push(data);
             this.trigger_row_added(id, data);
+        }
+    }
+
+    protected delete_row_from_array(id: string, rowID: any, index: number) {
+        const grid = this.get(id);
+        if (grid.primaryKey && grid.foreignKey) {
+            super.delete_row_from_array(id, rowID, index);
+        } else {
+            const record = grid.treeGridRecordsMap.get(rowID);
+            const childData = record.parent.data[grid.childDataKey];
+            index = grid.primaryKey ? childData.map(c => c[grid.primaryKey]).indexOf(rowID) :
+                childData.indexOf(rowID);
+            childData.splice(index, 1);
+        }
+    }
+
+    protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
+        const grid = this.get(id);
+        if (grid.primaryKey && grid.foreignKey) {
+            super.update_row_in_array(id, value, rowID, index);
+        } else {
+            const record = grid.treeGridRecordsMap.get(rowID);
+            const childData = record.parent.data[grid.childDataKey];
+            index = grid.primaryKey ? childData.map(c => c[grid.primaryKey]).indexOf(rowID) :
+                childData.indexOf(rowID);
+            childData[index] = value;
         }
     }
 }

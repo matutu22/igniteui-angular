@@ -1744,4 +1744,8 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
         event.target.scrollLeft = 0;
         event.target.scrollTop = 0;
     }
+
+    public should_apply_number_style(column: IgxColumnComponent): boolean {
+        return column.dataType === DataType.Number;
+    }
 }

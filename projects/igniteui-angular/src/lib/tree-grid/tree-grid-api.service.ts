@@ -2,12 +2,13 @@ import { GridBaseAPIService } from '../grid-common/api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 
 import { cloneArray } from '../core/utils';
-import { DataUtil } from '../data-operations/data-util';
+import { DataUtil, DataType } from '../data-operations/data-util';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { ITreeGridRowExpansionEventArgs } from './tree-grid.interfaces';
 import { IgxExpansionPanelDescriptionDirective } from '../expansion-panel/expansion-panel.directives';
+import { IgxColumnComponent } from '../grid-common/column.component';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
     public on_after_content_init(id: string) {
@@ -125,5 +126,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                 childData.indexOf(rowID);
             childData[index] = value;
         }
+    }
+
+    public should_apply_number_style(column: IgxColumnComponent): boolean {
+        return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
 }

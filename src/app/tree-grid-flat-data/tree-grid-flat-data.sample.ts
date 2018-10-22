@@ -17,9 +17,10 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public ngOnInit(): void {
         this.columns = [
-            { field: 'firstName', label: 'First Name', width: 300, resizable: true, movable: true },
-            { field: 'lastName', label: 'Last Name', width: 150, resizable: true, movable: true },
-            { field: 'Title', label: 'Title', width: 200, resizable: true, movable: true }
+            { field: 'employeeID', label: 'ID', width: 200, resizable: true, movable: true, dataType: 'number' },
+            { field: 'firstName', label: 'First Name', width: 300, resizable: true, movable: true, dataType: 'string' },
+            { field: 'lastName', label: 'Last Name', width: 150, resizable: true, movable: true, dataType: 'string' },
+            { field: 'Title', label: 'Title', width: 200, resizable: true, movable: true, dataType: 'string' }
         ];
         this.data = [
             { 'employeeID': 0, 'PID': -1, 'firstName': 'Andrew', 'lastName': 'Fuller', 'Title': 'Vice President, Sales' },

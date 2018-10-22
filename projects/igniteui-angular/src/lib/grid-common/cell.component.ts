@@ -383,7 +383,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
         const classList = {
             'igx_grid__cell--edit': this.inEditMode,
-            'igx-grid__td--number': this.column.dataType === DataType.Number,
+            'igx-grid__td--number': this.gridAPI.should_apply_number_style(this.column),
             'igx-grid__td--editing': this.inEditMode,
             'igx-grid__th--pinned': this.column.pinned,
             'igx-grid__th--pinned-last': this.isLastPinned,

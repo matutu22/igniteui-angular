@@ -4,6 +4,7 @@ import { IgxTreeGridModule } from './index';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { By } from '@angular/platform-browser';
 
 describe('IgxTreeGrid - Integration', () => {
     let fix;
@@ -97,6 +98,37 @@ describe('IgxTreeGrid - Integration', () => {
 
             TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
         }));
+
+        it('(API) should autosize tree-column', () => {
+            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
+            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(225, 'incorrect column width');
+            expect(parseInt(column.width, 10)).toBe(225);
+
+            // API autosizing
+            column.autosize();
+            fix.detectChanges();
+
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(100, 'incorrect headerCell width');
+            expect(parseInt(column.width, 10)).toBe(100);
+        });
+
+        it('(UI) should autosize tree-column', () => {
+            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
+            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+            column.resizable = true;
+
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(225, 'incorrect column width');
+            expect(parseInt(column.width, 10)).toBe(225);
+
+            // UI autosizing
+            const resizer = headerCell.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+            UIInteractions.simulateMouseEvent('dblclick', resizer, 225, 5);
+
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(100, 'incorrect headerCell width');
+            expect(parseInt(column.width, 10)).toBe(100);
+        });
     });
 
     describe('Primary/Foreign key', () => {
@@ -176,5 +208,36 @@ describe('IgxTreeGrid - Integration', () => {
 
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
         }));
+
+        it('(API) should autosize tree-column', () => {
+            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
+            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(180, 'incorrect column width');
+            expect(parseInt(column.width, 10)).toBe(180);
+
+            // API autosizing
+            column.autosize();
+            fix.detectChanges();
+
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(100, 'incorrect headerCell width');
+            expect(parseInt(column.width, 10)).toBe(100);
+        });
+
+        it('(UI) should autosize tree-column', () => {
+            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
+            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+            column.resizable = true;
+
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(180, 'incorrect column width');
+            expect(parseInt(column.width, 10)).toBe(180);
+
+            // UI autosizing
+            const resizer = headerCell.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+            UIInteractions.simulateMouseEvent('dblclick', resizer, 225, 5);
+
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(100, 'incorrect headerCell width');
+            expect(parseInt(column.width, 10)).toBe(100);
+        });
     });
 });

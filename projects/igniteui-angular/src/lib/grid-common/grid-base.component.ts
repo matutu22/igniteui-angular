@@ -1909,7 +1909,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 	 * @memberof IgxGridComponent
      */
     get pinnedColumns(): IgxColumnComponent[] {
-        return this._pinnedColumns;
+        return this._pinnedColumns.filter((col) => !col.hidden);
     }
     set pinnedColumns(value: IgxColumnComponent[]) {
         this._pinnedColumns = value;

@@ -138,14 +138,14 @@ export class IgxRowComponent<T extends IGridBaseComponent> implements DoCheck {
      * @hidden
      */
     get pinnedColumns(): IgxColumnComponent[] {
-        return this.grid.pinnedColumns.filter(c => !c.hidden);
+        return this.grid.pinnedColumns;
     }
 
     /**
      * @hidden
      */
     get unpinnedColumns(): IgxColumnComponent[] {
-        return this.grid.unpinnedColumns.filter(c => !c.hidden);
+        return this.grid.unpinnedColumns;
     }
 
     /**

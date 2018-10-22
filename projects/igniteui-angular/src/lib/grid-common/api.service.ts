@@ -1046,7 +1046,7 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
         const newUnpinnedCols = [];
 
         // When a column is a group or is inside a group, pin all related.
-        grid.pinnedColumns.forEach(col => {
+        (grid as any)._pinnedColumns.forEach(col => {
             if (col.parent) {
                 col.parent.pinned = true;
             }
@@ -1345,7 +1345,7 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
 
     public get_pinned_width(id: string, takeHidden: boolean) {
         const grid = this.get(id);
-        const fc = takeHidden ? grid.pinnedColumns : grid.pinnedColumns.filter(c => !c.hidden);
+        const fc = takeHidden ? (grid as any)._pinnedColumns : grid.pinnedColumns;
         let sum = 0;
         for (const col of fc) {
             if (col.level === 0) {
@@ -1485,7 +1485,7 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
 
     private reorder_pinned_columns(id: string, from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition) {
         const grid = this.get(id);
-        const pinned = grid.pinnedColumns;
+        const pinned = (grid as any)._pinnedColumns;
         let dropIndex = pinned.indexOf(to);
 
         if (position === DropPosition.BeforeDropTarget) {

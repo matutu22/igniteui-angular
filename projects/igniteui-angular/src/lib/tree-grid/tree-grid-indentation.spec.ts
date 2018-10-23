@@ -4,9 +4,10 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../test-utils/tree-grid-components.spec';
 import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
-import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
+import { TreeGridFunctions, NUMBER_CELL_CSS_CLASS } from '../test-utils/tree-grid-functions.spec';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { DropPosition } from '../grid';
 
 describe('IgxTreeGrid - Indentation', () => {
     let fix;
@@ -156,6 +157,28 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(8), rows[8], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(9), rows[9], 1);
         }));
+
+        it('should change cell content alignment of tree-column with number dataType when it is no longer tree-column', () => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
+            verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
+
+            // Moving 'ID' column
+            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+            let targetColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
+            verifyCellsContentAlignment(fix, 'ID', false); // Verify cells of 'ID' are right-aligned.
+
+            // Moving 'ID' column
+            targetColumn = treeGrid.columns.filter(c => c.field === 'Name')[0];
+            treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
+            verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
+        });
     });
 
     describe('Primary/Foreign key', () => {
@@ -284,6 +307,50 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(6), rows[6], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(7), rows[7], 1);
         }));
+
+        it('should change cell content alignment of tree-column with number dataType when it is no longer tree-column', () => {
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
+            verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
+
+            // Moving 'ID' column
+            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+            let targetColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
+            verifyCellsContentAlignment(fix, 'ID', false); // Verify cells of 'ID' are right-aligned.
+
+            // Moving 'ID' column
+            targetColumn = treeGrid.columns.filter(c => c.field === 'ParentID')[0];
+            treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
+            verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
+        });
     });
 });
 
+function verifyCellsContentAlignment(fix, columnKey, shouldBeLeftAligned: boolean) {
+    const cells = TreeGridFunctions.getColumnCells(fix, columnKey);
+    if (shouldBeLeftAligned) {
+        cells.forEach((cell) => {
+            expect(cell.nativeElement.classList.contains(NUMBER_CELL_CSS_CLASS))
+                .toBe(false, 'cell has number css class');
+
+            // TreeCells have either 2 or 3 div children (2 for root rows and 3 for child rows).
+            const cellDivChildren = cell.queryAll(By.css('div'));
+            expect((cellDivChildren.length === 2) || (cellDivChildren.length === 3)).toBe(true);
+        });
+    } else { // Should be right-aligned
+        cells.forEach((cell) => {
+            expect(cell.nativeElement.classList.contains(NUMBER_CELL_CSS_CLASS))
+                .toBe(true, 'cell does not have number css class');
+
+            // NormalCells have 1 div child (no div for indentation and no div for expander).
+            const cellDivChildren = cell.queryAll(By.css('div'));
+            expect(cellDivChildren.length === 1).toBe(true);
+        });
+    }
+}

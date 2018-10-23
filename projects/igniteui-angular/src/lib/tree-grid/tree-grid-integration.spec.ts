@@ -1,7 +1,10 @@
 import { async, TestBed } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
-import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../test-utils/tree-grid-components.spec';
+import {
+    IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
+    IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent
+} from '../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
@@ -14,12 +17,32 @@ describe('IgxTreeGrid - Integration', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent
+                IgxTreeGridPrimaryForeignKeyComponent,
+                IgxTreeGridStringTreeColumnComponent,
+                IgxTreeGridDateTreeColumnComponent
             ],
             imports: [IgxTreeGridModule]
         })
             .compileComponents();
     }));
+
+    it('should have tree-column with a \'string\' dataType', () => {
+        // Init test
+        fix = TestBed.createComponent(IgxTreeGridStringTreeColumnComponent);
+        fix.detectChanges();
+        treeGrid = fix.componentInstance.treeGrid;
+
+        TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
+    });
+
+    it('should have tree-column with a \'date\' dataType', () => {
+        // Init test
+        fix = TestBed.createComponent(IgxTreeGridDateTreeColumnComponent);
+        fix.detectChanges();
+        treeGrid = fix.componentInstance.treeGrid;
+
+        TreeGridFunctions.verifyTreeColumn(fix, 'HireDate', 4);
+    });
 
     describe('Child Collection', () => {
         beforeEach(() => {

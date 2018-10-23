@@ -12,6 +12,7 @@ export const TREE_CELL_SELECTION_CSS_CLASS = 'igx-grid__td--selected';
 export const TREE_HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
 export const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 export const TREE_CELL_INDICATOR_CSS_CLASS = '.igx-grid__tree-grouping-indicator';
+export const NUMBER_CELL_CSS_CLASS = 'igx-grid__td--number';
 
 export class TreeGridFunctions {
     public static getHeaderRow(fix) {
@@ -32,6 +33,13 @@ export class TreeGridFunctions {
 
     public static getNormalCells(rowDOM) {
         return rowDOM.queryAll(By.css('igx-grid-cell'));
+    }
+
+    public static getColumnCells(fix, columnKey) {
+        const allTreeCells = fix.debugElement.queryAll(By.css('igx-tree-grid-cell'));
+        const allNormalCells = fix.debugElement.queryAll(By.css('igx-grid-cell'));
+        const allDOMCells = allTreeCells.concat(allNormalCells);
+        return allDOMCells.filter((DOMcell) => DOMcell.componentInstance.column.field === columnKey);
     }
 
     public static getExpansionIndicatorDiv(rowDOM) {

@@ -20,6 +20,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IGridBaseComponent } from './common/grid-interfaces';
 import { Subject, animationFrameScheduler as rAF, fromEvent, combineLatest } from 'rxjs';
+import { valToPxlsUsingRange } from '../core/utils';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -1032,5 +1033,10 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private isNavigationKey(key) {
         return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright'].indexOf(key) !== -1;
+    }
+
+    public calculateSizeToFit(range: any): number {
+        return Math.max(...Array.from(this.nativeElement.children)
+                   .map((child) => valToPxlsUsingRange(range, child)));
     }
 }

@@ -25,13 +25,15 @@
         <igx-datePicker [outlet]="grid.outletDirective" [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [labelVisibility]="false"></igx-datePicker>
     </ng-container>
 </ng-template>
-<ng-container *ngIf="indentation > 0">
-    <div #indentationDiv class="igx-grid__tree-cell--padding-level-{{indentation}}"></div>
+<ng-container *ngIf="!inEditMode">
+    <ng-container *ngIf="indentation > 0">
+        <div #indentationDiv class="igx-grid__tree-cell--padding-level-{{indentation}}"></div>
+    </ng-container>
+    <div #indicator class="igx-grid__tree-grouping-indicator" [ngStyle]="{'visibility': hasChildren ? 'visible' : 'hidden'}"
+         (click)="toggle($event)" (focus)="onFocus($event)">
+        <igx-icon *ngIf="!expanded" fontSet="material">chevron_right</igx-icon>
+        <igx-icon *ngIf="expanded" fontSet="material">expand_more</igx-icon>
+    </div>
 </ng-container>
-<div #indicator class="igx-grid__tree-grouping-indicator" [ngStyle]="{'visibility': hasChildren ? 'visible' : 'hidden'}"
-     (click)="toggle($event)" (focus)="onFocus($event)">
-    <igx-icon *ngIf="!expanded" fontSet="material">chevron_right</igx-icon>
-    <igx-icon *ngIf="expanded" fontSet="material">expand_more</igx-icon>
-</div>
 <ng-container *ngTemplateOutlet="template; context: context">
 </ng-container>

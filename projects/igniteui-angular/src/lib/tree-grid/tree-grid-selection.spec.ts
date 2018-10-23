@@ -192,6 +192,16 @@ describe('IgxTreeGrid - Selection', () => {
     });
 
     describe('UI Row Selection', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.rowSelectable = true;
+            treeGrid.primaryKey = 'ID';
+            fix.detectChanges();
+        });
+
         it('should be able to select/deselect all rows', () => {
             TreeGridFunctions.clickHeaderRowSelectionCheckbox(fix);
             fix.detectChanges();

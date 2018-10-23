@@ -11,7 +11,7 @@ import { Calendar } from '../calendar/calendar';
         <igx-column [field]="'HireDate'" dataType="date" [sortable]="true"></igx-column>
         <igx-column [field]="'Age'" dataType="number" [sortable]="true"></igx-column>
     </igx-tree-grid>
-        `
+    `
 })
 export class IgxTreeGridSortingComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
@@ -26,7 +26,7 @@ export class IgxTreeGridSortingComponent {
         <igx-column [field]="'HireDate'" dataType="date" [filterable]="true"></igx-column>
         <igx-column [field]="'Age'" dataType="number" [filterable]="true"></igx-column>
     </igx-tree-grid>
-        `
+    `
 })
 export class IgxTreeGridFilteringComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
@@ -41,7 +41,7 @@ export class IgxTreeGridFilteringComponent {
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
-        `
+    `
 })
 export class IgxTreeGridSimpleComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
@@ -57,7 +57,7 @@ export class IgxTreeGridSimpleComponent {
         <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
-        `
+    `
 })
 export class IgxTreeGridPrimaryForeignKeyComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
@@ -105,7 +105,7 @@ export class IgxTreeGridCellSelectionComponent {
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
-        `
+    `
 })
 export class IgxTreeGridStringTreeColumnComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
@@ -121,7 +121,7 @@ export class IgxTreeGridStringTreeColumnComponent {
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
-        `
+    `
 })
 export class IgxTreeGridDateTreeColumnComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
@@ -136,9 +136,9 @@ export class IgxTreeGridDateTreeColumnComponent {
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'ID'" dataType="number"></igx-column>
-        <igx-column [field]="'Age'" dataType="number"></igx-column>        
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>
-        `
+    `
 })
 export class IgxTreeGridBooleanTreeColumnComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;

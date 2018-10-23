@@ -8,6 +8,7 @@ const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level
 
 export const TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
 export const TREE_ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
+export const TREE_CELL_SELECTION_CSS_CLASS = 'igx-grid__td--selected';
 export const TREE_HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
 export const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 export const TREE_CELL_INDICATOR_CSS_CLASS = '.igx-grid__tree-grouping-indicator';
@@ -263,5 +264,9 @@ export class TreeGridFunctions {
             expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(expectedSelection,
                 'Incorrect native checkbox selection state');
         }
+    }
+
+    public static verifyGridCellHasSelectedClass(cellDOM) {
+        return cellDOM.nativeElement.classList.contains(TREE_CELL_SELECTION_CSS_CLASS);
     }
 }

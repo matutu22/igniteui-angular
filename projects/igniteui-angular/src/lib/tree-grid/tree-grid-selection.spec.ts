@@ -2,12 +2,13 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule } from './index';
-import { IgxTreeGridSimpleComponent } from '../test-utils/tree-grid-components.spec';
+import { IgxTreeGridModule, IgxGridCellComponent } from './index';
+import { IgxTreeGridCellComponent } from './tree-cell.component';
+import { IgxTreeGridSimpleComponent, IgxTreeGridCellSelectionComponent } from '../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions,
          TREE_ROW_SELECTION_CSS_CLASS,
          TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS } from '../test-utils/tree-grid-functions.spec';
-import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 
 describe('IgxTreeGrid - Selection', () => {
     let fix;
@@ -16,42 +17,43 @@ describe('IgxTreeGrid - Selection', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxTreeGridSimpleComponent
+                IgxTreeGridSimpleComponent,
+                IgxTreeGridCellSelectionComponent
             ],
             imports: [IgxTreeGridModule]
         })
             .compileComponents();
     }));
 
-    beforeEach(() => {
-        fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
-        fix.detectChanges();
-
-        treeGrid = fix.componentInstance.treeGrid;
-        treeGrid.rowSelectable = true;
-        treeGrid.primaryKey = 'ID';
-        fix.detectChanges();
-    });
-
-    it('should have checkbox on each row if rowSelectable is true', () => {
-        const rows = TreeGridFunctions.getAllRows(fix);
-
-        expect(rows.length).toBe(10);
-        rows.forEach((row) => {
-            const checkBoxElement = row.nativeElement.querySelector(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS);
-            expect(checkBoxElement).not.toBeNull();
-        });
-
-        treeGrid.rowSelectable = false;
-
-        expect(rows.length).toBe(10);
-        rows.forEach((row) => {
-            const checkBoxElement = row.nativeElement.querySelector(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS);
-            expect(checkBoxElement).toBeNull();
-        });
-    });
-
     describe('API Row Selection', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.rowSelectable = true;
+            treeGrid.primaryKey = 'ID';
+            fix.detectChanges();
+        });
+
+        it('should have checkbox on each row if rowSelectable is true', () => {
+            const rows = TreeGridFunctions.getAllRows(fix);
+
+            expect(rows.length).toBe(10);
+            rows.forEach((row) => {
+                const checkBoxElement = row.nativeElement.querySelector(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS);
+                expect(checkBoxElement).not.toBeNull();
+            });
+
+            treeGrid.rowSelectable = false;
+
+            expect(rows.length).toBe(10);
+            rows.forEach((row) => {
+                const checkBoxElement = row.nativeElement.querySelector(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS);
+                expect(checkBoxElement).toBeNull();
+            });
+        });
+
         it('should be able to select/deselect all rows', () => {
             treeGrid.selectAllRows();
             fix.detectChanges();
@@ -355,9 +357,209 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
         });
     });
+
+    describe('Cell Selection', () => {
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.rowSelectable = true;
+            treeGrid.primaryKey = 'ID';
+            treeGrid.rowSelectable = false;
+            fix.detectChanges();
+        });
+
+        it('should return the correct type of cell when clicking on a cells', () => {
+            const rows = TreeGridFunctions.getAllRows(fix);
+            const normalCells = TreeGridFunctions.getNormalCells(rows[0]);
+            normalCells[0].triggerEventHandler('click', new Event('click'));
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
+
+            let treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
+            treeGridCell.triggerEventHandler('click', new Event('click'));
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+
+            // perform 2 clicks and check selection again
+            treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
+            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
+            treeGridCell.triggerEventHandler('click', new Event('click'));
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+        });
+
+        it('should return the correct type of cell when clicking on child cells', () => {
+            const rows = TreeGridFunctions.getAllRows(fix);
+
+            // level 1
+            let treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
+            treeGridCell.triggerEventHandler('click', new Event('click'));
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
+            expect(treeGrid.selectedCells[0].value).toBe(147);
+
+            // level 2
+            treeGridCell = TreeGridFunctions.getTreeCell(rows[1]);
+            treeGridCell.triggerEventHandler('click', new Event('click'));
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
+            expect(treeGrid.selectedCells[0].value).toBe(475);
+
+            // level 3
+            treeGridCell = TreeGridFunctions.getTreeCell(rows[2]);
+            treeGridCell.triggerEventHandler('click', new Event('click'));
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
+            expect(treeGrid.selectedCells[0].value).toBe(957);
+        });
+
+        it('should persist selection after paging', () => {
+            const rows = TreeGridFunctions.getAllRows(fix);
+            const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
+            treeGridCell.triggerEventHandler('click', new Event('click'));
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
+
+            navigateToNextPage(fix);
+            navigateToFirstPage(fix);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
+
+            navigateToLastPage(fix);
+            navigateToFirstPage(fix);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
+        });
+
+        it('should persist selection after filtering', () => {
+            const rows = TreeGridFunctions.getAllRows(fix);
+            const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
+            treeGridCell.triggerEventHandler('click', new Event('click'));
+
+            treeGrid.filter('ID', '14', IgxStringFilteringOperand.instance().condition('startsWith'), true);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
+
+            // set new filtering
+            treeGrid.clearFilter('ProductName');
+            treeGrid.filter('ID', '8', IgxStringFilteringOperand.instance().condition('startsWith'), true);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(0);
+        });
+
+        it('should persist selection after scrolling', () => {
+            treeGrid.paging = false;
+            fix.detectChanges();
+
+            const rows = TreeGridFunctions.getAllRows(fix);
+            const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
+            treeGridCell.triggerEventHandler('click', new Event('click'));
+            fix.detectChanges();
+
+            // scroll down 150 pixels
+            treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 150;
+            treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            fix.detectChanges();
+
+            // then scroll back to top
+            treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
+            treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(treeGrid.selectedCells[0].value).toBe(147);
+        });
+
+        it('should persist selection after sorting', () => {
+            const rows = TreeGridFunctions.getAllRows(fix);
+            const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
+            treeGridCell.triggerEventHandler('click', new Event('click'));
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(treeGrid.selectedCells[0].value).toBe(147);
+
+            treeGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(treeGrid.selectedCells[0].value).toBe(147);
+        });
+
+        it('should persist selection after row delete', () => {
+            const rows = TreeGridFunctions.getAllRows(fix);
+            const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
+            treeGridCell.triggerEventHandler('click', new Event('click'));
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(treeGrid.selectedCells[0].value).toBe(147);
+
+            treeGrid.deleteRow(847);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(treeGrid.selectedCells[0].value).toBe(147);
+
+            treeGrid.deleteRow(147);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedCells.length).toBe(0);
+        });
+
+    });
+
 });
 
 function getVisibleSelectedRows(fix) {
     return TreeGridFunctions.getAllRows(fix).filter(
         (row) => row.nativeElement.classList.contains(TREE_ROW_SELECTION_CSS_CLASS));
+}
+
+function navigateToFirstPage(fix) {
+    clickPagerButton(fix, 0);
+}
+
+function navigateToPrevPage(fix) {
+    clickPagerButton(fix, 1);
+}
+
+function navigateToNextPage(fix) {
+    clickPagerButton(fix, 2);
+}
+
+function navigateToLastPage(fix) {
+    clickPagerButton(fix, 3);
+}
+
+function clickPagerButton(fix, button: number) {
+    const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
+    const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+    pagingButtons[button].dispatchEvent(new Event('click'));
 }

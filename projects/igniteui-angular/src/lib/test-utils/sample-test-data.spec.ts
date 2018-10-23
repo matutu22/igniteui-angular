@@ -808,12 +808,14 @@ export class SampleTestData {
             Name: 'John Winchester',
             HireDate: new Date(2008, 3, 20),
             Age: 55,
+            OnPTO: false,
             Employees: [
                 {
                     ID: 475,
                     Name: 'Michael Langdon',
                     HireDate: new Date(2011, 6, 3),
                     Age: 43,
+                    OnPTO: false,
                     Employees: null
                 },
                 {
@@ -821,6 +823,7 @@ export class SampleTestData {
                     Name: 'Thomas Hardy',
                     HireDate: new Date(2009, 6, 19),
                     Age: 29,
+                    OnPTO: true,
                     Employees: undefined
                 },
                 {
@@ -828,18 +831,21 @@ export class SampleTestData {
                     Name: 'Monica Reyes',
                     HireDate: new Date(2014, 8, 18),
                     Age: 31,
+                    OnPTO: false,
                     Employees: [
                         {
                             ID: 711,
                             Name: 'Roland Mendel',
                             HireDate: new Date(2015, 9, 17),
-                            Age: 35
+                            Age: 35,
+                            OnPTO: true,
                         },
                         {
                             ID: 998,
                             Name: 'Sven Ottlieb',
                             HireDate: new Date(2009, 10, 11),
-                            Age: 44
+                            Age: 44,
+                            OnPTO: false,
                         }
                     ]
                 }]
@@ -849,11 +855,13 @@ export class SampleTestData {
             Name: 'Ana Sanders',
             HireDate: new Date(2014, 1, 22),
             Age: 42,
+            OnPTO: false,
             Employees: [
                 {
                     ID: 225,
                     Name: 'Laurence Johnson',
                     HireDate: new Date(2014, 4, 4),
+                    OnPTO: true,
                     Age: 44,
                 },
                 {
@@ -861,11 +869,13 @@ export class SampleTestData {
                     Name: 'Elizabeth Richards',
                     HireDate: new Date(2017, 11, 9),
                     Age: 25,
+                    OnPTO: false,
                     Employees: [
                         {
                             ID: 141,
                             Name: 'Trevor Ashworth',
                             HireDate: new Date(2010, 3, 22),
+                            OnPTO: false,
                             Age: 39
                         }
                     ]
@@ -876,12 +886,14 @@ export class SampleTestData {
             Name: 'Victoria Lincoln',
             HireDate: new Date(2014, 1, 22),
             Age: 49,
+            OnPTO: false,
             Employees: [
                 {
                     ID: 15,
                     Name: 'Antonio Moreno',
                     HireDate: new Date(2014, 4, 4),
                     Age: 44,
+                    OnPTO: true,
                     Employees: []
                 }]
         },
@@ -890,30 +902,35 @@ export class SampleTestData {
             Name: 'Yang Wang',
             HireDate: new Date(2010, 1, 1),
             Age: 61,
+            OnPTO: false,
             Employees: [
                 {
                     ID: 12,
                     Name: 'Pedro Afonso',
                     HireDate: new Date(2007, 11, 18),
                     Age: 50,
+                    OnPTO: false,
                     Employees: [
                         {
                             ID: 101,
                             Name: 'Patricio Simpson',
                             HireDate: new Date(2017, 11, 9),
                             Age: 25,
+                            OnPTO: false,
                             Employees: []
                         },
                         {
                             ID: 99,
                             Name: 'Francisco Chang',
                             HireDate: new Date(2010, 3, 22),
+                            OnPTO: true,
                             Age: 39
                         },
                         {
                             ID: 299,
                             Name: 'Peter Lewis',
                             HireDate: new Date(2018, 3, 18),
+                            OnPTO: false,
                             Age: 25
                         }
                     ]
@@ -922,6 +939,7 @@ export class SampleTestData {
                     ID: 101,
                     Name: 'Casey Harper',
                     HireDate: new Date(2016, 2, 19),
+                    OnPTO: false,
                     Age: 27
                 }]
         }

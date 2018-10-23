@@ -3,7 +3,7 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
-    IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent
+    IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent
 } from '../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
@@ -19,7 +19,8 @@ describe('IgxTreeGrid - Integration', () => {
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 IgxTreeGridStringTreeColumnComponent,
-                IgxTreeGridDateTreeColumnComponent
+                IgxTreeGridDateTreeColumnComponent,
+                IgxTreeGridBooleanTreeColumnComponent
             ],
             imports: [IgxTreeGridModule]
         })
@@ -42,6 +43,15 @@ describe('IgxTreeGrid - Integration', () => {
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'HireDate', 4);
+    });
+
+    it('should have tree-column with a \'boolean\' dataType', () => {
+        // Init test
+        fix = TestBed.createComponent(IgxTreeGridBooleanTreeColumnComponent);
+        fix.detectChanges();
+        treeGrid = fix.componentInstance.treeGrid;
+
+        TreeGridFunctions.verifyTreeColumn(fix, 'PTO', 5);
     });
 
     describe('Child Collection', () => {

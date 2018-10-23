@@ -112,6 +112,7 @@ export class IgxTreeGridCellSelectionFlatComponent {
     public data = SampleTestData.employeePrimaryForeignKeyTreeData();
 }
 
+// Test Component with 'string' dataType tree-column
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="900px" height="600px">
@@ -127,6 +128,7 @@ export class IgxTreeGridStringTreeColumnComponent {
     public data = SampleTestData.employeeSmallTreeData();
 }
 
+// Test Component with 'date' dataType tree-column
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="900px" height="600px">
@@ -140,4 +142,21 @@ export class IgxTreeGridStringTreeColumnComponent {
 export class IgxTreeGridDateTreeColumnComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
+}
+
+// Test Component with 'boolean' dataType tree-column
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="900px" height="600px">
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>        
+    </igx-tree-grid>
+        `
+})
+export class IgxTreeGridBooleanTreeColumnComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeAllTypesTreeData();
 }

@@ -108,7 +108,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             super.delete_row_from_array(id, rowID, index);
         } else {
             const record = grid.treeGridRecordsMap.get(rowID);
-            const childData = record.parent.data[grid.childDataKey];
+            const childData = record.parent ? record.parent.data[grid.childDataKey] : grid.data;
             index = grid.primaryKey ? childData.map(c => c[grid.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
             childData.splice(index, 1);
@@ -121,7 +121,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             super.update_row_in_array(id, value, rowID, index);
         } else {
             const record = grid.treeGridRecordsMap.get(rowID);
-            const childData = record.parent.data[grid.childDataKey];
+            const childData = record.parent ? record.parent.data[grid.childDataKey] : grid.data;
             index = grid.primaryKey ? childData.map(c => c[grid.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
             childData[index] = value;

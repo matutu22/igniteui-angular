@@ -63,6 +63,8 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
         const state = { expressionsTree: expressionsTree };
 
+        this.resetFilteredOutProperty(grid.treeGridRecordsMap);
+
         if (!state.expressionsTree ||
             !state.expressionsTree.filteringOperands ||
             state.expressionsTree.filteringOperands.length === 0) {
@@ -71,26 +73,38 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
         }
 
         DataUtil.mergeDefaultProperties(state, { strategy: new TreeGridFilteringStrategy() });
-
         const result = this.filter(hierarchyData, state);
-        const expandedStates = grid.expandedStates;
         const filteredData: any[] = [];
-        this.expandAllRecursive(result, expandedStates, filteredData);
+        this.expandAllRecursive(grid, result, grid.expandedStates, filteredData);
         grid.filteredData = filteredData;
 
         return result;
     }
 
-    private expandAllRecursive(data: ITreeGridRecord[], expandedStates: Map<any, boolean>, filteredData: any[]) {
+    private resetFilteredOutProperty(map: Map<any, ITreeGridRecord>) {
+        const keys = Array.from(map.keys());
+        for (let i = 0; i < keys.length; i++) {
+            map.get(keys[i]).isFilteredOutParent = undefined;
+        }
+    }
+
+    private expandAllRecursive(grid: IgxTreeGridComponent, data: ITreeGridRecord[],
+        expandedStates: Map<any, boolean>, filteredData: any[]) {
         for (let i = 0; i < data.length; i++) {
             const rec = data[i];
             filteredData.push(rec.data);
+            this.updateNonProcessedRecord(grid, rec);
 
             if (rec.children && rec.children.length > 0) {
                 expandedStates.set(rec.rowID, true);
-                this.expandAllRecursive(rec.children, expandedStates, filteredData);
+                this.expandAllRecursive(grid, rec.children, expandedStates, filteredData);
             }
         }
+    }
+
+    private updateNonProcessedRecord(grid: IgxTreeGridComponent, record: ITreeGridRecord) {
+        const rec = grid.treeGridRecordsMap.get(record.rowID);
+        rec.isFilteredOutParent = record.isFilteredOutParent;
     }
 
     private filter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {

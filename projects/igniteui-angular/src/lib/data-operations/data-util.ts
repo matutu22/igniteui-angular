@@ -91,7 +91,8 @@ export class DataUtil {
             data: hierarchicalRecord.data,
             children: hierarchicalRecord.children,
             isFilteredOutParent: hierarchicalRecord.isFilteredOutParent,
-            indentationLevel: hierarchicalRecord.indentationLevel
+            indentationLevel: hierarchicalRecord.indentationLevel,
+            expanded: hierarchicalRecord.expanded
         };
         return rec;
     }

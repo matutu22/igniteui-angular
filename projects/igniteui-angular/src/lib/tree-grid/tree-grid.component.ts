@@ -75,6 +75,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         }
     }
 
+    /**
+    * @hidden
+    */
     public flatData: any[];
 
     public treeGridRecords: ITreeGridRecord[];
@@ -88,7 +91,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
      * ```html
-     * <igx-tree-grid #grid [data]="localData" [showToolbar]="true" [childDataKey]="employees" [autoGenerate]="true"></iigx-tree-grid>
+     * <igx-tree-grid #grid [data]="localData" [showToolbar]="true" [childDataKey]="employees" [autoGenerate]="true"></igx-tree-grid>
      * ```
 	 * @memberof IgxTreeGridRowComponent
      */
@@ -98,7 +101,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * An @Input property that sets the foreign key of the `IgxTreeGridComponent`.
      * ```html
-     * <igx-tree-grid #grid [data]="localData" [primaryKey]="employeeID" [foreignKey]="parentID" [autoGenerate]="true"></iigx-tree-grid>
+     * <igx-tree-grid #grid [data]="localData" [primaryKey]="employeeID" [foreignKey]="parentID" [autoGenerate]="true"></igx-tree-grid>
      * ```
 	 * @memberof IgxTreeGridRowComponent
      */
@@ -164,10 +167,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         return mapCloned;
     }
 
-    public getTreeGridRecord(rowID: any): ITreeGridRecord {
-        return this.treeGridRecordsMap.get(rowID);
-    }
-
     public expandRow(rowID: any) {
         this.gridAPI.expand_row(this.id, rowID);
     }
@@ -192,15 +191,5 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
     public addChildRow(parentRowID: any, data: any) {
         this.gridAPI.add_child_row(this.id, parentRowID, data);
-    }
-
-    /**
-    * @hidden
-    */
-    public getContext(rowData): any {
-        return {
-            $implicit: rowData,
-            // templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
-        };
     }
 }

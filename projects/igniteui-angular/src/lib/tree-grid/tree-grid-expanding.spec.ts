@@ -3,7 +3,7 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
-import { IgxTreeGridExpandingComponent, IgxTreeGridCellSelectionFlatComponent } from '../test-utils/tree-grid-components.spec';
+import { IgxTreeGridExpandingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
 
 describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
@@ -199,10 +199,13 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
 });
 
 describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', () => {
+    let fix;
+    let treeGrid;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxTreeGridCellSelectionFlatComponent
+                IgxTreeGridPrimaryForeignKeyComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -211,11 +214,15 @@ describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', ()
         .compileComponents();
     }));
 
-    it('check row expanding and collapsing are changing rows count using flat data source (UI)', () => {
-        const fix = TestBed.createComponent(IgxTreeGridCellSelectionFlatComponent);
+    beforeEach(() => {
+        fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
+        treeGrid = fix.componentInstance.treeGrid;
+        treeGrid.expandedLevels = 0;
+        fix.detectChanges();
+    });
 
+    it('check row expanding and collapsing are changing rows count using flat data source (UI)', () => {
         let rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(3);
 
@@ -232,18 +239,14 @@ describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', ()
     });
 
     it('check row expanding and collapsing are changing rows count using flat data source (API)', () => {
-        const fix = TestBed.createComponent(IgxTreeGridCellSelectionFlatComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         let rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(3);
 
-        (<IgxTreeGridComponent>grid).toggleRowExpansion((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
+        (<IgxTreeGridComponent>treeGrid).toggleRowExpansion((<IgxTreeGridRowComponent>treeGrid.getRowByIndex(0)).rowID);
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(5);
 
-        (<IgxTreeGridComponent>grid).toggleRowExpansion((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
+        (<IgxTreeGridComponent>treeGrid).toggleRowExpansion((<IgxTreeGridRowComponent>treeGrid.getRowByIndex(0)).rowID);
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(3);
     });

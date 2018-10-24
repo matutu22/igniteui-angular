@@ -6,6 +6,10 @@ import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+
+const DEBOUNCETIME = 30;
+const CELL_CSS_CLASS = '.igx-grid__td';
 
 describe('IgxTreeGrid - CRUD', () => {
     let fix;
@@ -382,13 +386,124 @@ describe('IgxTreeGrid - CRUD', () => {
         });
     });
 
-    describe('Update UI', () => {
+    fdescribe('Update UI', () => {
         describe('Child Collection', () => {
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
+                for (const col of treeGrid.columns) {
+                    col.editable = true;
+                }
             });
+
+            it('should be able to enter edit mode of a tree-grid column on dblclick, enter and f2', async() => {
+                const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const rv = allCells[0];
+                const cell = treeGrid.getCellByColumn(0, 'ID');
+
+                rv.nativeElement.dispatchEvent(new Event('focus'));
+                fix.detectChanges();
+
+                rv.triggerEventHandler('dblclick', new Event('dblclick'));
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+
+                UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+
+                UIInteractions.triggerKeyDownEvtUponElem('f2', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+            });
+
+            it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and f2', async() => {
+                const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const rv = allCells[1];
+                const cell = treeGrid.getCellByColumn(0, 'Name');
+
+                rv.nativeElement.dispatchEvent(new Event('focus'));
+                fix.detectChanges();
+
+                rv.triggerEventHandler('dblclick', new Event('dblclick'));
+
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+
+                UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+
+                UIInteractions.triggerKeyDownEvtUponElem('f2', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+            });
+
+            it('should be able to edit a tree-grid cell', async() => {
+                const cell = treeGrid.getCellByColumn(0, 'ID');
+                const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+
+                cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
+                await wait(DEBOUNCETIME);
+
+                expect(cell.inEditMode).toBe(true);
+                const editTemplate = cellDomNumber.query(By.css('input'));
+                expect(editTemplate).toBeDefined();
+
+                UIInteractions.sendInput(editTemplate, 146);
+                await wait(DEBOUNCETIME);
+                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
+                await wait(DEBOUNCETIME);
+
+                expect(cell.inEditMode).toBe(false);
+                expect(parseInt(cell.value, 10)).toBe(146);
+                expect(editTemplate.nativeElement.type).toBe('number');
+            });
+
+            it('should be able to edit a non-tree-grid cell', async() => {
+                const cell = treeGrid.getCellByColumn(0, 'Name');
+                const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+
+                cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
+                await wait(DEBOUNCETIME);
+
+                expect(cell.inEditMode).toBe(true);
+                const editTemplate = cellDomNumber.query(By.css('input'));
+                expect(editTemplate).toBeDefined();
+
+                UIInteractions.sendInput(editTemplate, 'Abc Def');
+                await wait(DEBOUNCETIME);
+                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
+                await wait(DEBOUNCETIME);
+
+                expect(cell.inEditMode).toBe(false);
+                expect(cell.value).toBe('Abc Def');
+                expect(editTemplate.nativeElement.type).toBe('text');
+            });
+
         });
 
         describe('Primary/Foreign key', () => {

@@ -225,7 +225,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
     });
 
-    describe('Update', () => {
+    describe('Update API', () => {
         describe('Child Collection', () => {
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
@@ -233,7 +233,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 treeGrid = fix.componentInstance.treeGrid;
             });
 
-            it('should support updating a roow row through the treeGrid API', () => {
+            it('should support updating a root row through the treeGrid API', () => {
                 spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 0, 'Name', 'John Winchester');
@@ -289,6 +289,105 @@ describe('IgxTreeGrid - CRUD', () => {
                 });
                 verifyCellValue(fix, 6, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 10);
+            });
+
+            it('should support updating a child cell through the treeGrid API', () => {
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 6, 'Age', '25');
+                verifyRowsCount(fix, 3, 10);
+
+                // Update cell on level 3
+                const oldCellValue = treeGrid.getCellByKey(299, 'Age').value;
+                const newCellValue = 18;
+                treeGrid.updateCell(newCellValue, 299, 'Age');
+                fix.detectChanges();
+
+                const cellComponent = treeGrid.getCellByKey(299, 'Age');
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: cellComponent.row,
+                    cell: cellComponent,
+                    currentValue: oldCellValue,
+                    newValue: newCellValue
+                });
+                verifyCellValue(fix, 6, 'Age', '18');
+                verifyRowsCount(fix, 3, 10);
+            });
+        });
+
+        describe('Primary/Foreign key', () => {
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
+                fix.detectChanges();
+                treeGrid = fix.componentInstance.treeGrid;
+            });
+
+            it('should support updating a root row through the treeGrid API', () => {
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 0, 'Name', 'Casey Houston');
+                verifyRowsCount(fix, 8, 8);
+
+                // Update row on level 1
+                const oldRow = treeGrid.getRowByKey(1).rowData;
+                const newRow = {
+                    ID: 999,
+                    ParentID: -1,
+                    Name: 'New Name',
+                    JobTitle: 'CFO',
+                    Age: 40
+                };
+                treeGrid.updateRow(newRow, 1);
+                fix.detectChanges();
+
+                const rowComponent = treeGrid.getRowByKey(999);
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: rowComponent,
+                    cell: null,
+                    currentValue: oldRow,
+                    newValue: newRow
+                });
+                verifyCellValue(fix, 0, 'Name', 'New Name');
+                verifyRowsCount(fix, 8, 8);
+            });
+
+            it('should support updating a child row through the treeGrid API', () => {
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 2, 'Name', 'Tanya Bennett');
+                verifyRowsCount(fix, 8, 8);
+
+                // Update row on level 3
+                const oldRow = treeGrid.getRowByKey(2).rowData;
+                const newRow = {
+                    ID: 888,
+                    Name: 'New Name',
+                    HireDate: new Date(2010, 11, 11),
+                    Age: 42,
+                    Employees: []
+                };
+                treeGrid.updateRow(newRow, 2);
+                fix.detectChanges();
+
+                const rowComponent = treeGrid.getRowByKey(888);
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: rowComponent,
+                    cell: null,
+                    currentValue: oldRow,
+                    newValue: newRow
+                });
+                verifyCellValue(fix, 2, 'Name', 'New Name');
+                verifyRowsCount(fix, 8, 8);
+            });
+        });
+    });
+
+    describe('Update UI', () => {
+        describe('Child Collection', () => {
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
+                fix.detectChanges();
+                treeGrid = fix.componentInstance.treeGrid;
             });
         });
 
@@ -456,6 +555,6 @@ function verifyCellValue(fix, rowIndex, columnKey, expectedCellValue) {
     const treeGrid = fix.componentInstance.treeGrid;
     const actualValue = TreeGridFunctions.getCellValue(fix, rowIndex, columnKey);
     const actualAPIValue = treeGrid.getRowByIndex(rowIndex).cells.filter((c) => c.column.field === columnKey)[0].value;
-    expect(actualValue).toBe(expectedCellValue, 'incorrect cell value');
-    expect(actualAPIValue).toBe(expectedCellValue, 'incorrect api cell value');
+    expect(actualValue.toString()).toBe(expectedCellValue, 'incorrect cell value');
+    expect(actualAPIValue.toString()).toBe(expectedCellValue, 'incorrect api cell value');
 }

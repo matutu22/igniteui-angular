@@ -148,7 +148,7 @@ export class IgxTreeGridBooleanTreeColumnComponent {
 // Test Component for CRUD tests
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expandedLevels="2" width="900px" height="600px">
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" childDataKey="Employees" expandedLevels="2" width="900px" height="600px">
         <igx-column [field]="'ID'" dataType="number" [editable]="true"></igx-column>
         <igx-column [field]="'Name'" dataType="string" [editable]="true"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date" [editable]="true"></igx-column>

@@ -3,8 +3,9 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
-import { IgxTreeGridSimpleComponent, IgxTreeGridCrudComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../test-utils/tree-grid-components.spec';
+import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
+import { first } from 'rxjs/operators';
 
 describe('IgxTreeGrid - CRUD', () => {
     let fix;
@@ -14,12 +15,11 @@ describe('IgxTreeGrid - CRUD', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,
-                IgxTreeGridCrudComponent,
                 IgxTreeGridPrimaryForeignKeyComponent
             ],
             imports: [IgxTreeGridModule]
         })
-            .compileComponents();
+        .compileComponents();
     }));
 
     describe('Create', () => {
@@ -268,15 +268,128 @@ describe('IgxTreeGrid - CRUD', () => {
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
             });
+
+            it('should delete a row by ID', () => {
+                let someRow = treeGrid.getRowByIndex(0);
+                expect(someRow.rowID).toBe(147);
+
+                verifyRowsCount(fix, 3, 10);
+                verifyTreeGridRecordsCount(fix, 3, 10);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 10);
+
+                treeGrid.deleteRow(someRow.rowID);
+                fix.detectChanges();
+                someRow = treeGrid.getRowByIndex(0);
+                expect(someRow.rowID).toBe(19);
+
+                verifyRowsCount(fix, 2, 3);
+                verifyTreeGridRecordsCount(fix, 2, 3);
+                verifyProcessedTreeGridRecordsCount(fix, 2, 3);
+            });
+
+            it('should delete a row through the row object', () => {
+                let someRow = treeGrid.getRowByIndex(0);
+                expect(someRow.rowID).toBe(147);
+
+                verifyRowsCount(fix, 3, 10);
+                verifyTreeGridRecordsCount(fix, 3, 10);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 10);
+
+                someRow.delete();
+                fix.detectChanges();
+                someRow = treeGrid.getRowByIndex(0);
+                expect(someRow.rowID).toBe(19);
+
+                verifyRowsCount(fix, 2, 3);
+                verifyTreeGridRecordsCount(fix, 2, 3);
+                verifyProcessedTreeGridRecordsCount(fix, 2, 3);
+            });
+
+            it('should emit an event when deleting row by ID', (done) => {
+                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
+                    expect(args.data.ID).toBe(147);
+                    expect(args.data.Name).toBe('John Winchester');
+                    done();
+                });
+                const someRow = treeGrid.getRowByIndex(0);
+                treeGrid.deleteRow(someRow.rowID);
+            });
+
+            it('should emit an event when deleting row through the row object', (done) => {
+                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
+                    expect(args.data.ID).toBe(147);
+                    expect(args.data.Name).toBe('John Winchester');
+                    done();
+                });
+                const someRow = treeGrid.getRowByIndex(0);
+                someRow.delete();
+            });
         });
 
         describe('Primary/Foreign key', () => {
             beforeEach(() => {
-                fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
+                fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
             });
+
+            it('should delete a row by ID', () => {
+                let someRow = treeGrid.getRowByIndex(0);
+                expect(someRow.rowID).toBe(1);
+
+                verifyRowsCount(fix, 10, 8);
+                verifyTreeGridRecordsCount(fix, 3, 10);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                treeGrid.deleteRow(someRow.rowID);
+                fix.detectChanges();
+                someRow = treeGrid.getRowByIndex(0);
+                expect(someRow.rowID).toBe(2);
+
+                verifyRowsCount(fix, 9, 7);
+                verifyTreeGridRecordsCount(fix, 4, 9);
+                verifyProcessedTreeGridRecordsCount(fix, 4, 7);
+            });
+
+            it('should delete a row through the row object', () => {
+                let someRow = treeGrid.getRowByIndex(0);
+                expect(someRow.rowID).toBe(1);
+
+                verifyRowsCount(fix, 10, 8);
+                verifyTreeGridRecordsCount(fix, 3, 10);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                someRow.delete();
+                fix.detectChanges();
+                someRow = treeGrid.getRowByIndex(0);
+                expect(someRow.rowID).toBe(2);
+
+                verifyRowsCount(fix, 9, 7);
+                verifyTreeGridRecordsCount(fix, 4, 9);
+                verifyProcessedTreeGridRecordsCount(fix, 4, 7);
+            });
+
+            it('should emit an event when deleting row by ID', (done) => {
+                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
+                    expect(args.data.ID).toBe(1);
+                    expect(args.data.Name).toBe('Casey Houston');
+                    done();
+                });
+                const someRow = treeGrid.getRowByIndex(0);
+                treeGrid.deleteRow(someRow.rowID);
+            });
+
+            it('should emit an event when deleting row through the row object', (done) => {
+                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
+                    expect(args.data.ID).toBe(1);
+                    expect(args.data.Name).toBe('Casey Houston');
+                    done();
+                });
+                const someRow = treeGrid.getRowByIndex(0);
+                someRow.delete();
+            });
         });
+
     });
 });
 

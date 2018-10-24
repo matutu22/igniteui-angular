@@ -171,7 +171,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     ID: 777,
                     ParentID: -1,
                     Name: 'New Employee',
-                    JobTitle: "Senior Web Developer",
+                    JobTitle: 'Senior Web Developer',
                     Age: 33
                 };
                 treeGrid.addRow(newRow);
@@ -195,7 +195,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     ID: 777,
                     ParentID: 1,
                     Name: 'New Employee 1',
-                    JobTitle: "Senior Web Developer",
+                    JobTitle: 'Senior Web Developer',
                     Age: 33
                 };
                 treeGrid.addChildRow(1, newRow);
@@ -211,7 +211,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     ID: 333,
                     ParentID: 4,
                     Name: 'New Employee 2',
-                    JobTitle: "Senior Web Developer",
+                    JobTitle: 'Senior Web Developer',
                     Age: 33
                 };
                 treeGrid.addChildRow(4, newRow);

@@ -7,6 +7,7 @@ import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } fro
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { DropPosition } from '../grid';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -23,7 +24,7 @@ describe('IgxTreeGrid - CRUD', () => {
             ],
             imports: [IgxTreeGridModule]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     describe('Create', () => {
@@ -229,7 +230,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
     });
 
-    describe('Update API', () => {
+    fdescribe('Update API', () => {
         describe('Child Collection', () => {
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
@@ -295,7 +296,13 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyRowsCount(fix, 3, 10);
             });
 
-            it('should support updating a child cell through the treeGrid API', () => {
+            it('should support updating a child tree-cell through the treeGrid API', () => {
+                // Test prerequisites: move 'Age' column so it becomes the tree-column
+                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
+                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                fix.detectChanges();
+
                 spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 6, 'Age', '25');
@@ -381,6 +388,35 @@ describe('IgxTreeGrid - CRUD', () => {
                     newValue: newRow
                 });
                 verifyCellValue(fix, 2, 'Name', 'New Name');
+                verifyRowsCount(fix, 8, 8);
+            });
+
+            it('should support updating a child tree-cell through the treeGrid API', () => {
+                // Test prerequisites: move 'Name' column so it becomes the tree-column
+                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Name')[0];
+                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                fix.detectChanges();
+
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 3, 'Name', 'Debra Morton');
+                verifyRowsCount(fix, 8, 8);
+
+                // Update cell on level 3
+                const oldCellValue = treeGrid.getCellByKey(7, 'Name').value;
+                const newCellValue = 'Michael Myers';
+                treeGrid.updateCell(newCellValue, 7, 'Name');
+                fix.detectChanges();
+
+                const cellComponent = treeGrid.getCellByKey(7, 'Name');
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: cellComponent.row,
+                    cell: cellComponent,
+                    currentValue: oldCellValue,
+                    newValue: newCellValue
+                });
+                verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);
             });
         });

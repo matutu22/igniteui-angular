@@ -143,8 +143,8 @@ describe('IgxTreeGrid - Integration', () => {
             column.autosize();
             fix.detectChanges();
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(100, 'incorrect headerCell width');
-            expect(parseInt(column.width, 10)).toBe(100);
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
+            expect(parseInt(column.width, 10)).toBe(152);
         });
 
         it('(UI) should autosize tree-column', () => {
@@ -159,8 +159,8 @@ describe('IgxTreeGrid - Integration', () => {
             const resizer = headerCell.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
             UIInteractions.simulateMouseEvent('dblclick', resizer, 225, 5);
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(100, 'incorrect headerCell width');
-            expect(parseInt(column.width, 10)).toBe(100);
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
+            expect(parseInt(column.width, 10)).toBe(152);
         });
     });
 
@@ -253,8 +253,8 @@ describe('IgxTreeGrid - Integration', () => {
             column.autosize();
             fix.detectChanges();
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(100, 'incorrect headerCell width');
-            expect(parseInt(column.width, 10)).toBe(100);
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
+            expect(parseInt(column.width, 10)).toBe(152);
         });
 
         it('(UI) should autosize tree-column', () => {
@@ -269,8 +269,8 @@ describe('IgxTreeGrid - Integration', () => {
             const resizer = headerCell.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
             UIInteractions.simulateMouseEvent('dblclick', resizer, 225, 5);
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(100, 'incorrect headerCell width');
-            expect(parseInt(column.width, 10)).toBe(100);
+            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
+            expect(parseInt(column.width, 10)).toBe(152);
         });
     });
 });

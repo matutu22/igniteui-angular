@@ -3,7 +3,7 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
-import { IgxTreeGridSimpleComponent, IgxTreeGridCrudComponent } from '../test-utils/tree-grid-components.spec';
+import { IgxTreeGridSimpleComponent, IgxTreeGridCrudComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
 
 describe('IgxTreeGrid - CRUD', () => {
@@ -14,7 +14,8 @@ describe('IgxTreeGrid - CRUD', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,
-                IgxTreeGridCrudComponent
+                IgxTreeGridCrudComponent,
+                IgxTreeGridPrimaryForeignKeyComponent
             ],
             imports: [IgxTreeGridModule]
         })
@@ -152,7 +153,75 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
+                fix.detectChanges();
+                treeGrid = fix.componentInstance.treeGrid;
+                treeGrid.height = '800px';
+                fix.detectChanges();
+            });
 
+            it('should support adding root row through treeGrid API', () => {
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                spyOn(treeGrid.onRowAdded, 'emit');
+                const newRow = {
+                    ID: 777,
+                    ParentID: -1,
+                    Name: 'New Employee',
+                    JobTitle: "Senior Web Developer",
+                    Age: 33
+                };
+                treeGrid.addRow(newRow);
+                fix.detectChanges();
+
+                const rowDataEventArgs = /* IRowDataEventArgs */ { data: newRow };
+                expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith(rowDataEventArgs);
+                verifyRowsCount(fix, 9, 9);
+                verifyTreeGridRecordsCount(fix, 4, 9);
+                verifyProcessedTreeGridRecordsCount(fix, 4, 9);
+            });
+
+            it('should support adding child rows through treeGrid API', () => {
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                // Add child row on level 1
+                spyOn(treeGrid.onRowAdded, 'emit');
+                let newRow = {
+                    ID: 777,
+                    ParentID: 1,
+                    Name: 'New Employee 1',
+                    JobTitle: "Senior Web Developer",
+                    Age: 33
+                };
+                treeGrid.addChildRow(1, newRow);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
+                verifyRowsCount(fix, 9, 9);
+                verifyTreeGridRecordsCount(fix, 3, 9);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 9);
+
+                // Add child row on level 3
+                newRow = {
+                    ID: 333,
+                    ParentID: 4,
+                    Name: 'New Employee 2',
+                    JobTitle: "Senior Web Developer",
+                    Age: 33
+                };
+                treeGrid.addChildRow(4, newRow);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
+                verifyRowsCount(fix, 10, 10);
+                verifyTreeGridRecordsCount(fix, 3, 10);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 10);
+            });
         });
     });
 

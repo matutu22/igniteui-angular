@@ -6,6 +6,11 @@ import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { DropPosition } from '../grid';
+
+const DEBOUNCETIME = 30;
+const CELL_CSS_CLASS = '.igx-grid__td';
 
 describe('IgxTreeGrid - CRUD', () => {
     let fix;
@@ -19,7 +24,7 @@ describe('IgxTreeGrid - CRUD', () => {
             ],
             imports: [IgxTreeGridModule]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     describe('Create', () => {
@@ -225,7 +230,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
     });
 
-    describe('Update', () => {
+    describe('Update API', () => {
         describe('Child Collection', () => {
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
@@ -233,7 +238,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 treeGrid = fix.componentInstance.treeGrid;
             });
 
-            it('should support updating a roow row through the treeGrid API', () => {
+            it('should support updating a root row through the treeGrid API', () => {
                 spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 0, 'Name', 'John Winchester');
@@ -290,6 +295,368 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyCellValue(fix, 6, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 10);
             });
+
+            it('should support updating a child row through the rowObject API', () => {
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 6, 'Name', 'Peter Lewis');
+                verifyRowsCount(fix, 3, 10);
+
+                // Update row on level 3
+                const oldRow = treeGrid.getRowByKey(299).rowData;
+                const newRow = {
+                    ID: 888,
+                    Name: 'New Name',
+                    HireDate: new Date(2010, 11, 11),
+                    Age: 42,
+                    Employees: []
+                };
+                treeGrid.getRowByKey(299).update(newRow);
+                fix.detectChanges();
+
+                const rowComponent = treeGrid.getRowByKey(888);
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: rowComponent,
+                    cell: null,
+                    currentValue: oldRow,
+                    newValue: newRow
+                });
+                verifyCellValue(fix, 6, 'Name', 'New Name');
+                verifyRowsCount(fix, 3, 10);
+            });
+
+            it('should support updating a child tree-cell through the treeGrid API', () => {
+                // Test prerequisites: move 'Age' column so it becomes the tree-column
+                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
+                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                fix.detectChanges();
+
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 6, 'Age', '25');
+                verifyRowsCount(fix, 3, 10);
+
+                // Update cell on level 3
+                const oldCellValue = treeGrid.getCellByKey(299, 'Age').value;
+                const newCellValue = 18;
+                treeGrid.updateCell(newCellValue, 299, 'Age');
+                fix.detectChanges();
+
+                const cellComponent = treeGrid.getCellByKey(299, 'Age');
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: cellComponent.row,
+                    cell: cellComponent,
+                    currentValue: oldCellValue,
+                    newValue: newCellValue
+                });
+                verifyCellValue(fix, 6, 'Age', '18');
+                verifyRowsCount(fix, 3, 10);
+            });
+
+            it('should support updating a child tree-cell through the cellObject API', () => {
+                // Test prerequisites: move 'Age' column so it becomes the tree-column
+                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
+                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                fix.detectChanges();
+
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 6, 'Age', '25');
+                verifyRowsCount(fix, 3, 10);
+
+                // Update cell on level 3
+                const oldCellValue = treeGrid.getCellByKey(299, 'Age').value;
+                const newCellValue = 18;
+                treeGrid.getCellByKey(299, 'Age').update(newCellValue);
+                fix.detectChanges();
+
+                const cellComponent = treeGrid.getCellByKey(299, 'Age');
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: cellComponent.row,
+                    cell: cellComponent,
+                    currentValue: oldCellValue,
+                    newValue: newCellValue
+                });
+                verifyCellValue(fix, 6, 'Age', '18');
+                verifyRowsCount(fix, 3, 10);
+            });
+        });
+
+        describe('Primary/Foreign key', () => {
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
+                fix.detectChanges();
+                treeGrid = fix.componentInstance.treeGrid;
+            });
+
+            it('should support updating a root row through the treeGrid API', () => {
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 0, 'Name', 'Casey Houston');
+                verifyRowsCount(fix, 8, 8);
+
+                // Update row on level 1
+                const oldRow = treeGrid.getRowByKey(1).rowData;
+                const newRow = {
+                    ID: 999,
+                    ParentID: -1,
+                    Name: 'New Name',
+                    JobTitle: 'CFO',
+                    Age: 40
+                };
+                treeGrid.updateRow(newRow, 1);
+                fix.detectChanges();
+
+                const rowComponent = treeGrid.getRowByKey(999);
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: rowComponent,
+                    cell: null,
+                    currentValue: oldRow,
+                    newValue: newRow
+                });
+                verifyCellValue(fix, 0, 'Name', 'New Name');
+                verifyRowsCount(fix, 8, 8);
+            });
+
+            it('should support updating a child row through the treeGrid API', () => {
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 3, 'Name', 'Debra Morton');
+                verifyRowsCount(fix, 8, 8);
+
+                // Update row on level 3
+                const oldRow = treeGrid.getRowByKey(7).rowData;
+                const newRow = {
+                    ID: 888,
+                    ParentID: 2,
+                    Name: 'New Name',
+                    JobTitle: 'Web Developer',
+                    Age: 42
+                };
+                treeGrid.updateRow(newRow, 7);
+                fix.detectChanges();
+
+                const rowComponent = treeGrid.getRowByKey(888);
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: rowComponent,
+                    cell: null,
+                    currentValue: oldRow,
+                    newValue: newRow
+                });
+                verifyCellValue(fix, 3, 'Name', 'New Name');
+                verifyRowsCount(fix, 8, 8);
+            });
+
+            it('should support updating a child row through the rowObject API', () => {
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 3, 'Name', 'Debra Morton');
+                verifyRowsCount(fix, 8, 8);
+
+                // Update row on level 3
+                const oldRow = treeGrid.getRowByKey(7).rowData;
+                const newRow = {
+                    ID: 888,
+                    ParentID: 2,
+                    Name: 'New Name',
+                    JobTitle: 'Web Developer',
+                    Age: 42
+                };
+                treeGrid.getRowByKey(7).update(newRow);
+                fix.detectChanges();
+
+                const rowComponent = treeGrid.getRowByKey(888);
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: rowComponent,
+                    cell: null,
+                    currentValue: oldRow,
+                    newValue: newRow
+                });
+                verifyCellValue(fix, 3, 'Name', 'New Name');
+                verifyRowsCount(fix, 8, 8);
+            });
+
+            it('should support updating a child tree-cell through the treeGrid API', () => {
+                // Test prerequisites: move 'Name' column so it becomes the tree-column
+                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Name')[0];
+                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                fix.detectChanges();
+
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 3, 'Name', 'Debra Morton');
+                verifyRowsCount(fix, 8, 8);
+
+                // Update cell on level 3
+                const oldCellValue = treeGrid.getCellByKey(7, 'Name').value;
+                const newCellValue = 'Michael Myers';
+                treeGrid.updateCell(newCellValue, 7, 'Name');
+                fix.detectChanges();
+
+                const cellComponent = treeGrid.getCellByKey(7, 'Name');
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: cellComponent.row,
+                    cell: cellComponent,
+                    currentValue: oldCellValue,
+                    newValue: newCellValue
+                });
+                verifyCellValue(fix, 3, 'Name', 'Michael Myers');
+                verifyRowsCount(fix, 8, 8);
+            });
+
+            it('should support updating a child tree-cell through the cellObject API', () => {
+                // Test prerequisites: move 'Name' column so it becomes the tree-column
+                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Name')[0];
+                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                fix.detectChanges();
+
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 3, 'Name', 'Debra Morton');
+                verifyRowsCount(fix, 8, 8);
+
+                // Update cell on level 3
+                const oldCellValue = treeGrid.getCellByKey(7, 'Name').value;
+                const newCellValue = 'Michael Myers';
+                // treeGrid.updateCell(newCellValue, 7, 'Name');
+                treeGrid.getCellByKey(7, 'Name').update(newCellValue);
+                fix.detectChanges();
+
+                const cellComponent = treeGrid.getCellByKey(7, 'Name');
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: cellComponent.row,
+                    cell: cellComponent,
+                    currentValue: oldCellValue,
+                    newValue: newCellValue
+                });
+                verifyCellValue(fix, 3, 'Name', 'Michael Myers');
+                verifyRowsCount(fix, 8, 8);
+            });
+        });
+    });
+
+    describe('Update UI', () => {
+        describe('Child Collection', () => {
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
+                fix.detectChanges();
+                treeGrid = fix.componentInstance.treeGrid;
+                for (const col of treeGrid.columns) {
+                    col.editable = true;
+                }
+            });
+
+            it('should be able to enter edit mode of a tree-grid column on dblclick, enter and f2', async() => {
+                const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const rv = allCells[0];
+                const cell = treeGrid.getCellByColumn(0, 'ID');
+
+                rv.nativeElement.dispatchEvent(new Event('focus'));
+                fix.detectChanges();
+
+                rv.triggerEventHandler('dblclick', new Event('dblclick'));
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+
+                UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+
+                UIInteractions.triggerKeyDownEvtUponElem('f2', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+            });
+
+            it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and f2', async() => {
+                const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const rv = allCells[1];
+                const cell = treeGrid.getCellByColumn(0, 'Name');
+
+                rv.nativeElement.dispatchEvent(new Event('focus'));
+                fix.detectChanges();
+
+                rv.triggerEventHandler('dblclick', new Event('dblclick'));
+
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+
+                UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+
+                UIInteractions.triggerKeyDownEvtUponElem('f2', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(true);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                expect(cell.inEditMode).toBe(false);
+            });
+
+            it('should be able to edit a tree-grid cell', async() => {
+                const cell = treeGrid.getCellByColumn(0, 'ID');
+                const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+
+                cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
+                await wait(DEBOUNCETIME);
+
+                expect(cell.inEditMode).toBe(true);
+                const editTemplate = cellDomNumber.query(By.css('input'));
+                expect(editTemplate).toBeDefined();
+
+                UIInteractions.sendInput(editTemplate, 146);
+                await wait(DEBOUNCETIME);
+                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
+                await wait(DEBOUNCETIME);
+
+                expect(cell.inEditMode).toBe(false);
+                expect(parseInt(cell.value, 10)).toBe(146);
+                expect(editTemplate.nativeElement.type).toBe('number');
+            });
+
+            it('should be able to edit a non-tree-grid cell', async() => {
+                const cell = treeGrid.getCellByColumn(0, 'Name');
+                const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+
+                cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
+                await wait(DEBOUNCETIME);
+
+                expect(cell.inEditMode).toBe(true);
+                const editTemplate = cellDomNumber.query(By.css('input'));
+                expect(editTemplate).toBeDefined();
+
+                UIInteractions.sendInput(editTemplate, 'Abc Def');
+                await wait(DEBOUNCETIME);
+                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
+                await wait(DEBOUNCETIME);
+
+                expect(cell.inEditMode).toBe(false);
+                expect(cell.value).toBe('Abc Def');
+                expect(editTemplate.nativeElement.type).toBe('text');
+            });
+
         });
 
         describe('Primary/Foreign key', () => {
@@ -456,6 +823,6 @@ function verifyCellValue(fix, rowIndex, columnKey, expectedCellValue) {
     const treeGrid = fix.componentInstance.treeGrid;
     const actualValue = TreeGridFunctions.getCellValue(fix, rowIndex, columnKey);
     const actualAPIValue = treeGrid.getRowByIndex(rowIndex).cells.filter((c) => c.column.field === columnKey)[0].value;
-    expect(actualValue).toBe(expectedCellValue, 'incorrect cell value');
-    expect(actualAPIValue).toBe(expectedCellValue, 'incorrect api cell value');
+    expect(actualValue.toString()).toBe(expectedCellValue, 'incorrect cell value');
+    expect(actualAPIValue.toString()).toBe(expectedCellValue, 'incorrect api cell value');
 }

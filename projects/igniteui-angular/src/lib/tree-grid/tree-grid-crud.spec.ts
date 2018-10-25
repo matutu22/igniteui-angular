@@ -396,11 +396,44 @@ describe('IgxTreeGrid - CRUD', () => {
 
                 verifyCellValue(fix, 0, 'Name', 'Casey Houston');
                 verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
 
                 // Update row on level 1
                 const oldRow = treeGrid.getRowByKey(1).rowData;
                 const newRow = {
-                    ID: 999,
+                    ID: 1,
+                    ParentID: -1,
+                    Name: 'New Name',
+                    JobTitle: 'CFO',
+                    Age: 40
+                };
+                treeGrid.updateRow(newRow, 1);
+                fix.detectChanges();
+
+                const rowComponent = treeGrid.getRowByKey(1);
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: rowComponent,
+                    cell: null,
+                    currentValue: oldRow,
+                    newValue: newRow
+                });
+                verifyCellValue(fix, 0, 'Name', 'New Name');
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+            });
+
+            it('should support updating a root row by changing its ID (its children should become root rows)', () => {
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 0, 'Name', 'Casey Houston');
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 1, 1); // Second visible row is on level 2 (childrow)
+
+                // Update row on level 1
+                const oldRow = treeGrid.getRowByKey(1).rowData;
+                const newRow = {
+                    ID: 999, // Original ID is 1 and the new one is 999, which will transform its child rows into root rows.
                     ParentID: -1,
                     Name: 'New Name',
                     JobTitle: 'CFO',
@@ -418,6 +451,8 @@ describe('IgxTreeGrid - CRUD', () => {
                 });
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 5, 8); // Root records increment count with 2
+                TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 1, 0); // Second visible row is now on level 1 (rootrow)
             });
 
             it('should support updating a child row through the treeGrid API', () => {
@@ -476,6 +511,39 @@ describe('IgxTreeGrid - CRUD', () => {
                 });
                 verifyCellValue(fix, 3, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
+            });
+
+            it('should support updating a child row by changing the its original parentID', () => {
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 3, 'Name', 'Debra Morton');
+                verifyCellValue(fix, 5, 'Name', 'Erma Walsh');
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+
+                // Update row on level 3
+                const oldRow = treeGrid.getRowByKey(7).rowData;
+                const newRow = {
+                    ID: 888,
+                    ParentID: -1, // Original ID is 2 and the new one is -1, which will make the row a root row.
+                    Name: 'New Name',
+                    JobTitle: 'Web Developer',
+                    Age: 42
+                };
+                treeGrid.getRowByKey(7).update(newRow);
+                fix.detectChanges();
+
+                const rowComponent = treeGrid.getRowByKey(4); // original component: Name = 'Jack Simon'
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: rowComponent,
+                    cell: null,
+                    currentValue: oldRow,
+                    newValue: newRow
+                });
+                verifyCellValue(fix, 3, 'Name', 'Jack Simon');
+                verifyCellValue(fix, 5, 'Name', 'New Name');
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 4, 8); // Root rows count increment with 1 due to the row update.
             });
 
             it('should support updating a child tree-cell through the treeGrid API', () => {

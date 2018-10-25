@@ -33,7 +33,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
     public indentationDiv: ElementRef;
 
     protected resolveStyleClasses(): string {
-        return super.resolveStyleClasses() + ' igx-grid__tree-grid-cell';
+        return super.resolveStyleClasses() + ' igx-grid__td--tree-cell';
     }
 
     public get indentation() {

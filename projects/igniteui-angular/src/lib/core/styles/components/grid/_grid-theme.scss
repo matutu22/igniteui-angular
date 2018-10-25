@@ -710,6 +710,10 @@
         text-align: left;
     }
 
+    %igx-grid__td--tree-cell {
+        overflow: auto;
+    }
+
     %grid-cell-text {
         @include ellipsis();
     }

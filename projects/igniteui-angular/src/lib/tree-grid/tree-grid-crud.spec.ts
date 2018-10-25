@@ -836,7 +836,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 treeGrid = fix.componentInstance.treeGrid;
             });
 
-            it('should delete a row by ID', () => {
+            it('should delete a root level row by ID', () => {
                 let someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.rowID).toBe(147);
 
@@ -854,7 +854,25 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyProcessedTreeGridRecordsCount(fix, 2, 3);
             });
 
-            it('should delete a row through the row object', () => {
+            it('should delete a child level row by ID', () => {
+                let someRow = treeGrid.getRowByIndex(3);
+                expect(someRow.rowID).toBe(317);
+
+                verifyRowsCount(fix, 3, 10);
+                verifyTreeGridRecordsCount(fix, 3, 10);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 10);
+
+                treeGrid.deleteRow(someRow.rowID);
+                fix.detectChanges();
+                someRow = treeGrid.getRowByIndex(3);
+                expect(someRow.rowID).toBe(19);
+
+                verifyRowsCount(fix, 3, 6);
+                verifyTreeGridRecordsCount(fix, 3, 6);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 6);
+            });
+
+            it('should delete a root level row through the row object', () => {
                 let someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.rowID).toBe(147);
 
@@ -870,6 +888,24 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyRowsCount(fix, 2, 3);
                 verifyTreeGridRecordsCount(fix, 2, 3);
                 verifyProcessedTreeGridRecordsCount(fix, 2, 3);
+            });
+
+            it('should delete a child level row through the row object', () => {
+                let someRow = treeGrid.getRowByIndex(3);
+                expect(someRow.rowID).toBe(317);
+
+                verifyRowsCount(fix, 3, 10);
+                verifyTreeGridRecordsCount(fix, 3, 10);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 10);
+
+                someRow.delete();
+                fix.detectChanges();
+                someRow = treeGrid.getRowByIndex(3);
+                expect(someRow.rowID).toBe(19);
+
+                verifyRowsCount(fix, 3, 6);
+                verifyTreeGridRecordsCount(fix, 3, 6);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 6);
             });
 
             it('should emit an event when deleting row by ID', (done) => {
@@ -900,12 +936,12 @@ describe('IgxTreeGrid - CRUD', () => {
                 treeGrid = fix.componentInstance.treeGrid;
             });
 
-            it('should delete a row by ID', () => {
+            it('should delete a root level row by ID', () => {
                 let someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.rowID).toBe(1);
 
-                verifyRowsCount(fix, 10, 8);
-                verifyTreeGridRecordsCount(fix, 3, 10);
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 8);
 
                 treeGrid.deleteRow(someRow.rowID);
@@ -913,17 +949,35 @@ describe('IgxTreeGrid - CRUD', () => {
                 someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.rowID).toBe(2);
 
-                verifyRowsCount(fix, 9, 7);
-                verifyTreeGridRecordsCount(fix, 4, 9);
+                verifyRowsCount(fix, 7, 7);
+                verifyTreeGridRecordsCount(fix, 4, 7);
                 verifyProcessedTreeGridRecordsCount(fix, 4, 7);
             });
 
-            it('should delete a row through the row object', () => {
+            it('should delete a child level row by ID', () => {
+                let someRow = treeGrid.getRowByIndex(1);
+                expect(someRow.rowID).toBe(2);
+
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                treeGrid.deleteRow(someRow.rowID);
+                fix.detectChanges();
+                someRow = treeGrid.getRowByIndex(1);
+                expect(someRow.rowID).toBe(4);
+
+                verifyRowsCount(fix, 7, 7);
+                verifyTreeGridRecordsCount(fix, 5, 7);
+                verifyProcessedTreeGridRecordsCount(fix, 5, 7);
+            });
+
+            it('should delete a root level row through the row object', () => {
                 let someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.rowID).toBe(1);
 
-                verifyRowsCount(fix, 10, 8);
-                verifyTreeGridRecordsCount(fix, 3, 10);
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 8);
 
                 someRow.delete();
@@ -931,9 +985,27 @@ describe('IgxTreeGrid - CRUD', () => {
                 someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.rowID).toBe(2);
 
-                verifyRowsCount(fix, 9, 7);
-                verifyTreeGridRecordsCount(fix, 4, 9);
+                verifyRowsCount(fix, 7, 7);
+                verifyTreeGridRecordsCount(fix, 4, 7);
                 verifyProcessedTreeGridRecordsCount(fix, 4, 7);
+            });
+
+            it('should delete a child level row through the row object', () => {
+                let someRow = treeGrid.getRowByIndex(1);
+                expect(someRow.rowID).toBe(2);
+
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                someRow.delete();
+                fix.detectChanges();
+                someRow = treeGrid.getRowByIndex(1);
+                expect(someRow.rowID).toBe(4);
+
+                verifyRowsCount(fix, 7, 7);
+                verifyTreeGridRecordsCount(fix, 5, 7);
+                verifyProcessedTreeGridRecordsCount(fix, 5, 7);
             });
 
             it('should emit an event when deleting row by ID', (done) => {
@@ -967,15 +1039,15 @@ function verifyRowsCount(fix, expectedRootRowsCount, expectedVisibleRowsCount) {
     expect(treeGrid.dataRowList.length).toBe(expectedVisibleRowsCount, 'Incorrect dataRowList length.');
 }
 
-function verifyTreeGridRecordsCount(fix, expectedRecordsCount, expectedFlatRecordsCount) {
+function verifyTreeGridRecordsCount(fix, expectedRootRecordsCount, expectedFlatRecordsCount) {
     const treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-    expect(treeGrid.treeGridRecords.length).toBe(expectedRecordsCount);
+    expect(treeGrid.treeGridRecords.length).toBe(expectedRootRecordsCount);
     expect(treeGrid.treeGridRecordsMap.size).toBe(expectedFlatRecordsCount);
 }
 
-function verifyProcessedTreeGridRecordsCount(fix, expectedProcessedRecordsCount, expectedProcessedFlatRecordsCount) {
+function verifyProcessedTreeGridRecordsCount(fix, expectedProcessedRootRecordsCount, expectedProcessedFlatRecordsCount) {
     const treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-    expect(treeGrid.processedTreeGridRecords.length).toBe(expectedProcessedRecordsCount);
+    expect(treeGrid.processedTreeGridRecords.length).toBe(expectedProcessedRootRecordsCount);
     expect(treeGrid.processedTreeGridRecordsMap.size).toBe(expectedProcessedFlatRecordsCount);
 }
 

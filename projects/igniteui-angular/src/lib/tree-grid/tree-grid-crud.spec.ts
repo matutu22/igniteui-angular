@@ -230,7 +230,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
     });
 
-    fdescribe('Update API', () => {
+    describe('Update API', () => {
         describe('Child Collection', () => {
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
@@ -296,6 +296,35 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyRowsCount(fix, 3, 10);
             });
 
+            it('should support updating a child row through the rowObject API', () => {
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 6, 'Name', 'Peter Lewis');
+                verifyRowsCount(fix, 3, 10);
+
+                // Update row on level 3
+                const oldRow = treeGrid.getRowByKey(299).rowData;
+                const newRow = {
+                    ID: 888,
+                    Name: 'New Name',
+                    HireDate: new Date(2010, 11, 11),
+                    Age: 42,
+                    Employees: []
+                };
+                treeGrid.getRowByKey(299).update(newRow);
+                fix.detectChanges();
+
+                const rowComponent = treeGrid.getRowByKey(888);
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: rowComponent,
+                    cell: null,
+                    currentValue: oldRow,
+                    newValue: newRow
+                });
+                verifyCellValue(fix, 6, 'Name', 'New Name');
+                verifyRowsCount(fix, 3, 10);
+            });
+
             it('should support updating a child tree-cell through the treeGrid API', () => {
                 // Test prerequisites: move 'Age' column so it becomes the tree-column
                 const sourceColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
@@ -312,6 +341,35 @@ describe('IgxTreeGrid - CRUD', () => {
                 const oldCellValue = treeGrid.getCellByKey(299, 'Age').value;
                 const newCellValue = 18;
                 treeGrid.updateCell(newCellValue, 299, 'Age');
+                fix.detectChanges();
+
+                const cellComponent = treeGrid.getCellByKey(299, 'Age');
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: cellComponent.row,
+                    cell: cellComponent,
+                    currentValue: oldCellValue,
+                    newValue: newCellValue
+                });
+                verifyCellValue(fix, 6, 'Age', '18');
+                verifyRowsCount(fix, 3, 10);
+            });
+
+            it('should support updating a child tree-cell through the cellObject API', () => {
+                // Test prerequisites: move 'Age' column so it becomes the tree-column
+                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
+                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                fix.detectChanges();
+
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 6, 'Age', '25');
+                verifyRowsCount(fix, 3, 10);
+
+                // Update cell on level 3
+                const oldCellValue = treeGrid.getCellByKey(299, 'Age').value;
+                const newCellValue = 18;
+                treeGrid.getCellByKey(299, 'Age').update(newCellValue);
                 fix.detectChanges();
 
                 const cellComponent = treeGrid.getCellByKey(299, 'Age');
@@ -365,19 +423,19 @@ describe('IgxTreeGrid - CRUD', () => {
             it('should support updating a child row through the treeGrid API', () => {
                 spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
 
-                verifyCellValue(fix, 2, 'Name', 'Tanya Bennett');
+                verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
 
                 // Update row on level 3
-                const oldRow = treeGrid.getRowByKey(2).rowData;
+                const oldRow = treeGrid.getRowByKey(7).rowData;
                 const newRow = {
                     ID: 888,
+                    ParentID: 2,
                     Name: 'New Name',
-                    HireDate: new Date(2010, 11, 11),
-                    Age: 42,
-                    Employees: []
+                    JobTitle: 'Web Developer',
+                    Age: 42
                 };
-                treeGrid.updateRow(newRow, 2);
+                treeGrid.updateRow(newRow, 7);
                 fix.detectChanges();
 
                 const rowComponent = treeGrid.getRowByKey(888);
@@ -387,7 +445,36 @@ describe('IgxTreeGrid - CRUD', () => {
                     currentValue: oldRow,
                     newValue: newRow
                 });
-                verifyCellValue(fix, 2, 'Name', 'New Name');
+                verifyCellValue(fix, 3, 'Name', 'New Name');
+                verifyRowsCount(fix, 8, 8);
+            });
+
+            it('should support updating a child row through the rowObject API', () => {
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 3, 'Name', 'Debra Morton');
+                verifyRowsCount(fix, 8, 8);
+
+                // Update row on level 3
+                const oldRow = treeGrid.getRowByKey(7).rowData;
+                const newRow = {
+                    ID: 888,
+                    ParentID: 2,
+                    Name: 'New Name',
+                    JobTitle: 'Web Developer',
+                    Age: 42
+                };
+                treeGrid.getRowByKey(7).update(newRow);
+                fix.detectChanges();
+
+                const rowComponent = treeGrid.getRowByKey(888);
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: rowComponent,
+                    cell: null,
+                    currentValue: oldRow,
+                    newValue: newRow
+                });
+                verifyCellValue(fix, 3, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
             });
 
@@ -419,10 +506,40 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);
             });
+
+            it('should support updating a child tree-cell through the cellObject API', () => {
+                // Test prerequisites: move 'Name' column so it becomes the tree-column
+                const sourceColumn = treeGrid.columns.filter(c => c.field === 'Name')[0];
+                const targetColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+                treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
+                fix.detectChanges();
+
+                spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
+
+                verifyCellValue(fix, 3, 'Name', 'Debra Morton');
+                verifyRowsCount(fix, 8, 8);
+
+                // Update cell on level 3
+                const oldCellValue = treeGrid.getCellByKey(7, 'Name').value;
+                const newCellValue = 'Michael Myers';
+                // treeGrid.updateCell(newCellValue, 7, 'Name');
+                treeGrid.getCellByKey(7, 'Name').update(newCellValue);
+                fix.detectChanges();
+
+                const cellComponent = treeGrid.getCellByKey(7, 'Name');
+                expect(treeGrid.onEditDone.emit).toHaveBeenCalledWith({
+                    row: cellComponent.row,
+                    cell: cellComponent,
+                    currentValue: oldCellValue,
+                    newValue: newCellValue
+                });
+                verifyCellValue(fix, 3, 'Name', 'Michael Myers');
+                verifyRowsCount(fix, 8, 8);
+            });
         });
     });
 
-    fdescribe('Update UI', () => {
+    describe('Update UI', () => {
         describe('Child Collection', () => {
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);

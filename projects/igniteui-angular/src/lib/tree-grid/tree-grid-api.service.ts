@@ -96,8 +96,12 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             data[grid.foreignKey] = parentRowID;
             this.add_row(id, data);
         } else {
-            const children = parentRecord.data[grid.childDataKey];
-            children.push(data);
+            const parentData = parentRecord.data;
+            const childKey = grid.childDataKey;
+            if (!parentData[childKey]) {
+                parentData[childKey] = [];
+            }
+            parentData[childKey].push(data);
             this.trigger_row_added(id, data);
         }
     }

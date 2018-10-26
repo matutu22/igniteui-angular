@@ -1626,7 +1626,7 @@ export class GridBaseAPIService <T extends IGridBaseComponent> {
             gridData.indexOf(rowID);
         if (index !== -1) {
             const args: IGridEditEventArgs = { row: this.get_row_by_key(id, rowID), cell: null,
-                currentValue: this.get(id).data[index], newValue: value };
+                currentValue: gridData[index], newValue: value };
             grid.onEditDone.emit(args);
             this.update_row_in_array(id, args.newValue, rowID, index);
             if (isRowSelected) {

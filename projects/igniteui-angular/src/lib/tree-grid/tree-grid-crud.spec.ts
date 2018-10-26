@@ -99,6 +99,30 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyProcessedTreeGridRecordsCount(fix, 3, 12);
             });
 
+            it('should do nothing when adding child row to a non-existing parent row', () => {
+                verifyRowsCount(fix, 3, 10);
+                verifyTreeGridRecordsCount(fix, 3, 10);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 10);
+
+                // Try adding child row to a non-existing parent row
+                spyOn(treeGrid.onRowAdded, 'emit');
+                let newRow = {
+                    ID: 383,
+                    Name: 'TEST NAME 1',
+                    HireDate: new Date(2018, 3, 22),
+                    Age: 55,
+                    Employees: []
+                };
+                treeGrid.addChildRow(12345, newRow); // there is no row with ID=12345
+                fix.detectChanges();
+
+                // Verify treeGrid remains unchanged
+                expect(treeGrid.onRowAdded.emit).not.toHaveBeenCalled();
+                verifyRowsCount(fix, 3, 10);
+                verifyTreeGridRecordsCount(fix, 3, 10);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 10);
+            });
+
             it('should support adding child row to \'null\' collection through treeGrid API', () => {
                 // Add child row to a row that has a child collection set to 'null'
                 spyOn(treeGrid.onRowAdded, 'emit');
@@ -226,6 +250,30 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyRowsCount(fix, 10, 10);
                 verifyTreeGridRecordsCount(fix, 3, 10);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 10);
+            });
+
+            it('should do nothing when adding child row to a non-existing parent row', () => {
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                // Try adding child row to a non-existing parent row
+                spyOn(treeGrid.onRowAdded, 'emit');
+                let newRow = {
+                    ID: 777,
+                    ParentID: 12345,  // there is no row with ID=12345
+                    Name: 'New Employee 1',
+                    JobTitle: 'Senior Web Developer',
+                    Age: 33
+                };
+                treeGrid.addChildRow(12345, newRow);
+                fix.detectChanges();
+
+                // Verify treeGrid remains unchanged
+                expect(treeGrid.onRowAdded.emit).not.toHaveBeenCalled();
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
             });
         });
     });

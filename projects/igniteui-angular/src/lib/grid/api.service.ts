@@ -11,6 +11,7 @@ import { IgxColumnComponent } from './column.component';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './row.component';
 import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
+import { ISortingStrategy } from '../data-operations/sorting-strategy';
 /**
  *@hidden
  */
@@ -207,13 +208,15 @@ export class IgxGridAPIService {
         }
     }
 
-    public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+    public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean, strategy: ISortingStrategy): void {
         if (dir === SortingDirection.None) {
             this.remove_grouping_expression(id, fieldName);
         }
         const sortingState = cloneArray(this.get(id).sortingExpressions);
-
-        this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase });
+        const columnSortStrategy = this.get_column_by_name(this.get(id).id, fieldName) ?
+            this.get_column_by_name(this.get(id).id, fieldName).sortStrategy : undefined;
+        strategy = strategy ? strategy : columnSortStrategy;
+        this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase, strategy });
         this.get(id).sortingExpressions = sortingState;
     }
 
@@ -224,17 +227,18 @@ export class IgxGridAPIService {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(id, each.fieldName);
             }
+            each.strategy = each.strategy ? each.strategy : this.get_column_by_name(this.get(id).id, each.fieldName).sortStrategy;
             this.prepare_sorting_expression([sortingState], each);
         }
 
         this.get(id).sortingExpressions = sortingState;
     }
 
-    public groupBy(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+    public groupBy(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean, strategy: ISortingStrategy): void {
         const groupingState = cloneArray(this.get(id).groupingExpressions);
         const sortingState = cloneArray(this.get(id).sortingExpressions);
-
-        this.prepare_sorting_expression([sortingState, groupingState], { fieldName, dir, ignoreCase });
+        strategy = strategy ? strategy : this.get_column_by_name(this.get(id).id, fieldName).sortStrategy;
+        this.prepare_sorting_expression([sortingState, groupingState], { fieldName, dir, ignoreCase, strategy });
         this.get(id).groupingExpressions = groupingState;
         this.arrange_sorting_expressions(id);
     }
@@ -244,6 +248,7 @@ export class IgxGridAPIService {
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         for (const each of expressions) {
+            each.strategy = each.strategy ? each.strategy : this.get_column_by_name(this.get(id).id, each.fieldName).sortStrategy;
             this.prepare_sorting_expression([sortingState, groupingState], each);
         }
 

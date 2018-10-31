@@ -81,10 +81,18 @@ export class IgxGridSummaryComponent implements DoCheck {
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>, public cdr: ChangeDetectorRef) { }
 
+    /** TODO: Need alternative update mechanism tied to grid data changes */
     ngDoCheck() {
-        this.displayDensity = this.gridAPI.get(this.gridID).displayDensity;
-        this.summaryItemHeight = this.gridAPI.get(this.gridID).defaultRowHeight;
-        this.cdr.detectChanges();
+        const gridDisplayDensity = this.gridAPI.get(this.gridID).displayDensity;
+        if (this.displayDensity !== gridDisplayDensity) {
+            this.displayDensity = gridDisplayDensity;
+            this.cdr.detectChanges();
+        }
+        const gridRowHeight = this.gridAPI.get(this.gridID).defaultRowHeight;
+        if (this.summaryItemHeight !== gridRowHeight) {
+            this.summaryItemHeight = gridRowHeight;
+            this.cdr.detectChanges();
+        }
     }
 
     get resolveSummaries(): any[] {

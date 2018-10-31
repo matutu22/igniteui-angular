@@ -452,6 +452,28 @@ describe('IgxTransaction', () => {
             trans.clear();
         });
 
+        it('Should emit events on state change operations', () => {
+            const transaction = new IgxTransactionService();
+            spyOn(transaction.onStateUpdate, 'emit');
+
+            let addItem: Transaction = { id: 1, type: TransactionType.ADD, newValue: { Category: 'Something' } };
+            transaction.add(addItem);
+            expect(transaction.onStateUpdate.emit).toHaveBeenCalledTimes(1);
+            addItem = { id: 2, type: TransactionType.ADD, newValue: { Category: 'Something 2' } };
+            transaction.add(addItem);
+            expect(transaction.onStateUpdate.emit).toHaveBeenCalledTimes(2);
+            transaction.undo();
+            expect(transaction.onStateUpdate.emit).toHaveBeenCalledTimes(3);
+            transaction.undo();
+            expect(transaction.onStateUpdate.emit).toHaveBeenCalledTimes(4);
+            transaction.undo(); // noop
+            expect(transaction.onStateUpdate.emit).toHaveBeenCalledTimes(4);
+            transaction.redo();
+            expect(transaction.onStateUpdate.emit).toHaveBeenCalledTimes(5);
+            transaction.clear();
+            expect(transaction.onStateUpdate.emit).toHaveBeenCalledTimes(6);
+        });
+
         it('Should properly confirm the length of the undo/redo stacks', () => {
             const originalData = SampleTestData.generateProductData(11);
             const transaction = new IgxTransactionService();

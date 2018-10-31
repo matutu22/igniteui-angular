@@ -1,4 +1,4 @@
-import { EventEmitter } from '@angular/core';
+import { Subject } from 'rxjs';
 
 export enum TransactionType {
     ADD = 'add',
@@ -25,19 +25,19 @@ export interface TransactionService {
     readonly enabled: boolean;
 
     /**
+     * Returns if the service can perform an Undo operation
+     */
+    readonly canUndo: boolean;
+
+    /**
+     * Returns if the service can perform a Redo operation
+     */
+    readonly canRedo: boolean;
+
+    /**
      * Event fired when transaction state has changed - add transaction, commit all transactions, undo and redo.
      */
-    onStateUpdate?: EventEmitter<void>;
-
-    /**
-     * @returns if there are any transactions in the Undo stack
-     */
-    canUndo: boolean;
-
-    /**
-     * @returns if there are any transactions in the Redo stack
-     */
-    canRedo: boolean;
+    onStateUpdate: Subject<void>;
 
     /**
      * Adds provided  transaction with recordRef if any

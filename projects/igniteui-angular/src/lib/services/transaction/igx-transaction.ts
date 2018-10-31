@@ -10,6 +10,10 @@ export class IgxTransactionService extends IgxBaseTransactionService {
     private _undoStack: { transaction: Transaction, recordRef: any }[] = [];
     private _states: Map<any, State> = new Map();
 
+    public get enabled(): boolean {
+        return true;
+    }
+
     get canUndo(): boolean {
         return this._undoStack.length > 0;
     }
@@ -17,8 +21,6 @@ export class IgxTransactionService extends IgxBaseTransactionService {
     get canRedo(): boolean {
         return this._redoStack.length > 0;
     }
-
-    public onStateUpdate = new EventEmitter<void>();
 
     public add(transaction: Transaction, recordRef?: any): void {
         const states = this._isPending ? this._pendingStates : this._states;
@@ -53,10 +55,6 @@ export class IgxTransactionService extends IgxBaseTransactionService {
 
     public getState(id: any): State {
         return this._states.get(id);
-    }
-
-    public get enabled(): boolean {
-        return true;
     }
 
     public getAggregatedValue(id: any, mergeChanges: boolean): any {

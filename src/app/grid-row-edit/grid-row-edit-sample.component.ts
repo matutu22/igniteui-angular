@@ -11,13 +11,13 @@ import { IgxGridComponent, Transaction, IgxToggleDirective } from 'igniteui-angu
 export class GridRowEditSampleComponent {
     public console = window.console;
     private addProductId: number;
-    private pinFlag = false;
-    private hideFlag = false;
-    private summaryFlag = true;
-    private customTemplate = false;
-    private update_value;
-    private update_row;
-    private update_column;
+    public pinFlag = false;
+    public hideFlag = false;
+    public summaryFlag = true;
+    public customTemplate = false;
+    public update_value;
+    public update_row;
+    public update_column;
     public currentActiveGrid: {
         id: string,
         transactions: any[]
@@ -164,10 +164,10 @@ export class GridRowEditSampleComponent {
         this.gridRowEditTransaction.updateCell(value, row, column);
     }
 
-    update(grid: IgxGridComponent) {
+    update(gridID) {
         const editRowValue = this.generateRow();
         editRowValue.ProductID = 3;
-        this.getGridById(grid).updateRow(editRowValue, 3);
+        this.getGridById(gridID).updateRow(editRowValue, 3);
     }
 
     refreshAll() {

@@ -2588,7 +2588,8 @@ describe('IgxGrid Component Tests', () => {
 
                 const grid = fixture.componentInstance.grid;
                 const trans = grid.transactions;
-                spyOn(trans.onStateUpdate, 'emit').and.callThrough();
+                let pipeTrigger = grid.pipeTrigger;
+                spyOn(grid, 'clearSummaryCache').and.callThrough();
                 let row = null;
                 let cell = grid.getCellByColumn(0, 'ProductName');
                 let updateValue = 'Chaiiii';
@@ -2598,7 +2599,8 @@ describe('IgxGrid Component Tests', () => {
                 cell.inEditMode = false;
                 tick();
 
-                expect(trans.onStateUpdate.emit).toHaveBeenCalled();
+                expect(grid.clearSummaryCache).toHaveBeenCalled();
+                expect(grid.pipeTrigger).toEqual(++pipeTrigger);
                 let state = trans.aggregatedState(false);
                 expect(state.length).toEqual(1);
                 expect(state[0].type).toEqual(TransactionType.UPDATE);
@@ -2612,7 +2614,8 @@ describe('IgxGrid Component Tests', () => {
                 cell.inEditMode = false;
                 tick();
 
-                expect(trans.onStateUpdate.emit).toHaveBeenCalled();
+                expect(grid.clearSummaryCache).toHaveBeenCalled();
+                expect(grid.pipeTrigger).toEqual(++pipeTrigger);
                 state = trans.aggregatedState(false);
                 expect(state.length).toEqual(2);
                 expect(state[1].type).toEqual(TransactionType.UPDATE);
@@ -2621,7 +2624,8 @@ describe('IgxGrid Component Tests', () => {
                 grid.deleteRow(grid.getRowByIndex(2).rowID);
                 tick();
 
-                expect(trans.onStateUpdate.emit).toHaveBeenCalled();
+                expect(grid.clearSummaryCache).toHaveBeenCalled();
+                expect(grid.pipeTrigger).toEqual(++pipeTrigger);
                 state = trans.aggregatedState(false);
                 expect(state.length).toEqual(3);
                 expect(state[2].type).toEqual(TransactionType.DELETE);
@@ -2630,7 +2634,8 @@ describe('IgxGrid Component Tests', () => {
                 trans.undo();
                 tick();
 
-                expect(trans.onStateUpdate.emit).toHaveBeenCalled();
+                expect(grid.clearSummaryCache).toHaveBeenCalled();
+                expect(grid.pipeTrigger).toEqual(++pipeTrigger);
                 state = trans.aggregatedState(false);
                 expect(state.length).toEqual(2);
                 expect(state[1].type).toEqual(TransactionType.UPDATE);
@@ -2641,7 +2646,8 @@ describe('IgxGrid Component Tests', () => {
                 trans.redo();
                 tick();
 
-                expect(trans.onStateUpdate.emit).toHaveBeenCalled();
+                expect(grid.clearSummaryCache).toHaveBeenCalled();
+                expect(grid.pipeTrigger).toEqual(++pipeTrigger);
                 state = trans.aggregatedState(false);
                 expect(state.length).toEqual(3);
                 expect(state[2].type).toEqual(TransactionType.DELETE);
@@ -2650,6 +2656,7 @@ describe('IgxGrid Component Tests', () => {
 
                 trans.commit(grid.data);
                 tick();
+                expect(grid.pipeTrigger).toEqual(++pipeTrigger);
                 state = trans.aggregatedState(false);
                 expect(state.length).toEqual(0);
                 expect(row.classList).not.toContain('igx-grid__tr--deleted');
@@ -2661,8 +2668,11 @@ describe('IgxGrid Component Tests', () => {
                 cell.update(updateValue);
                 cell.inEditMode = false;
                 tick();
+                expect(grid.pipeTrigger).toEqual(++pipeTrigger);
                 trans.clear();
                 tick();
+                expect(grid.clearSummaryCache).toHaveBeenCalled();
+                expect(grid.pipeTrigger).toEqual(++pipeTrigger);
                 state = trans.aggregatedState(false);
                 expect(state.length).toEqual(0);
                 expect(cell.nativeElement.classList).not.toContain('igx-grid__tr--edited');

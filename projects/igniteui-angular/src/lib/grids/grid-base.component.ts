@@ -2787,6 +2787,8 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
                 this.transactions.add(transaction, this.data[index]);
             } else {
                 this.data.splice(index, 1);
+                this._pipeTrigger++;
+                this.cdr.markForCheck();
             }
         } else {
             this.transactions.add({ id: rowId, type: TransactionType.DELETE, newValue: null }, state.recordRef);
@@ -2797,8 +2799,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         } else {
             this.checkHeaderCheckboxStatus();
         }
-        this._pipeTrigger++;
-        this.cdr.markForCheck();
 
         this.refreshSearch();
         if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {

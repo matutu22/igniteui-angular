@@ -293,13 +293,11 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                 grid.transactions.add(transaction, rowData);
             } else {
                 grid.data[rowIndex][column.field] = args.newValue;
+                (grid as any)._pipeTrigger++;
             }
             if (grid.primaryKey === column.field && isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 grid.selection.select_item(id, args.newValue);
-            }
-            if (!grid.rowEditable || !grid.rowInEditMode || grid.rowInEditMode.rowID !== rowID) {
-                (grid as any)._pipeTrigger++;
             }
         }
     }

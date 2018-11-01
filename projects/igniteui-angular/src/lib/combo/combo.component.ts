@@ -17,7 +17,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NgControl } from '@angular/forms';
 import { IgxCheckboxComponent, IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray } from '../core/utils';
+import { cloneArray, CancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -400,11 +400,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * Emitted before the dropdown is opened
      *
      * ```html
-     * <igx-combo onOpening='handleOpening()'></igx-combo>
+     * <igx-combo onOpening='handleOpening($event)'></igx-combo>
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter();
+    public onOpening = new EventEmitter<CancelableEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
@@ -420,11 +420,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * Emitted before the dropdown is closed
      *
      * ```html
-     * <igx-combo (onClosing)='handleClosing()'></igx-combo>
+     * <igx-combo (onClosing)='handleClosing($event)'></igx-combo>
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter();
+    public onClosing = new EventEmitter<CancelableEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
@@ -522,23 +522,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return this._valid === IgxComboState.INVALID;
     }
 
-
-    /**
-     * Sets the style height of the element
-     *
-     * ```typescript
-     * // get
-     * let myComboHeight = this.combo.height;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [height]='400px'></igx-combo>
-     * ```
-     */
-    @Input()
-    public height = '400px';
-
     /**
      * Controls whether custom values can be added to the collection
      *
@@ -569,7 +552,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
     */
     @Input()
-    public itemsMaxHeight = 320;
+    public itemsMaxHeight = 480;
 
     /**
      * Configures the drop down list width
@@ -601,7 +584,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Input()
-    public itemHeight = 32;
+    public itemHeight = 48;
 
     /**
      * @hidden
@@ -1331,9 +1314,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public writeValue(value: any): void {
-        if (this.valueKey !== '') {
-            this.selectItems(value, true);
-        }
+        // selectItems can handle Array<any>, no valueKey is needed;
+        this.selectItems(value, true);
+        this.cdr.markForCheck();
     }
 
     /**

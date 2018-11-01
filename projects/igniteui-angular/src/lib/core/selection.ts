@@ -1,3 +1,8 @@
+import { Injectable } from '@angular/core';
+
+@Injectable({
+    providedIn: 'root',
+})
 export class IgxSelectionAPIService {
     /**
      * If primaryKey is defined, then multiple selection is based on the primaryKey, and it is array of numbers, strings, etc.
@@ -19,6 +24,9 @@ export class IgxSelectionAPIService {
      * @param newSelection The new component selection to be set.
      */
     public set(componentID: string, newSelection: Set<any>) {
+        if (!componentID) {
+            throw Error('Invalid value for component id!');
+        }
         this.selection.set(componentID, newSelection);
     }
 
@@ -56,6 +64,9 @@ export class IgxSelectionAPIService {
         }
         if (sel === undefined) {
             sel = this.get_empty();
+        }
+        if (!itemID && itemID !== 0) {
+            throw Error('Invalid value for item id!');
         }
         sel.add(itemID);
         return sel;
@@ -191,12 +202,12 @@ export class IgxSelectionAPIService {
     /**
      * Returns whether all items are selected.
      * @param componentID ID of the component.
-     * @param data Entire data array.
+     * @param dataCount: number Number of items in the data.
      *
      * @returns If all items are selected.
      */
-    public are_all_selected(componentID: string, data): boolean {
-        return this.size(componentID) === data.length;
+    public are_all_selected(componentID: string, dataCount: number): boolean {
+        return this.size(componentID) === dataCount;
     }
 
     /**

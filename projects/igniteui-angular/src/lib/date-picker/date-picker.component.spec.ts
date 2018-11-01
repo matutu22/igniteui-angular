@@ -9,7 +9,10 @@ import { IgxInputDirective } from '../directives/input/input.directive';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxDatePicker', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -31,6 +34,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('Base Tests', () => {
+        configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerTestComponent>;
         let datePicker: IgxDatePickerComponent;
 
@@ -174,6 +178,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('DatePicker with passed date', () => {
+        configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerWithPassedDateComponent>;
         let datePicker: IgxDatePickerComponent;
         let inputTarget;
@@ -298,6 +303,45 @@ describe('IgxDatePicker', () => {
         fix.detectChanges();
 
         expect(datePicker.value).toBe(null);
+    });
+
+    it('Should not alter hours, minutes, seconds and milliseconds when changing date.', () => {
+        const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+        const debugElement = fixture.debugElement;
+        const datePicker = fixture.componentInstance.datePicker;
+        const date = new Date(2030, 1, 1, 15, 16, 17, 18);
+        datePicker.value = date;
+        fixture.detectChanges();
+
+        const datePickerTarget = debugElement.query(By.css('.igx-date-picker__input-date'));
+        datePickerTarget.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+        fixture.detectChanges();
+
+        const targetDate = 15;
+        const fromDate = datePicker.calendar.dates.filter(
+            d => d.date.date.getDate() === targetDate)[0];
+        fromDate.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(datePicker.value.getFullYear()).toBe(date.getFullYear());
+        expect(datePicker.value.getMonth()).toBe(date.getMonth());
+        expect(datePicker.value.getDate()).toBe(targetDate);
+        expect(datePicker.value.getHours()).toBe(date.getHours());
+        expect(datePicker.value.getMinutes()).toBe(date.getMinutes());
+        expect(datePicker.value.getSeconds()).toBe(date.getSeconds());
+        expect(datePicker.value.getMilliseconds()).toBe(date.getMilliseconds());
+    });
+
+    describe('EditorProvider', () => {
+        it('Should return correct edit element', () => {
+            const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+            fixture.detectChanges();
+
+            const instance = fixture.componentInstance.datePicker;
+            const editElement = fixture.debugElement.query(By.css('.igx-date-picker__input-date')).nativeElement;
+
+            expect(instance.getEditElement()).toBe(editElement);
+        });
     });
 });
 

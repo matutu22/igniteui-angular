@@ -5,6 +5,7 @@ import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
 import { AnimationMetadata, AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
+import { CancelableEventArgs } from '../../core/utils';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -47,6 +48,18 @@ export interface OverlayEventArgs {
     componentRef?: ComponentRef<{}>;
 }
 
+export interface OverlayCancelableEventArgs extends OverlayEventArgs, CancelableEventArgs {
+}
+
+export interface OverlayAnimationEventArgs {
+    /** Id of the overlay as returned by the `show()` method */
+    id: string;
+    /** Animation player that will play the animation */
+    animationPlayer: AnimationPlayer;
+    /** Type of animation to be played. It should be either 'open' or 'close' */
+    animationType: 'open' | 'close';
+}
+
 /** @hidden */
 export function getPointFromPositionsSettings(settings: PositionSettings, overlayWrapper: HTMLElement): Point {
     let result: Point = new Point(0, 0);
@@ -81,4 +94,6 @@ export interface OverlayInfo {
     hook?: HTMLElement;
     openAnimationPlayer?: AnimationPlayer;
     closeAnimationPlayer?: AnimationPlayer;
+    openAnimationInnerPlayer?: any;
+    closeAnimationInnerPlayer?: any;
 }

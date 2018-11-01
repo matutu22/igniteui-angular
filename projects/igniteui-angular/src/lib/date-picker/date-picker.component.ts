@@ -35,6 +35,7 @@ import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive
 import { OverlaySettings } from '../services';
 import { DeprecateClass } from '../core/deprecateDecorators';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
+import { EditorProvider } from '../core/edit-provider';
 
 @Directive({
     selector: '[igxDatePickerTemplate]'
@@ -77,8 +78,7 @@ let NEXT_ID = 0;
     templateUrl: 'date-picker.component.html'
 })
 @DeprecateClass('\'igx-datePicker\' selector is deprecated. Use \'igx-date-picker\' selector instead.')
-export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
-
+export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
     /**
      *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      *```html
@@ -444,7 +444,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     private _specialDates: DateRangeDescriptor[] = null;
 
-    @ViewChild(IgxInputDirective) private input: IgxInputDirective;
+    @ViewChild(IgxInputDirective) protected input: IgxInputDirective;
 
     constructor(private resolver: ComponentFactoryResolver) { }
 
@@ -474,6 +474,11 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *@hidden
      */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+
+    /** @hidden */
+    getEditElement() {
+        return this.input.nativeElement;
+    }
 
     /**
      *@hidden
@@ -593,12 +598,19 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *
      * @hidden
      */
-    public handleSelection(event) {
-        this.value = event;
-        this.calendar.viewDate = event;
-        this._onChangeCallback(event);
+    public handleSelection(date: Date) {
+        if (this.value !== null && this.value !== undefined) {
+            date.setHours(this.value.getHours());
+            date.setMinutes(this.value.getMinutes());
+            date.setSeconds(this.value.getSeconds());
+            date.setMilliseconds(this.value.getMilliseconds());
+        }
+
+        this.value = date;
+        this.calendar.viewDate = date;
+        this._onChangeCallback(date);
         this.alert.close();
-        this.onSelection.emit(event);
+        this.onSelection.emit(date);
     }
 
     @HostListener('keydown.spacebar', ['$event'])
@@ -655,7 +667,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
             this.calendar.viewDate = this.value;
         }
         this.calendar.weekStart = this.weekStart;
-        this.calendar.onSelection.subscribe((ev) => this.handleSelection(ev));
+        this.calendar.onSelection.pipe(takeUntil(this.destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
     }
 
     // Focus the dialog element, after its appearence into DOM.

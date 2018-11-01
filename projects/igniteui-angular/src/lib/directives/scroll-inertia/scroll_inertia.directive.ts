@@ -1,12 +1,15 @@
-import { Directive, Input, ElementRef, NgZone, OnInit, NgModule } from '@angular/core';
+import { Directive, Input, ElementRef, NgZone, OnInit, NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Directive({ selector: '[igxScrollInertia]' })
-export class IgxScrollInertiaDirective implements OnInit {
+export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
     constructor(private element: ElementRef, private _zone: NgZone) {
 
     }
+
+    @Input()
+    public IgxScrollInertiaDirection: string;
 
     @Input()
     public IgxScrollInertiaScrollContainer: any;
@@ -46,10 +49,10 @@ export class IgxScrollInertiaDirective implements OnInit {
     private _lastMovedX;
     private _lastMovedY;
     private _gestureObject;
-    private setPointerCaptureFName = typeof Element.prototype.msSetPointerCapture === 'function' ?
+    private setPointerCaptureFName = typeof Element.prototype['msSetPointerCapture'] === 'function' ?
     'msSetPointerCapture' :
     'setPointerCapture';
-    private releasePointerCaptureFName = typeof Element.prototype.msReleasePointerCapture === 'function' ?
+    private releasePointerCaptureFName = typeof Element.prototype['msReleasePointerCapture'] === 'function' ?
     'msReleasePointerCapture' :
     'releasePointerCapture';
     private _pointer;
@@ -121,7 +124,7 @@ export class IgxScrollInertiaDirective implements OnInit {
             /* For other browsers that don't provide wheelDelta, use the deltaY to determine direction and pass default values. */
             scrollDeltaY = this.calcAxisCoords(evt.deltaY, -1, 1);
         }
-        if (scrollDeltaX) {
+        if (scrollDeltaX && this.IgxScrollInertiaDirection === 'horizontal') {
             this._scrollToX(
                 this._startX + scrollDeltaX * scrollStep
             );
@@ -131,7 +134,7 @@ export class IgxScrollInertiaDirective implements OnInit {
                 // Prevent navigating through pages when scrolling on Mac
                 evt.preventDefault();
             }
-        } else if (scrollDeltaY) {
+        } else if (scrollDeltaY && this.IgxScrollInertiaDirection === 'vertical') {
             this._scrollToY(
                 this._startY + scrollDeltaY * scrollStep
             );
@@ -444,6 +447,28 @@ export class IgxScrollInertiaDirective implements OnInit {
     // Start inertia and continue it recursively
     this._touchInertiaAnimID = requestAnimationFrame(inertiaStep);
    }
+
+    ngOnDestroy() {
+        this._zone.runOutsideAngular(() => {
+            const targetElem = this.element.nativeElement.parentElement || this.element.nativeElement.parentNode;
+            targetElem.removeEventListener('wheel',
+                (evt) => { this.onWheel(evt); });
+            targetElem.removeEventListener('touchstart',
+                (evt) => { this.onTouchStart(evt); });
+            targetElem.removeEventListener('touchmove',
+                (evt) => { this.onTouchMove(evt); });
+            targetElem.removeEventListener('touchend',
+                (evt) => { this.onTouchEnd(evt); });
+            targetElem.removeEventListener('pointerdown',
+                (evt) => { this.onPointerDown(evt); });
+            targetElem.removeEventListener('pointerup',
+                (evt) => { this.onPointerUp(evt); });
+            targetElem.removeEventListener('MSGestureStart',
+                (evt) => { this.onMSGestureStart(evt); });
+            targetElem.removeEventListener('MSGestureChange',
+                (evt) => { this.onMSGestureChange(evt); });
+        });
+    }
 
 }
 @NgModule({

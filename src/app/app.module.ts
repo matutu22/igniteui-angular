@@ -3,7 +3,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService } from 'igniteui-angular';
+import {
+    IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService, IgxGridTransaction, IgxTransactionService} from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 // import { IgxHierarchicalGridModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
@@ -18,7 +19,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
-import { ChipsSampleComponent} from './chips/chips.sample';
+import { ChipsSampleComponent } from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
@@ -26,8 +27,10 @@ import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
+import { InputGroupChildSampleComponent } from './input-group/input-group-child.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
+import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
 import { ListPerformanceSampleComponent } from './list-performance/list-performance.sample';
 import { NavbarSampleComponent } from './navbar/navbar.sample';
 import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
@@ -57,13 +60,20 @@ import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
+import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
 
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
+import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { TooltipSampleComponent } from './tooltip/tooltip.sample';
+import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
+import { DisplayDensityToken, DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
+import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
+import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
 
 const components = [
     AppComponent,
@@ -73,6 +83,7 @@ const components = [
     CalendarSampleComponent,
     CardSampleComponent,
     CarouselSampleComponent,
+    ExpansionPanelSampleComponent,
     ChipsSampleComponent,
     DialogSampleComponent,
     DatePickerSampleComponent,
@@ -82,13 +93,16 @@ const components = [
     IconSampleComponent,
     InputSampleComponent,
     InputGroupSampleComponent,
+    InputGroupChildSampleComponent,
     LayoutSampleComponent,
     ListSampleComponent,
+    ListPanningSampleComponent,
     ListPerformanceSampleComponent,
     MaskSampleComponent,
     NavbarSampleComponent,
     NavdrawerSampleComponent,
     OverlaySampleComponent,
+    OverlayAnimationSampleComponent,
     PageHeaderComponent,
     ProgressbarSampleComponent,
     RippleSampleComponent,
@@ -112,6 +126,9 @@ const components = [
     GridToolbarSampleComponent,
     GridVirtualizationSampleComponent,
     GridColumnGroupsSampleComponent,
+    GridCellStylingSampleComponent,
+    GridRowEditSampleComponent,
+    GridWithTransactionsComponent,
 
     HierarchicalGridSampleComponent,
 
@@ -119,7 +136,8 @@ const components = [
     ColorsSampleComponent,
     ShadowsSampleComponent,
     TypographySampleComponent,
-    RadioSampleComponent
+    RadioSampleComponent,
+    TooltipSampleComponent
 ];
 
 @NgModule({
@@ -143,7 +161,8 @@ const components = [
         RemoteService,
         IgxExcelExporterService,
         IgxCsvExporterService,
-        IgxOverlayService
+        IgxOverlayService,
+        { provide: DisplayDensityToken, useFactory: () => { return { displayDensity: DisplayDensity.comfortable } } }
     ],
     bootstrap: [AppComponent]
 })

@@ -20,6 +20,8 @@
 ///   @include igx-icon($my-icon-theme);
 @function igx-icon-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $color: null,
     $size: null,
     $disabled-color: null
@@ -28,8 +30,12 @@
         name: 'igx-icon',
         color: currentColor,
         size: rem(24px),
-        disabled-color: igx-color($palette, 'grays', 500)
+        disabled-color: currentColor
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @return extend($default-theme, (
         palette: $palette,
@@ -55,9 +61,24 @@
         height: $igx-icon-font-size;
         font-size: $igx-icon-font-size;
         color: --var($theme, 'color');
+
+        svg {
+            width: inherit;
+            height: inherit;
+            fill: currentColor;
+        }
     }
 
     %igx-icon--inactive {
         color: --var($theme, 'disabled-color') !important;
+        opacity: .54;
     }
+}
+
+%igx-svg-container {
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    font-size: 0;
+    overflow: hidden;
 }

@@ -1,0 +1,28 @@
+.sample-buttons {
+    margin-top: 24px;
+}
+
+[igxButton] + [igxButton] {
+    margin-left: 8px;
+}
+
+:host ::ng-deep {
+    .test1 {
+        color: red;
+        font-weight: 900;
+        background-color: yellow;
+    }
+
+    .test2 {
+        color: blue;
+        font-weight: 900;
+        background-color: salmon;
+        height: 200px;
+    }
+
+    .test3 {
+        color: black;
+        font-weight: 900;
+        background-color: greenyellow;
+    }
+}

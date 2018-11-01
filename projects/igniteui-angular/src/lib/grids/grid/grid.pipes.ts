@@ -170,3 +170,33 @@ export class IgxGridFilteringPipe implements PipeTransform {
         return result;
     }
 }
+
+/**
+ *@hidden
+ */
+@Pipe({
+    name: 'gridHierarchical',
+    pure: true
+})
+export class IgxGridHierarchicalPipe implements PipeTransform {
+
+    constructor(private gridAPI: GridBaseAPIService<IgxGridComponent>) { }
+
+    public transform(
+        collection: IGroupByResult,
+        state = [],
+        id: string,
+        primaryKey: any,
+        childKey: string,
+        pipeTrigger: number
+        ): IGroupByResult {
+        if (!childKey) {
+            return collection;
+        }
+        const result: IGroupByResult = {
+            data: DataUtil.addHierarchy(cloneArray(collection.data), state, primaryKey, childKey),
+            metadata: DataUtil.addHierarchy(cloneArray(collection.metadata), state, primaryKey, childKey)
+        };
+        return result;
+    }
+}

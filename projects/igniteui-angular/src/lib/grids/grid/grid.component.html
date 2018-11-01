@@ -73,9 +73,20 @@
     | gridSort:sortingExpressions:id:pipeTrigger
     | gridPreGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:pipeTrigger
     | gridPaging:page:perPage:id:pipeTrigger
+    | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKey:pipeTrigger
     | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger"
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+        <ng-template #hierarchical_record_template>
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+            </igx-hierarchical-grid-row>
+        </ng-template>
+        <ng-template #child_record_template>
+            <div [style.width.%]="95" style="overflow:auto;">
+                <igx-child-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                </igx-child-grid-row>
+            </div>
+        </ng-template>
         <ng-template #record_template>
             <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
             </igx-grid-row>
@@ -84,7 +95,7 @@
             <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
             </igx-grid-groupby-row>
         </ng-template>
-        <ng-container *igxTemplateOutlet="isGroupByRecord(rowData) ? group_template : record_template; context: getContext(rowData) "></ng-container>
+        <ng-container *igxTemplateOutlet="(isGroupByRecord(rowData) ? group_template : (isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : record_template))); context: getContext(rowData)"></ng-container>
     </ng-template>
     <ng-container *ngTemplateOutlet="template"></ng-container>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>

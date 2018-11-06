@@ -69,6 +69,8 @@ import { DisplayDensity } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { auditTime, sampleTime, throttleTime, debounceTime } from 'rxjs/operators';
+import { fromEvent, animationFrameScheduler as afs } from 'rxjs';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -154,7 +156,15 @@ export interface IFocusChangeEventArgs {
 }
 
 export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+    /**
+     * The default time for which the scroll event will be debounced.
+     * This will be applied only for IE.
+     */
+    private debounceTime = 500;
 
+    private get isIE () {
+       return  window.navigator.userAgent.indexOf('MSIE') > -1 || !!window.navigator.userAgent.match(/trident/i);
+    }
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
      * ```html
@@ -2242,16 +2252,36 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
                 .map(row => row.virtDirRow)
         );
 
-        this.zone.runOutsideAngular(() =>
-            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this))
+        this.zone.runOutsideAngular(() => {
+                if (this.isIE) {
+                    fromEvent(this.verticalScrollContainer.getVerticalScroll(), 'scroll')
+                        .pipe(debounceTime(this.debounceTime, afs))
+                        .subscribe(this.verticalScrollHandler.bind(this));
+                } else {
+                    this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
+                }
+            }
         );
 
-        this.zone.runOutsideAngular(() =>
-            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this))
+        this.zone.runOutsideAngular(() => {
+                if (this.isIE) {
+                    fromEvent( this.parentVirtDir.getHorizontalScroll(), 'scroll')
+                        .pipe(debounceTime(this.debounceTime, afs))
+                        .subscribe(this.horizontalScrollHandler.bind(this));
+                } else {
+                    this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
+                }
+            }
         );
         this._horizontalForOfs = this._dataRowList.map(row => row.virtDirRow);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
-        vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
+        if (this.isIE) {
+            fromEvent(vertScrDC, 'scroll')
+                .pipe(debounceTime(this.debounceTime, afs))
+                .subscribe((evt) => { this.scrollHandler(evt); });
+        } else {
+            vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
+        }
     }
 
     /**

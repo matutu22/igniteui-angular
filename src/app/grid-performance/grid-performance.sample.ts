@@ -29,17 +29,14 @@ export class GridPerformanceSampleComponent implements OnInit {
         }
 
         this.columns = cols;
-
-        const obj = {};
-        for (let j = 0; j < cols.length; j++) {
-            const col = cols[j].field;
-            obj[col] = j;
-        }
-
         for (let i = 0; i < 100000; i++) {
-            var newObj = Object.create(obj);
-            newObj['ID'] = i;
-            this.localData.push(newObj);
+            const obj = {};
+            for (let j = 0; j < cols.length; j++) {
+                const col = cols[j].field;
+                obj[col] = j * i;
+            }
+            obj['ID'] = i;
+            this.localData.push(obj);
         }
     }
 

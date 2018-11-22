@@ -154,11 +154,6 @@ export class AppComponent implements OnInit {
             name: 'Grid Remote Virtualization'
         },
         {
-            link: '/gridRowEdit',
-            icon: 'view_column',
-            name: 'Grid Row Editing'
-        },
-        {
             link: '/gridSelection',
             icon: 'view_column',
             name: 'Grid Selection'

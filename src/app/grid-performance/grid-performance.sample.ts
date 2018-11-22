@@ -21,10 +21,10 @@ export class GridPerformanceSampleComponent implements OnInit {
             field: 'ID',
             width: 90
         });
-        for (let j = 0; j < 300; j++) {
+        for (let j = 0; j < 30; j++) {
             cols.push({
                 field: (j + 1).toString(),
-                width: (Math.random() * 80) + 90
+                width: 120
             });
         }
 
@@ -36,7 +36,7 @@ export class GridPerformanceSampleComponent implements OnInit {
             obj[col] = j;
         }
 
-        for (let i = 0; i < 100000; i++) {
+        for (let i = 0; i < 1000; i++) {
             var newObj = Object.create(obj);
             newObj['ID'] = i;
             this.localData.push(newObj);

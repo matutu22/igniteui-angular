@@ -2,7 +2,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AvatartSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
-import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
 import { ChipsSampleComponent} from './chips/chips.sample';
@@ -38,7 +37,6 @@ import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-colum
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
-import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
@@ -52,7 +50,6 @@ import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sam
 import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
-import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 
@@ -73,10 +70,6 @@ const appRoutes = [
     {
         path: 'buttons',
         component: ButtonSampleComponent
-    },
-    {
-        path: 'calendar',
-        component: CalendarSampleComponent
     },
     {
         path: 'card',
@@ -240,10 +233,6 @@ const appRoutes = [
         component: GridColumnResizingSampleComponent
     },
     {
-        path: 'gridSummary',
-        component: GridSummaryComponent
-    },
-    {
         path: 'gridPerformance',
         component: GridPerformanceSampleComponent
     },
@@ -270,10 +259,6 @@ const appRoutes = [
     {
         path: 'gridGroupBy',
         component: GridGroupBySampleComponent
-    },
-    {
-        path: 'gridRowEdit',
-        component: GridRowEditSampleComponent
     },
     {
         path: 'treeGrid',

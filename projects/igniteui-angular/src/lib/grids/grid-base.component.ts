@@ -2003,12 +2003,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);
+        this.tbody.nativeElement.style.display = "none"
         this.zone.run(() => {
-            this.cdr.detectChanges();
+           // this.cdr.detectChanges();
             this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
             }
+            this.tbody.nativeElement.style.display = "block";
         });
     }
 
@@ -2021,7 +2023,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.summaryContainer.onHScroll(scrollLeft);
         }
         this.zone.run(() => {
-            this.cdr.detectChanges();
+            //this.cdr.detectChanges();
             this.parentVirtDir.onChunkLoad.emit(this.headerContainer.state);
         });
     }
@@ -2162,24 +2164,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // In order to prevent that add a mutation observer that watches if we have been added.
         if (!this.calcWidth && this._width !== undefined) {
             const config = { childList: true, subtree: true };
-            let observer: MutationObserver = null;
-            const callback = (mutationsList) => {
-                mutationsList.forEach((mutation) => {
-                    if (mutation.type === 'childList') {
-                        const addedNodes = new Array(...mutation.addedNodes);
-                        addedNodes.forEach((node) => {
-                            const added = this.checkIfGridIsAdded(node);
-                            if (added) {
-                                this.calculateGridWidth();
-                                observer.disconnect();
-                            }
-                        });
-                    }
-                });
-            };
-
-            observer = new MutationObserver(callback);
-            observer.observe(this.document.body, config);
         }
 
         this._dataRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(list =>

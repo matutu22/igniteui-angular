@@ -16,7 +16,6 @@ import { AvatartSampleComponent } from './avatar/avatar.sample';
 import { PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
-import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
 import { ChipsSampleComponent } from './chips/chips.sample';
@@ -53,7 +52,6 @@ import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
-import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
@@ -70,8 +68,6 @@ import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { DisplayDensityToken, DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
-import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
-import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 
@@ -80,7 +76,6 @@ const components = [
     AvatartSampleComponent,
     BadgeSampleComponent,
     ButtonSampleComponent,
-    CalendarSampleComponent,
     CardSampleComponent,
     CarouselSampleComponent,
     ExpansionPanelSampleComponent,
@@ -120,15 +115,12 @@ const components = [
     GridColumnPinningSampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,
-    GridSummaryComponent,
     GridPerformanceSampleComponent,
     GridSelectionComponent,
     GridToolbarSampleComponent,
     GridVirtualizationSampleComponent,
     GridColumnGroupsSampleComponent,
     GridCellStylingSampleComponent,
-    GridRowEditSampleComponent,
-    GridWithTransactionsComponent,
     TreeGridSampleComponent,
     TreeGridFlatDataSampleComponent,
     CustomContentComponent,

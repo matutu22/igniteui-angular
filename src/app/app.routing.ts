@@ -2,7 +2,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AvatartSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
-import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
@@ -32,7 +31,6 @@ import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.s
 import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
-import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
@@ -41,7 +39,6 @@ import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
-import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 
@@ -62,10 +59,6 @@ const appRoutes = [
     {
         path: 'buttons',
         component: ButtonSampleComponent
-    },
-    {
-        path: 'calendar',
-        component: CalendarSampleComponent
     },
     {
         path: 'card',
@@ -192,10 +185,7 @@ const appRoutes = [
         path: 'gridConditionalCellStyling',
         component: GridCellStylingSampleComponent
     },
-    {
-        path: 'gridSummary',
-        component: GridSummaryComponent
-    },
+
     {
         path: 'gridPerformance',
         component: GridPerformanceSampleComponent
@@ -207,10 +197,6 @@ const appRoutes = [
     {
         path: 'gridRemoteVirtualization',
         component: GridVirtualizationSampleComponent
-    },
-    {
-        path: 'gridRowEdit',
-        component: GridRowEditSampleComponent
     },
     {
         path: 'buttonGroup',

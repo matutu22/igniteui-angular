@@ -22,7 +22,8 @@ import {
     TemplateRef,
     TrackByFunction,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
+    ViewRef
 } from '@angular/core';
 
 import { DeprecateProperty } from '../../core/deprecateDecorators';
@@ -262,7 +263,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             totalSize = this.initSizesCache(this.igxForOf);
             this.hScroll = this.getElement(vc, 'igx-horizontal-virtual-helper');
             if (this.hScroll) {
-                this.state.startIndex = this.getIndexAt(this.hScroll.scrollLeft, this.sizesCache, 0);
+                this.state.startIndex = this.getIndexAt(this.hScroll.scrollLeft, this.sizesCache);
             }
             this.state.chunkSize = this._calculateChunkSize();
             for (let i = 0; i < this.state.chunkSize && this.igxForOf[i] !== undefined; i++) {
@@ -463,8 +464,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.vh.instance.elementRef.nativeElement.scrollTop;
         const endIndex = this.getIndexAt(
             scr + parseInt(this.igxForContainerSize, 10),
-            this.sizesCache,
-            0
+            this.sizesCache
         );
         this.scrollTo(endIndex);
     }
@@ -543,8 +543,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.vh.instance.elementRef.nativeElement.scrollTop;
             let startIndex = this.getIndexAt(
                 position,
-                this.sizesCache,
-                0
+                this.sizesCache
             );
             if (position - this.sizesCache[startIndex] > 0 ) {
                 // fisrt item is not fully in view
@@ -552,8 +551,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
             const endIndex = this.getIndexAt(
                 position + parseInt(this.igxForContainerSize, 10),
-                this.sizesCache,
-                0
+                this.sizesCache
             );
             return endIndex - startIndex;
     }
@@ -663,9 +661,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 }
                 this.vh.instance.height = Math.min(this.vh.instance.height + totalDiff, this._maxHeight);
                 this._virtHeight = hSum;
-                if (!this.vh.instance.destroyed) {
-                    this.vh.instance.cdr.detectChanges();
-                }
+                // if (!this.vh.instance.destroyed) {
+                //     this.vh.instance.cdr.detectChanges();
+                // }
                 if (scrToBottom && !this._isAtBottomIndex) {
                     const containerSize = parseInt(this.igxForContainerSize, 10);
                     const scrollOffset = this.fixedUpdateAllRows(this._virtHeight - containerSize);
@@ -689,13 +687,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @hidden
      */
     protected fixedUpdateAllRows(inScrollTop: number): number {
-        const embeddedViewCopy = Object.assign([], this._embeddedViews);
+        const embeddedViewCopy: Array<EmbeddedViewRef<any>> = Object.assign([], this._embeddedViews);
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
 
         const ind = this.getIndexAt(
             inScrollTop,
-            this.sizesCache,
-            0
+            this.sizesCache
         );
         // floating point number calculations are flawed so we need to handle rounding errors.
         let currIndex = ind % 1 > 0.999 ? Math.round(ind) : Math.floor(ind);
@@ -704,24 +701,43 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             currIndex = count - this.state.chunkSize;
         }
 
-        // We update the startIndex before recalculating the chunkSize.
-        const bUpdatedStart = this.state.startIndex !== currIndex;
-        this.state.startIndex = currIndex;
-
-        if (bUpdatedStart) {
-            this.onChunkPreload.emit(this.state);
+        // currIndex 
+        if (currIndex > this.state.startIndex) {
+            const s = this.state.startIndex + this.state.chunkSize;
+            for (let i = s; i < s + currIndex - this.state.startIndex && this.igxForOf[i] !== undefined; i++) {
+                const input = this.igxForOf[i];
+                //const embView = embeddedViewCopy.shift();
+                const embView = this._embeddedViews.shift();
+                const cntx = embView.context;
+                cntx.$implicit = input;
+                cntx.index = this.igxForOf.indexOf(input);
+                const view: ViewRef = this.dc.instance._vcr.detach(0);
+                this.dc.instance._vcr.insert(view);
+                this._embeddedViews.push(embView);
+              //  view.detectChanges();
+            }
         }
-        if (this.isRemote) {
-            return inScrollTop - this.sizesCache[this.state.startIndex];
-        }
 
-        for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
+         // We update the startIndex before recalculating the chunkSize.
+         const bUpdatedStart = this.state.startIndex !== currIndex;
+         this.state.startIndex = currIndex;
+ 
+         if (bUpdatedStart) {
+             this.onChunkPreload.emit(this.state);
+         }
+         if (this.isRemote) {
+             return inScrollTop - this.sizesCache[this.state.startIndex];
+         }
+
+
+
+       /* for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
             const input = this.igxForOf[i];
             const embView = embeddedViewCopy.shift();
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
-        }
+        }*/
         const scrOffset = inScrollTop - this.sizesCache[this.state.startIndex];
         return scrOffset;
     }
@@ -751,11 +767,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @hidden
      */
     protected fixedUpdateAllCols(inScrollLeft) {
-        const startIndex = this.getIndexAt(
-            inScrollLeft,
-            this.sizesCache,
-            0
-        );
+        const startIndex = this.getIndexAt(inScrollLeft, this.sizesCache);
         const bUpdatedStart = this.state.startIndex !== startIndex;
         if (bUpdatedStart) {
             this.onChunkPreload.emit(this.state);
@@ -775,8 +787,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
         }
-        const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
-        const scrollWidth = parseInt(this.hScroll.children[0].style.width, 10);
+        // const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
+        // const scrollWidth = parseInt(this.hScroll.children[0].style.width, 10);
         const scrOffset = inScrollLeft - this.sizesCache[this.state.startIndex];
         return scrOffset;
     }
@@ -970,7 +982,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * @hidden
      */
-     protected getIndexAt(left, set, index) {
+     protected getIndexAt(left, set) {
          let start = 0;
          let end = set.length - 1;
          if (left === 0) {
@@ -1211,8 +1223,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
 
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllCols(scrollAmount);
-        this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        requestAnimationFrame(() => {
+            const scrollOffset = this.fixedUpdateAllCols(scrollAmount);
+            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        });
     }
 
     protected addLastElem() {

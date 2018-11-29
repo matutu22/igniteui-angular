@@ -57,6 +57,7 @@ import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
 import { FinJSDemoComponent } from './finjs/grid-finjs-demo.component';
+import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 
 const appRoutes = [
     {
@@ -295,6 +296,10 @@ const appRoutes = [
     }, {
         path: 'hierarhicalGrid',
         component: HierarchicalGridSampleComponent
+    },
+    {
+        path: 'gridPercentage',
+        component: GridColumnPercentageWidthsSampleComponent
     }
 ];
 

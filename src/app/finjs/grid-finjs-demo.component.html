@@ -4,7 +4,7 @@
     <igx-grid #grid1 [data]="data | async" [height]="'600px'" width="1200px" [autoGenerate]='false' displayDensity='compact'
         [showToolbar]="false" [columnHiding]="true" [columnPinning]="true" toolbarTitle="Torkyo Commodity Exchange"
         columnHidingTitle="Indicators" hiddenColumnsText="Hidden" primaryKey='ID' (onGroupingDone)="groupingDone($event)"
-        [rowSelectable]="true" [allowFiltering]="true">
+        [rowSelectable]="false" [allowFiltering]="true">
         <igx-column [field]="'ID'" [hidden]='true'></igx-column>
         <igx-column [field]="'Category'" [width]="'120px'" [groupable]='false' [sortable]='true'></igx-column>
         <igx-column [field]="'Type'" [width]="'100px'" [groupable]='false' [sortable]='true' [filterable]='false'></igx-column>

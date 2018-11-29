@@ -141,7 +141,7 @@ const components = [
     TypographySampleComponent,
     RadioSampleComponent,
     TooltipSampleComponent,
-    HierarchicalGridSampleComponent
+    HierarchicalGridSampleComponent,
     GridColumnPercentageWidthsSampleComponent
 ];
 

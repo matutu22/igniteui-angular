@@ -29,6 +29,11 @@ export class AppComponent implements OnInit {
 
     componentLinks = [
         {
+            link: '/finjs',
+            icon: 'account_circle',
+            name: 'FINJS'
+        },
+        {
             link: '/avatar',
             icon: 'account_circle',
             name: 'Avatar'

@@ -75,8 +75,10 @@ import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transac
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
+import { FinJSDemoComponent } from './finjs/grid-finjs-demo.component';
 
 const components = [
+    FinJSDemoComponent,
     AppComponent,
     AvatartSampleComponent,
     BadgeSampleComponent,

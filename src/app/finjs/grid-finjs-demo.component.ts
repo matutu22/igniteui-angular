@@ -116,7 +116,7 @@ export class FinJSDemoComponent implements OnInit, AfterViewInit {
         if (this.theme) {
             document.body.classList.add("finjs-dark-theme");
         }
-       /* this.grid1.groupingExpressions = [{
+        this.grid1.groupingExpressions = [{
                 dir: SortingDirection.Desc,
                 fieldName: "Category",
                 ignoreCase: true,
@@ -134,7 +134,7 @@ export class FinJSDemoComponent implements OnInit, AfterViewInit {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             }
-        ];*/
+        ];
     }
 
     public ngAfterViewInit() {
@@ -223,25 +223,25 @@ export class FinJSDemoComponent implements OnInit, AfterViewInit {
         if (this.grid1.groupingExpressions.length > 0) {
             this.grid1.groupingExpressions = [];
         } else {
-          /*  this.grid1.groupingExpressions = [{
-                dir: SortingDirection.Desc,
-                fieldName: "Category",
-                ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            },
-            {
-                dir: SortingDirection.Desc,
-                fieldName: "Type",
-                ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            },
-            {
-                dir: SortingDirection.Desc,
-                fieldName: "Contract",
-                ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            }
-        ];*/
+            this.grid1.groupingExpressions = [{
+                    dir: SortingDirection.Desc,
+                    fieldName: "Category",
+                    ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                },
+                {
+                    dir: SortingDirection.Desc,
+                    fieldName: "Type",
+                    ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                },
+                {
+                    dir: SortingDirection.Desc,
+                    fieldName: "Contract",
+                    ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                }
+            ];
         }
     }
 

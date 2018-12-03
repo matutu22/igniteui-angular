@@ -22,7 +22,8 @@ import {
     TemplateRef,
     TrackByFunction,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
+    ViewRef
 } from '@angular/core';
 
 import { DeprecateProperty } from '../../core/deprecateDecorators';
@@ -686,7 +687,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @hidden
      */
     protected fixedUpdateAllRows(inScrollTop: number): number {
-        const embeddedViewCopy = Object.assign([], this._embeddedViews);
+        const embeddedViewCopy: Array<EmbeddedViewRef<any>> = Object.assign([], this._embeddedViews);
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
 
         const ind = this.getIndexAt(
@@ -701,24 +702,43 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             currIndex = count - this.state.chunkSize;
         }
 
-        // We update the startIndex before recalculating the chunkSize.
-        const bUpdatedStart = this.state.startIndex !== currIndex;
-        this.state.startIndex = currIndex;
-
-        if (bUpdatedStart) {
-            this.onChunkPreload.emit(this.state);
+        // currIndex 
+        if (currIndex > this.state.startIndex) {
+            const s = this.state.startIndex + this.state.chunkSize;
+            for (let i = s; i < s + currIndex - this.state.startIndex && this.igxForOf[i] !== undefined; i++) {
+                const input = this.igxForOf[i];
+                //const embView = embeddedViewCopy.shift();
+                const embView = this._embeddedViews.shift();
+                const cntx = embView.context;
+                cntx.$implicit = input;
+                cntx.index = this.igxForOf.indexOf(input);
+                const view: ViewRef = this.dc.instance._vcr.detach(0);
+                this.dc.instance._vcr.insert(view);
+                this._embeddedViews.push(embView);
+              //  view.detectChanges();
+            }
         }
-        if (this.isRemote) {
-            return inScrollTop - this.sizesCache[this.state.startIndex];
-        }
 
-        for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
+         // We update the startIndex before recalculating the chunkSize.
+         const bUpdatedStart = this.state.startIndex !== currIndex;
+         this.state.startIndex = currIndex;
+ 
+         if (bUpdatedStart) {
+             this.onChunkPreload.emit(this.state);
+         }
+         if (this.isRemote) {
+             return inScrollTop - this.sizesCache[this.state.startIndex];
+         }
+
+
+
+       /* for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
             const input = this.igxForOf[i];
             const embView = embeddedViewCopy.shift();
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
-        }
+        }*/
         const scrOffset = inScrollTop - this.sizesCache[this.state.startIndex];
         return scrOffset;
     }

@@ -26,7 +26,6 @@ import {
     ViewRef
 } from '@angular/core';
 
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
@@ -178,7 +177,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private get _isAtBottomIndex() {
         return this.igxForOf && this.state.startIndex + this.state.chunkSize > this.igxForOf.length;
     }
-    private extraRowApplied = false;
 
     // Start properties related to virtual height handling due to browser limitation
     /** Maximum height for an element of the browser. */
@@ -199,12 +197,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /** If the next onScroll event is triggered due to internal setting of scrollTop */
     protected _bScrollInternal = false;
     // End properties related to virtual height handling
-
-    @ViewChild(DisplayContainerComponent)
-    private displayContiner: DisplayContainerComponent;
-
-    @ViewChild(VirtualHelperComponent)
-    private virtualHelper: VirtualHelperComponent;
 
     protected _embeddedViews: Array<EmbeddedViewRef<any>> = [];
 
@@ -708,22 +700,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.state.startIndex = newStart;
         if (diff) {
             this.onChunkPreload.emit(this.state);
+            if (!this.isRemote) {
+                /*recalculate and apply page size.*/
+                if (diff > 0 && diff <= this.MAX_PERF_SCROLL_DIFF) {
+                    this.moveApplyScrollNext(prevStart);
+                } else if (diff < 0 && Math.abs(diff) <= this.MAX_PERF_SCROLL_DIFF) {
+                    this.moveApplyScrollPrev(prevStart);
+                } else {
+                    this.fixedApplyScroll();
+                }
+            }
         }
-        if (this.isRemote) {
-            return inScrollTop - this.sizesCache[this.state.startIndex];
-        }
-
-        /*recalculate and apply page size.*/
-        if (diff > 0 && diff <= this.MAX_PERF_SCROLL_DIFF) {
-            this.moveApplyScrollNext(prevStart);
-        } else if (diff < 0 && Math.abs(diff) <= this.MAX_PERF_SCROLL_DIFF) {
-            this.moveApplyScrollPrev(prevStart);
-        } else {
-            this.fixedApplyScroll();
-        }
-
-        const scrOffset = inScrollTop - this.sizesCache[this.state.startIndex];
-        return scrOffset;
+        return inScrollTop - this.sizesCache[this.state.startIndex];
     }
 
     /**
@@ -781,7 +769,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * The function applies an optimized state change for scrolling up/left employing context change with view rearrangement
      */
     protected moveApplyScrollPrev(prevIndex: number): void {
-        for (let i = this.state.startIndex; i < prevIndex && this.igxForOf[i] !== undefined; i++) {
+        for (let i = prevIndex - 1; i >= this.state.startIndex  && this.igxForOf[i] !== undefined; i--) {
             const input = this.igxForOf[i];
             const embView = this._embeddedViews.pop();
             const cntx = embView.context;
@@ -1297,12 +1285,15 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 const inScrollTop = this.igxForScrollOrientation === 'horizontal' ?
                     this.hScroll.scrollLeft :
                     this.vh.instance.elementRef.nativeElement.scrollTop;
-                this.state.startIndex = this.getIndexAt(
+                startIndex = this.getIndexAt(
                     inScrollTop,
                     this.sizesCache,
                     0
                 );
-                startIndex = this.state.startIndex;
+                if (startIndex + this.state.chunkSize > this.igxForOf.length) {
+                    startIndex = this.igxForOf.length - this.state.chunkSize;
+                }
+                this.state.startIndex = startIndex;
                 endIndex = this.state.chunkSize + this.state.startIndex;
             }
 

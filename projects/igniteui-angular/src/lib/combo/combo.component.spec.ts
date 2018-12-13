@@ -633,7 +633,7 @@ describe('igxCombo', () => {
             tick();
             expect(combo.collapsed).toEqual(true);
         }));
-        it('Should scroll up to the first item in the dropdown list with HOME key', async(() => {
+        fit('Should scroll up to the first item in the dropdown list with HOME key', async(() => {
             let scrollbar: HTMLElement;
             let dropdownContainer: HTMLElement;
             let firstVisibleItem: Element;
@@ -677,7 +677,7 @@ describe('igxCombo', () => {
                             firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                             lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
                             expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
-                            expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+                            expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                             expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[11]);
                             dropdownContent.dispatchEvent(homeEvent);
                             setTimeout(function () {

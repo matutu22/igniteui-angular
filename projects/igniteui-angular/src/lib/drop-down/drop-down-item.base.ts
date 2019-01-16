@@ -124,7 +124,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      */
     @Input()
     @HostBinding('class.igx-drop-down__header')
-    public isHeader = false;
+    public isHeader: boolean;
 
     /**
      * Sets/gets if the given item is disabled

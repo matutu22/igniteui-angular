@@ -39,6 +39,16 @@ export class AppComponent implements OnInit {
             name: 'Badge'
         },
         {
+            link: '/banner',
+            icon: 'banner',
+            name: 'Banner'
+        },
+        {
+            link: '/bottom-navigation',
+            icon: 'tab',
+            name: 'Bottom Navigation'
+        },
+        {
             link: '/buttonGroup',
             icon: 'group_work',
             name: 'Button Group'
@@ -59,14 +69,14 @@ export class AppComponent implements OnInit {
             name: 'Carousel'
         },
         {
+            link: '/chip',
+            icon: 'android',
+            name: 'Chips'
+        },
+        {
             link: '/combo',
             icon: 'arrow_drop_down_circle',
             name: 'Combo'
-        },
-        {
-            link: '/expansionPanel',
-            icon: 'expand_more',
-            name: 'ExpansionPanel'
         },
         {
             link: '/datePicker',
@@ -74,14 +84,9 @@ export class AppComponent implements OnInit {
             name: 'DatePicker'
         },
         {
-            link: '/timePicker',
-            icon: 'date_range',
-            name: 'TimePicker'
-        },
-        {
-            link: '/dropDown',
-            icon: 'drop_down',
-            name: 'DropDown'
+            link: '/dialog',
+            icon: 'all_out',
+            name: 'Dialog'
         },
         {
             link: '/drag-drop',
@@ -89,9 +94,34 @@ export class AppComponent implements OnInit {
             name: 'Drag and Drop'
         },
         {
+            link: '/dropDown',
+            icon: 'view_list',
+            name: 'DropDown'
+        },
+        {
+            link: '/expansionPanel',
+            icon: 'expand_more',
+            name: 'ExpansionPanel'
+        },
+        {
+            link: '/inputs',
+            icon: 'web',
+            name: 'Forms'
+        },
+        {
             link: '/grid',
             icon: 'view_column',
             name: 'Grid'
+        },
+        {
+            link: '/gridCellEditing',
+            icon: 'view_column',
+            name: 'Grid Cell Editing'
+        },
+        {
+            link: '/gridColumnGroups',
+            icon: 'view_column',
+            name: 'Grid Column Groups'
         },
         {
             link: '/gridColumnMoving',
@@ -99,19 +129,9 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Moving'
         },
         {
-            link: '/gridConditionalCellStyling',
-            icon: 'view_column',
-            name: 'Grid Cell Styling'
-        },
-        {
             link: '/gridColumnPinning',
             icon: 'view_column',
             name: 'Grid Column Pinning'
-        },
-        {
-            link: '/gridGroupBy',
-            icon: 'view_column',
-            name: 'Grid GroupBy'
         },
         {
             link: '/gridHeightTest',
@@ -124,9 +144,19 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Resizing'
         },
         {
-            link: '/gridColumnGroups',
+            link: '/gridConditionalCellStyling',
             icon: 'view_column',
-            name: 'Grid Column Groups'
+            name: 'Grid Cell Styling'
+        },
+        {
+            link: '/gridGroupBy',
+            icon: 'view_column',
+            name: 'Grid GroupBy'
+        },
+        {
+            link: '/gridPercentage',
+            icon: 'view_column',
+            name: 'Grid Percentage'
         },
         {
             link: '/gridPerformance',
@@ -139,14 +169,9 @@ export class AppComponent implements OnInit {
             name: 'Grid Remote Virtualization'
         },
         {
-            link: '/gridSummary',
+            link: '/gridRowEdit',
             icon: 'view_column',
-            name: 'Grid Summary'
-        },
-        {
-            link: '/gridCellEditing',
-            icon: 'view_column',
-            name: 'Grid Cell Editing'
+            name: 'Grid Row Editing'
         },
         {
             link: '/gridSelection',
@@ -154,19 +179,19 @@ export class AppComponent implements OnInit {
             name: 'Grid Selection'
         },
         {
+            link: '/gridSummary',
+            icon: 'view_column',
+            name: 'Grid Summary'
+        },
+        {
             link: '/gridToolbar',
             icon: 'view_column',
             name: 'Grid Toolbar'
         },
         {
-            link: '/dialog',
-            icon: 'all_out',
-            name: 'Dialog'
-        },
-        {
-            link: '/inputs',
-            icon: 'web',
-            name: 'Forms'
+            link: '/gridToolbarCustom',
+            icon: 'view_column',
+            name: 'Grid Toolbar Custom Content'
         },
         {
             link: '/icon',
@@ -200,12 +225,12 @@ export class AppComponent implements OnInit {
         },
         {
             link: '/overlay',
-            icon: 'overlay',
+            icon: 'flip_to_front',
             name: 'Overlay'
         },
         {
             link: '/overlay-animation',
-            icon: 'overlay_animation',
+            icon: 'flip_to_front',
             name: 'Overlay Animation'
         },
         {
@@ -229,14 +254,14 @@ export class AppComponent implements OnInit {
             name: 'Snackbar'
         },
         {
-            link: '/bottom-navigation',
-            icon: 'tab',
-            name: 'Bottom Navigation'
-        },
-        {
             link: '/tabs',
             icon: 'tab',
             name: 'Tabs'
+        },
+        {
+            link: '/timePicker',
+            icon: 'date_range',
+            name: 'TimePicker'
         },
         {
             link: '/toast',
@@ -244,9 +269,14 @@ export class AppComponent implements OnInit {
             name: 'Toast'
         },
         {
-            link: '/chip',
-            icon: 'android',
-            name: 'Chips'
+            link: '/treeGrid',
+            icon: 'view_column',
+            name: 'Tree Grid'
+        },
+        {
+            link: '/treeGridFlatData',
+            icon: 'view_column',
+            name: 'Tree Grid Flat Data'
         }
     ];
 
@@ -267,24 +297,24 @@ export class AppComponent implements OnInit {
             name: 'Layout'
         },
         {
-            link: '/ripple',
-            icon: 'wifi_tethering',
-            name: 'Ripple'
-        },
-        {
-            link: '/virtualForDirective',
-            icon: 'view_column',
-            name: 'Virtual-For Directive'
-        },
-        {
             link: '/mask',
             icon: 'view_column',
             name: 'Mask Directive'
         },
         {
+            link: '/ripple',
+            icon: 'wifi_tethering',
+            name: 'Ripple'
+        },
+        {
             link: '/tooltip',
             icon: 'info',
             name: 'Tooltip'
+        },
+        {
+            link: '/virtualForDirective',
+            icon: 'view_column',
+            name: 'Virtual-For Directive'
         }
     ];
 
@@ -295,14 +325,14 @@ export class AppComponent implements OnInit {
             name: 'Colors'
         },
         {
-            link: '/typography',
-            icon: 'font_download',
-            name: 'Typography'
-        },
-        {
             link: '/shadows',
             icon: 'layers',
             name: 'Shadows'
+        },
+        {
+            link: '/typography',
+            icon: 'font_download',
+            name: 'Typography'
         }
     ];
 

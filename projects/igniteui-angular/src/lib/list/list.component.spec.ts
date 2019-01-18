@@ -10,10 +10,12 @@ import {
     ListLoadingComponent, ListWithPanningTemplatesComponent,
     ListCustomLoadingComponent,
     TwoHeadersListComponent, TwoHeadersListNoPanningComponent } from '../test-utils/list-components.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 declare var Simulator: any;
 
 describe('List', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -280,6 +282,25 @@ describe('List', () => {
 
         const noItemsParagraphEl = fixture.debugElement.query(By.css('p'));
         expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
+    });
+
+    it('Should show loading template when isLoading=\'true\' even when there are children.', () => {
+        const fixture = TestBed.createComponent(ListWithHeaderComponent);
+        const list = fixture.componentInstance.list;
+        list.isLoading = true;
+        const listLoadingItemsMessage = 'Loading data from the server...';
+
+        fixture.detectChanges();
+
+        verifyItemsCount(list, 3);
+
+        const noItemsParagraphEl = fixture.debugElement.query(By.css('p'));
+        expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
+
+        list.isLoading = false;
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('p'))).toBeFalsy();
     });
 
     it('Should have custom loading template.', () => {

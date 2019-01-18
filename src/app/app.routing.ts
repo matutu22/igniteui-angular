@@ -42,7 +42,11 @@ import { GridHeightTestComponent } from './grid-height-test/grid-height-test.sam
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
-
+import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
+import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
+import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
+import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
+import { BannerSampleComponent } from './banner/banner.sample';
 
 const appRoutes = [
     {
@@ -57,6 +61,10 @@ const appRoutes = [
     {
         path: 'badge',
         component: BadgeSampleComponent
+    },
+    {
+        path: 'banner',
+        component: BannerSampleComponent
     },
     {
         path: 'buttons',
@@ -208,6 +216,10 @@ const appRoutes = [
         component: GridVirtualizationSampleComponent
     },
     {
+        path: 'gridRowEdit',
+        component: GridRowEditSampleComponent
+    },
+    {
         path: 'buttonGroup',
         component: ButtonGroupSampleComponent
     },
@@ -220,8 +232,20 @@ const appRoutes = [
         component: GridHeightTestComponent
     },
     {
+        path: 'treeGrid',
+        component: TreeGridSampleComponent
+    },
+    {
+        path: 'treeGridFlatData',
+        component: TreeGridFlatDataSampleComponent
+    },
+    {
         path: 'tooltip',
         component: TooltipSampleComponent
+    },
+    {
+        path: 'gridPercentage',
+        component: GridColumnPercentageWidthsSampleComponent
     }
 ];
 

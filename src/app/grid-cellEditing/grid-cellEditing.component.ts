@@ -49,6 +49,14 @@ export class GridCellEditingComponent {
         });
     }
 
+    enDisSummaries() {
+        if (this.gridWithPK.getColumnByName('ReorderLevel').hasSummary) {
+            this.gridWithPK.disableSummaries([{ fieldName: 'ReorderLevel' }]);
+        } else {
+            this.gridWithPK.enableSummaries([{ fieldName: 'ReorderLevel' }]);
+        }
+    }
+
     public deleteRow(event, rowID) {
         event.stopPropagation();
         const row = this.gridWithPK.getRowByKey(rowID);
@@ -151,5 +159,24 @@ export class GridCellEditingComponent {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    changeFocus(event) {
+        console.log(event);
+        const cell = event.cell;
+        const target = event.event.target.tagName.toLowerCase() === 'igx-grid-cell';
+        if (cell && cell.inEditMode && target) {
+            let focusTarget;
+            if (cell.column.dataType === 'date') {
+                event.cancel = true;
+                focusTarget  = cell.nativeElement.querySelector('input');
+            } else if (cell.column.dataType === 'boolean') {
+                event.cancel = true;
+                focusTarget  = cell.nativeElement.querySelector('.igx-checkbox__input');
+            }
+            console.log(cell.nativeElement, focusTarget);
+            if (focusTarget) { focusTarget.focus(); }
+            console.log(document.activeElement);
+        }
     }
 }

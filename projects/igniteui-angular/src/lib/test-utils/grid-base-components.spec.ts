@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
-import { IgxColumnHidingComponent, IgxColumnPinningComponent, IgxGridComponent } from '../grid';
+import { IgxColumnHidingComponent, IgxColumnPinningComponent } from '../grids';
+import { IgxGridComponent } from '../grids/grid/grid.component';
 
 @Component({
     template: `
@@ -42,6 +43,10 @@ export class GridAutoGenerateComponent extends BasicGridComponent {
 export class GridWithSizeComponent extends GridAutoGenerateComponent {
     public width = '100%';
     public height = '100%';
+
+    public scrollTop(newTop: number) {
+        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+    }
 }
 
 @Component({
@@ -147,6 +152,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     </div>`
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
+    constructor(cdr: ChangeDetectorRef) { super(cdr); }
     data = SampleTestData.contactInfoDataFull();
 }
 
@@ -183,5 +189,6 @@ export class ColumnPinningTestComponent extends GridWithSizeComponent implements
     </div>`
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
+    constructor(cdr: ChangeDetectorRef) { super(cdr); }
     data = SampleTestData.contactInfoDataFull();
 }

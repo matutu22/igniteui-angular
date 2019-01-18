@@ -8,10 +8,13 @@ import {
     NgModule,
     Output,
     Provider,
-    ViewChild
+    ViewChild,
+    ElementRef
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { isIE } from '../core/utils';
+import { EditorProvider } from '../core/edit-provider';
 
 export enum LabelPosition {
     BEFORE = 'before',
@@ -45,7 +48,7 @@ let nextId = 0;
     preserveWhitespaces: false,
     templateUrl: 'checkbox.component.html'
 })
-export class IgxCheckboxComponent implements ControlValueAccessor {
+export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvider {
     /**
      *@hidden
      */
@@ -57,7 +60,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('checkbox') public nativeCheckbox;
+    @ViewChild('checkbox') public nativeCheckbox: ElementRef;
     /**
      * Returns reference to the native label element.
      * ```typescript
@@ -262,6 +265,19 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @HostBinding('class.igx-checkbox--disabled')
     @Input() public disabled = false;
     /**
+     * Sets/gets whether the checkbox should disable all css transitions.
+     * Default value is `false`.
+     * ```html
+     * <igx-checkbox [disableTransitions]="true"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let disableTransitions = this.checkbox.disableTransitions;
+     * ```
+     * @memberof IgxCheckboxComponent
+     */
+    @HostBinding('class.igx-checkbox--plain')
+    @Input() public disableTransitions = false;
+    /**
      *@hidden
      */
     public inputId = `${this.id}-input`;
@@ -309,6 +325,11 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
         // we need to prevent the checkbox click event from bubbling up
         // as it gets triggered on label click
         event.stopPropagation();
+
+        if (isIE()) {
+            this.nativeCheckbox.nativeElement.blur();
+        }
+
         this.toggle();
     }
     /**
@@ -361,6 +382,11 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
      *@hidden
      */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+
+    /** @hidden */
+    getEditElement() {
+        return this.nativeCheckbox.nativeElement;
+    }
 }
 
 export const IGX_CHECKBOX_REQUIRED_VALIDATOR: Provider = {

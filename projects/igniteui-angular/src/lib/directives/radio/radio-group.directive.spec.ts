@@ -3,7 +3,11 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxRadioModule, IgxRadioGroupDirective } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
 describe('IgxRadioGroupDirective', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -14,7 +18,8 @@ describe('IgxRadioGroupDirective', () => {
             imports: [
                 IgxRadioModule,
                 FormsModule,
-                ReactiveFormsModule
+                ReactiveFormsModule,
+                NoopAnimationsModule
             ]
         })
         .compileComponents();

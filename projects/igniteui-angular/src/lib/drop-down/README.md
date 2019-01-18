@@ -36,6 +36,7 @@ The following inputs are available in the **igx-drop-down** component:
 | :--- | :--- | :--- |
 | `width` | string | Sets the tab width of the control. |
 | `height` | string | Sets the tab height of the control. |
+| `maxHeight` | string | defines drop down maximum height |
 | `allowItemsFocus` | boolean | Allows items to take focus. |
 | `id` | string | Sets the drop down's id. |
 
@@ -47,9 +48,9 @@ The following outputs are available in the **igx-drop-down** component:
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
 | `onSelection` | false | Emitted when item selection is changing, before the selection completes. | `{ISelectionEventArgs}` |
-| `onOpening` | false | Emitted before the dropdown is opened. |
+| `onOpening` | true | Emitted before the dropdown is opened. |
 | `onOpened` | false | Emitted when a dropdown is being opened. |
-| `onClosing` | false | Emitted before the dropdown is closed. |
+| `onClosing` | true | Emitted before the dropdown is closed. |
 | `onClosed` | false | Emitted when a dropdown is being closed. |
 
 #### Methods

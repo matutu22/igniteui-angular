@@ -55,7 +55,7 @@ The service, should inform the combo for the total items that are on the server 
 
 ### Value Binding
 
-If we want to use a two-way data-binding, we could just use `ngModule` like this:
+If we want to use a two-way data-binding, we could just use `ngModel` like this:
 
 ```html
 <igx-combo #combo [(ngModel)]="values"></igx-combo>
@@ -210,7 +210,6 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 |--------------------------|---------------------------------------------------|-----------------------------|
 |  `id`                    | combo id                                          | string                      |
 |  `data`                  | combo data source                                 | any                         |
-|  `value`                 | combo value                                       | string                      |
 |  `allowCustomValue`      | enables/disables combo custom value                | boolean                     |
 |  `filterable`            | enables/disables combo drop down filtering - enabled by default                  | boolean                     |
 |  `valueKey`              | combo value data source property                  | string                      |
@@ -219,6 +218,7 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 |  `virtualizationState`   | defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`      | `IForOfState`               |
 |  `totalItemCount`        | total count of the virtual data items, when using remote service                                | number                      |
 |  `width `                | defines combo width                               | string                      |
+| `displayDensity` | defines the display density of the combo . Available options are `cosy`, `compact`, `comfortable` | `DisplayDensity | string` |
 |  `itemsMaxHeight `       | defines drop down maximum height                  | number                      |
 |  `itemsWidth `           | defines drop down width                           | string                      |
 |  `itemHeight `           | defines drop down item height                     | number                      |
@@ -229,6 +229,11 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 |  `ariaLabelledBy`        | defines label ID related to combo                 | boolean                     |
 |  `type`                  | Combo style. - "line", "box", "border", "search"                                        | string                      |
 |  `valid`                 | gets if control is valid, when used in a form     | boolean                     |
+
+### Getters
+| Name                     | Description                                       | Type                        |
+|--------------------------|---------------------------------------------------|-----------------------------|
+|  `value`                    | the value of the combo text field                                          | string                      |
 
 ### Outputs
 
@@ -255,3 +260,4 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 | `deselectItems`  | Deselect defined items      | `void`               | items: `Array<any>`         |
 | `selectAllItems` | Select all (filtered) items | `void`               | ignoreFilter?: `boolean` - if `true` selects **all** values |
 | `deselectAllItems` | Deselect (filtered) all items | `void`           | ignoreFilter?: `boolean` - if `true` deselects **all** values |
+| `setSelectedItem` | Toggles (select/deselect) an item by key | `void` | itemID: any, select = true, event?: Event |

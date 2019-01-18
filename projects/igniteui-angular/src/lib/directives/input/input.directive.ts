@@ -3,7 +3,6 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
-    forwardRef,
     HostBinding,
     HostListener,
     Inject,
@@ -14,7 +13,7 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormControlName, NgControl, NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { IgxInputGroupComponent } from '../../input-group/input-group.component';
+import { IgxInputGroupBase } from '../../input-group/input-group.common';
 
 const nativeValidationAttributes = ['required', 'pattern', 'minlength', 'maxlength', 'min', 'max', 'step'];
 
@@ -32,8 +31,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _statusChanges$: Subscription;
 
     constructor(
-        @Inject(forwardRef(() => IgxInputGroupComponent))
-        public inputGroup: IgxInputGroupComponent,
+        public inputGroup: IgxInputGroupBase,
         @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
         @Optional() @Self() @Inject(FormControlName) protected formControl: FormControlName,
         protected element: ElementRef,
@@ -54,6 +52,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @Input('value')
     set value(value: any) {
         this.nativeElement.value = value;
+        this.checkValidity();
     }
     /**
      * Gets the `value` propery.
@@ -146,9 +145,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     @HostListener('input')
     public onInput() {
-        if (!this.ngControl && this._hasValidators()) {
-            this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
-        }
+        this.checkValidity();
     }
     /**
      *@hidden
@@ -295,5 +292,11 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     public set valid(value: IgxInputState) {
         this._valid = value;
+    }
+
+    private checkValidity() {
+        if (!this.ngControl && this._hasValidators()) {
+            this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
+        }
     }
 }

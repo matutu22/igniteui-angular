@@ -13,7 +13,7 @@ export class GridSelectionComponent implements AfterViewInit {
     @ViewChild('grid1')
     grid1: IgxGridComponent;
     remote: Observable<any[]>;
-    selection;
+    selection = true;
 
     constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
         this.remoteService.urlBuilder = (state) => this.remoteService.url;
@@ -31,6 +31,10 @@ export class GridSelectionComponent implements AfterViewInit {
 
     private onSelection(event) {
 
+    }
+
+    public scrScrollTo(index) {
+        this.grid1.verticalScrollContainer.scrollTo(parseInt(index, 10));
     }
 
     handleRowSelection(args) {

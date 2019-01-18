@@ -2,6 +2,7 @@ import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { WorksheetDataDictionary } from './worksheet-data-dictionary';
 
+/** @hidden */
 export class WorksheetData {
     private _columnCount: number;
     private _rowCount: number;
@@ -9,7 +10,8 @@ export class WorksheetData {
     private _keys: string[];
     private _isSpecialData: boolean;
 
-    constructor(private _data: any[], public options: IgxExcelExporterOptions, public indexOfLastPinnedColumn, public sort: any) {
+    constructor(private _data: any[], public options: IgxExcelExporterOptions, public indexOfLastPinnedColumn,
+                public sort: any, public isTreeGridData = false) {
         this.initializeData();
     }
 
@@ -46,13 +48,14 @@ export class WorksheetData {
             return;
         }
 
-        this._keys = ExportUtilities.getKeysFromData(this._data);
+        const actualData = this._data.map((item) => item.rowData);
 
+        this._keys = ExportUtilities.getKeysFromData(actualData);
         if (this._keys.length === 0) {
             return;
         }
 
-        this._isSpecialData = ExportUtilities.isSpecialData(this._data);
+        this._isSpecialData = ExportUtilities.isSpecialData(actualData);
 
         this._columnCount = this._keys.length;
         this._rowCount = this._data.length + 1;

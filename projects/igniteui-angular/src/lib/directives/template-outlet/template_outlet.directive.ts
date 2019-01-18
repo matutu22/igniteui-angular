@@ -3,6 +3,9 @@ import {Directive, EmbeddedViewRef, Input, OnChanges, ChangeDetectorRef,
 
 import { CommonModule } from '@angular/common';
 
+/**
+ * @hidden
+ */
 @Directive({selector: '[igxTemplateOutlet]'})
 export class IgxTemplateOutletDirective implements OnChanges {
   private _viewRef !: EmbeddedViewRef<any>;
@@ -39,10 +42,15 @@ export class IgxTemplateOutletDirective implements OnChanges {
            // if view exists, but template has been changed and there is a view in the cache with the related template
            // then detach old view and insert the stored one with the matching template
            // after that update its context.
-            this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
-            this._viewRef = cachedView;
-            this._viewContainerRef.insert(this._viewRef, 0);
-            this._updateExistingContext(this.igxTemplateOutletContext);
+           this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
+           if (!cachedView.destroyed) {
+             this._viewRef = cachedView;
+           } else {
+             this._recreateView();
+             return;
+           }
+           this._viewContainerRef.insert(this._viewRef, 0);
+           this._updateExistingContext(this.igxTemplateOutletContext);
         }
     } else {
         // view should not be re-created. Check if it exists and if context exists and just update it.
@@ -67,10 +75,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
                 // Note: Views in detached state do not appear in the DOM, however they remain stored in memory.
                 const res = this._embeddedViewsMap.get(this.igxTemplateOutletContext['templateID']);
                 if (!res) {
-                    let emptyView = this._viewContainerRef.createEmbeddedView(
-                        this.igxTemplateOutlet, {});
-                    emptyView = this._viewContainerRef.detach(this._viewContainerRef.indexOf(emptyView)) as EmbeddedViewRef<any>;
-                    this._embeddedViewsMap.set(this.igxTemplateOutletContext['templateID'], emptyView);
+                    this._embeddedViewsMap.set(this.igxTemplateOutletContext['templateID'], this._viewRef);
                 }
             }
       }
@@ -102,6 +107,10 @@ export class IgxTemplateOutletDirective implements OnChanges {
       }
   }
 }
+
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxTemplateOutletDirective],
     entryComponents: [],

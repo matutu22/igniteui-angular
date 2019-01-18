@@ -10,6 +10,9 @@ import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component
 import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelTitleDirective,
   IgxExpansionPanelIconDirective } from './expansion-panel.directives';
 
+/**
+ * @hidden
+ */
 @NgModule({
   declarations: [
     IgxExpansionPanelComponent,
@@ -27,7 +30,7 @@ import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelTitleDirective,
     IgxExpansionPanelBodyComponent,
     IgxExpansionPanelDescriptionDirective,
     IgxExpansionPanelTitleDirective,
-    IgxExpansionPanelIconDirective
+      IgxExpansionPanelIconDirective
   ],
   imports: [
     CommonModule,

@@ -2,7 +2,7 @@ sudo: required
 dist: trusty
 language: node_js
 node_js:
-- '8.9.4'
+- '10.12.0'
 before_install:
 - export CHROME_BIN=/usr/bin/google-chrome
 - export DISPLAY=:99.0
@@ -19,11 +19,12 @@ script:
 - ng build igniteui-angular --prod
 - npm run build:style
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib; fi
-- if [ -z "${TRAVIS_TAG}" ]; then npm run test:migration; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:schematics; fi
 - if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
 
 before_deploy:
 - npm run build:migration
+- npm run build:schematics
 # move to dist
 - cd dist/igniteui-angular
 # update package versions

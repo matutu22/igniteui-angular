@@ -4,6 +4,7 @@ import { FormsModule, FormBuilder, ReactiveFormsModule, Validators  } from '@ang
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const TEXTAREA_CSS_CLASS = 'igx-input-group__textarea';
@@ -18,6 +19,7 @@ const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
 describe('IgxInput', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -189,6 +191,37 @@ describe('IgxInput', () => {
 
         const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
         testRequiredValidation(inputElement, fixture);
+    });
+
+    it('Should update style when required input\'s value is set.', () => {
+        const fixture = TestBed.createComponent(RequiredInputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+
+        const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        igxInput.value = 'test';
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+
+
+        igxInput.value = '';
+        fixture.detectChanges();
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
     });
 
     it('Should style required input with two-way databinding correctly.', () => {

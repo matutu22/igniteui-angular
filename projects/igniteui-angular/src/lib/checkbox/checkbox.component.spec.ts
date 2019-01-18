@@ -8,7 +8,11 @@ import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxCheckboxComponent } from './checkbox.component';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
 describe('IgxCheckbox', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -19,9 +23,10 @@ describe('IgxCheckbox', () => {
                 CheckboxRequiredComponent,
                 CheckboxExternalLabelComponent,
                 CheckboxInvisibleLabelComponent,
+                CheckboxDisabledTransitionsComponent,
                 IgxCheckboxComponent
             ],
-            imports: [FormsModule, IgxRippleModule]
+            imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));
@@ -153,6 +158,21 @@ describe('IgxCheckbox', () => {
         expect(testInstance.subscribed).toBe(false);
     });
 
+    it('Should be able to enable/disable CSS transitions', () => {
+        const fixture = TestBed.createComponent(CheckboxDisabledTransitionsComponent);
+        const testInstance = fixture.componentInstance;
+        const checkboxInstance = testInstance.cb;
+        const checkboxHost = fixture.debugElement.query(By.css('igx-checkbox')).nativeElement;
+        fixture.detectChanges();
+
+        expect(checkboxInstance.disableTransitions).toBe(true);
+        expect(checkboxHost.classList).toContain('igx-checkbox--plain');
+
+        testInstance.cb.disableTransitions = false;
+        fixture.detectChanges();
+        expect(checkboxHost.classList).not.toContain('igx-checkbox--plain');
+    });
+
     it('Required state', () => {
         const fixture = TestBed.createComponent(CheckboxRequiredComponent);
         const testInstance = fixture.componentInstance;
@@ -200,6 +220,18 @@ describe('IgxCheckbox', () => {
         expect(testInstance.changeEventCalled).toBe(true);
         expect(testInstance.subscribed).toBe(false);
         expect(testInstance.clickCounter).toEqual(2);
+    });
+
+    describe('EditorProvider', () => {
+        it('Should return correct edit element', () => {
+            const fixture = TestBed.createComponent(CheckboxSimpleComponent);
+            fixture.detectChanges();
+
+            const instance = fixture.componentInstance.cb;
+            const editElement = fixture.debugElement.query(By.css('.igx-checkbox__input')).nativeElement;
+
+            expect(instance.getEditElement()).toBe(editElement);
+        });
     });
 });
 
@@ -265,4 +297,11 @@ class CheckboxExternalLabelComponent {
 class CheckboxInvisibleLabelComponent {
     @ViewChild('cb') public cb: IgxCheckboxComponent;
     label = 'Invisible Label';
+}
+
+@Component({
+    template: `<igx-checkbox #cb [disableTransitions]="true"></igx-checkbox>`
+})
+class CheckboxDisabledTransitionsComponent {
+    @ViewChild('cb') public cb: IgxCheckboxComponent;
 }

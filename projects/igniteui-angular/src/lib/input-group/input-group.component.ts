@@ -8,13 +8,17 @@ import {
     HostListener,
     Input,
     NgModule,
-    QueryList
+    QueryList,
+    Inject,
+    Optional
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxPrefixDirective, IgxPrefixModule} from '../directives/prefix/prefix.directive';
+import { IgxSuffixDirective, IgxSuffixModule } from '../directives/suffix/suffix.directive';
+import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import { IgxInputGroupBase } from './input-group.common';
 
 let NEXT_ID = 0;
 
@@ -27,11 +31,13 @@ enum IgxInputGroupType {
 
 @Component({
     selector: 'igx-input-group',
-    templateUrl: 'input-group.component.html'
+    templateUrl: 'input-group.component.html',
+    providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }]
 })
-export class IgxInputGroupComponent {
+export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase {
     private _type = IgxInputGroupType.LINE;
     private _filled = false;
+    private _supressInputAutofocus = false;
 
     /**
      * An ElementRef property of the `IgxInputGroupComponent`.
@@ -148,7 +154,9 @@ export class IgxInputGroupComponent {
      */
     @HostListener('click', ['$event'])
     public onClick(event) {
-        this.input.focus();
+        if (!this._supressInputAutofocus) {
+            this.input.focus();
+        }
     }
 
     /**
@@ -180,9 +188,57 @@ export class IgxInputGroupComponent {
         }
     }
 
+    /**
+     * Returns whether the input element of the input group will be automatically focused on click.
+     * ```typescript
+     * let supressInputAutofocus = this.inputGroup.supressInputAutofocus;
+     * ```
+     */
+    @Input()
+    public get supressInputAutofocus(): boolean {
+        return this._supressInputAutofocus;
+    }
+
+    /**
+     * Sets whether the input element of the input group will be automatically focused on click.
+     * ```html
+     * <igx-input-group [supressInputAutofocus]="true"></igx-input-group>
+     * ```
+     */
+    public set supressInputAutofocus(value: boolean) {
+        this._supressInputAutofocus = value;
+    }
+
+    /**
+     *@hidden
+     */
     @HostBinding('class.igx-input-group--filled')
     get isFilled() {
         return this._filled || (this.input && this.input.value);
+    }
+
+    /**
+     *@hidden
+     */
+    @HostBinding('class.igx-input-group--cosy')
+    get isDisplayDensityCosy() {
+        return this.displayDensity === DisplayDensity.cosy;
+    }
+
+    /**
+     *@hidden
+     */
+    @HostBinding('class.igx-input-group--comfortable')
+    get isDisplayDensityComfortable() {
+        return this.displayDensity === DisplayDensity.comfortable;
+    }
+
+    /**
+     *@hidden
+     */
+    @HostBinding('class.igx-input-group--compact')
+    get isDisplayDensityCompact() {
+        return this.displayDensity === DisplayDensity.compact;
     }
 
     /**
@@ -200,7 +256,9 @@ export class IgxInputGroupComponent {
         return this._type.toString();
     }
 
-    constructor(private _element: ElementRef) {
+    constructor(private _element: ElementRef,
+        @Optional() @Inject(DisplayDensityToken) private _displayDensityOptions: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
         this.element = _element;
     }
 
@@ -302,8 +360,8 @@ export class IgxInputGroupComponent {
  * The IgxInputGroupModule provides the {@link IgxInputGroupComponent} inside your application.
  */
 @NgModule({
-    declarations: [IgxInputGroupComponent, IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective],
+    declarations: [IgxInputGroupComponent, IgxHintDirective, IgxInputDirective, IgxLabelDirective],
     exports: [IgxInputGroupComponent,  IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective],
-    imports: [CommonModule]
+    imports: [CommonModule, IgxPrefixModule, IgxSuffixModule]
 })
 export class IgxInputGroupModule { }

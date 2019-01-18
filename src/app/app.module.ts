@@ -4,9 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
-    IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService,
-    IgxOverlayService
-} from 'igniteui-angular';
+    IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
+    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
@@ -28,6 +27,7 @@ import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
+import { InputGroupChildSampleComponent } from './input-group/input-group-child.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
 import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
@@ -57,6 +57,7 @@ import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
+import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
@@ -70,11 +71,20 @@ import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sam
 import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
+import { DisplayDensityToken, DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
+import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
+import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
+import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
+import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
+import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
+import { BannerSampleComponent } from './banner/banner.sample';
+import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
 
 const components = [
     AppComponent,
     AvatartSampleComponent,
     BadgeSampleComponent,
+    BannerSampleComponent,
     ButtonSampleComponent,
     CalendarSampleComponent,
     CardSampleComponent,
@@ -89,6 +99,7 @@ const components = [
     IconSampleComponent,
     InputSampleComponent,
     InputGroupSampleComponent,
+    InputGroupChildSampleComponent,
     LayoutSampleComponent,
     ListSampleComponent,
     ListPanningSampleComponent,
@@ -120,16 +131,22 @@ const components = [
     GridPerformanceSampleComponent,
     GridSelectionComponent,
     GridToolbarSampleComponent,
+    GridToolbarCustomSampleComponent,
     GridVirtualizationSampleComponent,
     GridColumnGroupsSampleComponent,
     GridCellStylingSampleComponent,
-
+    GridRowEditSampleComponent,
+    GridWithTransactionsComponent,
+    TreeGridSampleComponent,
+    TreeGridFlatDataSampleComponent,
+    TreeGridWithTransactionsComponent,
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
     TypographySampleComponent,
     RadioSampleComponent,
-    TooltipSampleComponent
+    TooltipSampleComponent,
+    GridColumnPercentageWidthsSampleComponent
 ];
 
 @NgModule({
@@ -140,8 +157,9 @@ const components = [
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        IgxIconModule.forRoot(),
+        IgxIconModule,
         IgxGridModule.forRoot(),
+        IgxTreeGridModule,
         IgxColumnHidingModule,
         IgxDragDropModule,
         SharedModule,
@@ -152,7 +170,8 @@ const components = [
         RemoteService,
         IgxExcelExporterService,
         IgxCsvExporterService,
-        IgxOverlayService
+        IgxOverlayService,
+        { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) }
     ],
     bootstrap: [AppComponent]
 })
